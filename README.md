@@ -16,6 +16,44 @@ you can run.
 | [`physics/projectile-drag`](physics/projectile-drag) | Physics HL | Projectile motion with air resistance |
 | [`chemistry/maxwell-boltzmann`](chemistry/maxwell-boltzmann) | Chemistry HL | Maxwell-Boltzmann and activation energy |
 
+## The website
+
+There is a browsable version of this collection in [`docs/`](docs), built to be
+served by GitHub Pages:
+
+- a landing page with **search** and subject filters, so you can find a topic by
+  typing the question you are stuck on rather than opening every folder;
+- an **interactive animation** of each topic that runs in the browser, with
+  sliders — no Python needed to get the idea;
+- the **full Python source** on each page, with a copy button and a download
+  button, plus links to the notebook and to Colab.
+
+### Turning it on
+
+In the repository settings: **Settings → Pages → Source: Deploy from a branch**,
+branch `main`, folder `/docs`. The site is then at
+`https://iyu210-tech.github.io/Capstone_Repository/`.
+
+### Working on it locally
+
+```
+python -m http.server -d docs 8000
+```
+
+Then open `http://localhost:8000`.
+
+### After changing any topic
+
+The site does not keep its own copy of the code — `docs/topics.js` is generated
+from the real `.py` files, so it can never quietly drift out of date:
+
+```
+python build_site.py
+```
+
+Run that whenever you edit a script or add a topic, and commit the regenerated
+`docs/topics.js`.
+
 ## Two ways to use these
 
 Each topic ships **both** a plain script and a notebook, from the same code.
@@ -50,6 +88,14 @@ Both are standalone: download the single file and it runs.
 3. Run the notebook top to bottom before committing, so the saved outputs match
    the code and GitHub shows the graphs.
 4. Add a row to the table above.
+5. Add an entry to [`topics.json`](topics.json) — that is what feeds the website's
+   cards and its search. The `tags` field is worth a minute of thought: it is how
+   someone finds your topic when they do not know its name. Write the *questions*
+   a stuck student would type, not just the technical term.
+6. To give it an animation, add a case to `docs/demos.js` and point the entry's
+   `demo` field at it. Skip this and the topic still gets a page, just without
+   the interactive panel.
+7. Run `python build_site.py`.
 
 Keeping the shape identical every week is what makes the collection browsable
 later - and it is what a search or index page would be built on top of.

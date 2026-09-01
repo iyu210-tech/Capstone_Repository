@@ -28,8 +28,11 @@
   };
 
   function trim(v) {
-    if (Math.abs(v) >= 1000 || (v !== 0 && Math.abs(v) < 0.01)) return v.toPrecision(3);
-    return String(Math.round(v * 100) / 100);
+    var a = Math.abs(v);
+    if (a >= 1e6 || (v !== 0 && a < 0.001)) return v.toExponential(1);
+    if (a >= 100) return String(Math.round(v));
+    if (a >= 1) return String(Math.round(v * 10) / 10);
+    return String(Math.round(v * 1000) / 1000);
   }
 
   Plot.prototype.resize = function () {
@@ -135,11 +138,11 @@
       for (var i = 0; i < xs.length; i++) {
         if (xs[i] < fromX) continue;
         var X = self.px(xs[i]), Y = self.py(ys[i]);
-        if (!started) { ctx.moveTo(X, self.py(0)); started = true; }
+        if (!started) { ctx.moveTo(X, self.py(self.ymin)); started = true; }
         ctx.lineTo(X, Y);
       }
       if (started) {
-        ctx.lineTo(self.px(xs[xs.length - 1]), self.py(0));
+        ctx.lineTo(self.px(xs[xs.length - 1]), self.py(self.ymin));
         ctx.closePath();
         ctx.fill();
       }
@@ -158,7 +161,8 @@
       ctx.font = "600 11px ui-sans-serif, system-ui, sans-serif";
       ctx.textAlign = X > this.w - 120 ? "right" : "left";
       ctx.textBaseline = "top";
-      ctx.fillText(label, X + (X > this.w - 120 ? -6 : 6), p.t + 2);
+      ctx.textBaseline = "bottom";
+      ctx.fillText(label, X + (X > this.w - 120 ? -6 : 6), this.h - p.b - 6);
     }
     ctx.restore();
   };
@@ -257,7 +261,7 @@
     for (var i = 0; i <= 700; i++) xs.push(-4 * Math.PI + (8 * Math.PI) * i / 700);
     var exact = xs.map(Math.sin);
 
-    var n = 1, playing = true, tAccum = 0;
+    var n = 1, playing = true, lastStep = 0;
 
     var nSlider = slider(ctx.controls, {
       label: "Terms", min: 1, max: MAX_TERMS, value: 1,
@@ -295,15 +299,13 @@
         " — then it escapes to infinity.";
     }
 
-    function tick(dt) {
+    function tick(dt, now) {
       if (!playing) return;
-      tAccum += dt;
-      if (tAccum > 900) {
-        tAccum = 0;
-        n = n % MAX_TERMS + 1;
-        nSlider.set(n);
-        draw();
-      }
+      if (now - lastStep < 900) return;
+      lastStep = now;
+      n = n % MAX_TERMS + 1;
+      nSlider.set(n);
+      draw();
     }
 
     draw();
@@ -441,14 +443,41 @@
 
   function demoBoltzmann(ctx) {
     var MASS = 0.028 / N_A;
-    var T = 300, eaKJ = 50, playing = true, dir = 1;
+    var T = 300, eaKJ = 50, playing = true, dir = 1, logY = true;
+    var FLOOR = -14;   // log10 clamp, so zeros do not blow up the axis
+
+    function applyScale() {
+      if (logY) {
+        plot.set({
+          xmin: 0, xmax: 2500, ymin: FLOOR, ymax: -2,
+          xlabel: "molecular speed / m s⁻¹",
+          ylabel: "fraction of molecules (log scale)",
+          xticks: 5, yticks: 6,
+          fmtY: function (v) { return "1e" + Math.round(v); }
+        });
+      } else {
+        plot.set({
+          xmin: 0, xmax: 2500, ymin: 0, ymax: 0.0022,
+          xlabel: "molecular speed / m s⁻¹",
+          ylabel: "fraction of molecules",
+          xticks: 5, yticks: 4,
+          fmtY: function (v) { return v === 0 ? "0" : (v * 1000).toFixed(1) + "e-3"; }
+        });
+      }
+    }
 
     var plot = new Plot(ctx.canvas, {
       xmin: 0, xmax: 2500, ymin: 0, ymax: 0.0022,
       xlabel: "molecular speed / m s⁻¹", ylabel: "fraction of molecules",
-      xticks: 5, yticks: 4,
-      fmtY: function (v) { return v === 0 ? "0" : (v * 1000).toFixed(1) + "e-3"; }
+      xticks: 5, yticks: 4
     });
+    applyScale();
+
+    // map a density onto whichever axis is showing
+    function ymap(y) {
+      if (!logY) return y;
+      return y <= 0 ? FLOOR : Math.max(FLOOR, Math.log(y) / Math.LN10);
+    }
 
     var vs = [];
     for (var i = 0; i <= 600; i++) vs.push(2500 * i / 600);
@@ -468,6 +497,13 @@
     var playBtn = button(row, "Pause", function (b) {
       playing = !playing; b.textContent = playing ? "Pause" : "Play";
     });
+    var logBtn = button(row, "Log scale", function (b) {
+      logY = !logY;
+      b.setAttribute("aria-pressed", String(logY));
+      applyScale();
+      draw();
+    });
+    logBtn.setAttribute("aria-pressed", "true");
 
     function vEa() { return Math.sqrt(2 * (eaKJ * 1000 / N_A) / MASS); }
 
@@ -477,26 +513,28 @@
 
       // faint reference curves so the shift in the peak is visible
       [300, 500].forEach(function (Tref) {
-        var ysr = vs.map(function (v) { return mbDistribution(v, Tref, MASS); });
+        var ysr = vs.map(function (v) { return ymap(mbDistribution(v, Tref, MASS)); });
         plot.line(vs, ysr, cssVar("--border", "#ddd"), 1.5);
       });
 
-      var ys = vs.map(function (v) { return mbDistribution(v, T, MASS); });
+      var ys = vs.map(function (v) { return ymap(mbDistribution(v, T, MASS)); });
       plot.fillUnder(vs, ys, cssVar("--accent-soft", "#fbeeeb"), ve);
       plot.line(vs, ys, cssVar("--accent", "#b4341f"), 2.5);
       plot.vline(ve, cssVar("--ink", "#000"), "Ea = " + eaKJ + " kJ/mol");
       plot.legend([
-        { label: T + " K", color: cssVar("--accent", "#b4341f") },
+        { label: Math.round(T) + " K", color: cssVar("--accent", "#b4341f") },
         { label: "300 K / 500 K", color: cssVar("--border", "#ddd"), width: 1.5 }
       ]);
 
       var frac = fractionAbove(ve, T, MASS);
       var base = fractionAbove(ve, 300, MASS);
       ctx.readout.innerHTML =
-        "At <b>" + T + " K</b>, <b>" + frac.toExponential(2) +
+        "At <b>" + Math.round(T) + " K</b>, <b>" + frac.toExponential(2) +
         "</b> of molecules clear the barrier — that is <b>" +
         (frac / base).toFixed(2) + "×</b> the fraction at 300 K. " +
-        "Notice how little the peak moves compared with the shaded area.";
+        (logY
+          ? "On this log axis every gridline is 10x - watch the shaded tail climb."
+          : "Notice how little the peak moves. The tail past Ea is far too small to see here, which is exactly why it needs a log axis.");
     }
 
     function tick(dt) {
@@ -531,7 +569,7 @@
       if (last === null) last = ts;
       var dt = Math.min(ts - last, 60);
       last = ts;
-      demo.tick(dt);
+      demo.tick(dt, ts);
       raf = requestAnimationFrame(loop);
     }
     raf = requestAnimationFrame(loop);
