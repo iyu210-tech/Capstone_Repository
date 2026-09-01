@@ -1,0 +1,41 @@
+[
+  {
+    "id": "taylor-series",
+    "title": "Taylor / Maclaurin series",
+    "subject": "Maths AA HL",
+    "syllabus": "AHL 5.19",
+    "folder": "math/taylor-series",
+    "script": "taylor_series.py",
+    "notebook": "taylor_series.ipynb",
+    "demo": "taylor",
+    "tags": ["series", "maclaurin", "taylor", "approximation", "convergence", "polynomial", "calculus", "sin", "radius of convergence"],
+    "hard_bit": "You can compute the coefficients, but it is not obvious why adding terms helps, or why the approximation collapses far from the centre.",
+    "shows": "The polynomial is built up one term at a time against sin(x). Each new term grips the curve over a wider interval, and outside that interval it shoots off to infinity - which is what radius of convergence means, visually."
+  },
+  {
+    "id": "projectile-drag",
+    "title": "Projectile motion with air resistance",
+    "subject": "Physics HL",
+    "syllabus": "Theme A",
+    "folder": "physics/projectile-drag",
+    "script": "projectile_drag.py",
+    "notebook": "projectile_drag.ipynb",
+    "demo": "projectile",
+    "tags": ["projectile", "drag", "air resistance", "kinematics", "range", "launch angle", "trajectory", "parabola", "forces", "euler"],
+    "hard_bit": "Exam questions use the vacuum parabola, so it is easy to believe 45 degrees is always optimal and that the path is symmetric. Neither survives contact with drag, and there is no neat formula to show why.",
+    "shows": "Real trajectories against the vacuum parabola, and range plotted against launch angle. The optimum slides below 45 degrees, and the faster you launch, the further it slides."
+  },
+  {
+    "id": "maxwell-boltzmann",
+    "title": "Maxwell-Boltzmann and activation energy",
+    "subject": "Chemistry HL",
+    "syllabus": "Reactivity 2.2",
+    "folder": "chemistry/maxwell-boltzmann",
+    "script": "maxwell_boltzmann.py",
+    "notebook": "maxwell_boltzmann.ipynb",
+    "demo": "boltzmann",
+    "tags": ["maxwell-boltzmann", "activation energy", "rate of reaction", "kinetics", "arrhenius", "temperature", "catalyst", "distribution"],
+    "hard_bit": "The curve is usually drawn once, so 'a 10 K rise roughly doubles the rate' stays a memorised fact rather than something you can see.",
+    "shows": "Raising the temperature barely moves the peak - it stretches the tail past Ea. Drag the temperature slider and watch the shaded area multiply while the curve itself hardly shifts."
+  }
+]
