@@ -7,6 +7,11 @@
  * Fill these in from Supabase -> Project Settings -> API. Until they are set,
  * the site runs exactly as before and the account button explains what is
  * missing rather than failing silently.
+ *
+ * This file is the source of truth on any host that serves docs/ as plain
+ * files - Vercel and GitHub Pages both do. Only server.py, for Render, can
+ * override it from SUPABASE_URL and SUPABASE_PUBLISHABLE_KEY, because only
+ * there is a process running to generate a response.
  */
 window.SUPABASE_CONFIG = {
   url: "https://vilvxunldjqawkknphip.supabase.co",
