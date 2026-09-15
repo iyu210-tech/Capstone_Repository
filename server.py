@@ -54,15 +54,46 @@ mimetypes.add_type("image/svg+xml", ".svg")
 
 
 class Handler(SimpleHTTPRequestHandler):
-    def do_GET(self):
-        body = auth_config_js() if self.path.split("?")[0] == "/auth-config.js" else None
+    def generated(self):
+        """Headers for the env-built auth-config.js, or None to fall through."""
+        if self.path.split("?")[0] != "/auth-config.js":
+            return None
+        body = auth_config_js()
         if body is None:
-            return super().do_GET()
+            return None
         self.send_response(200)
         self.send_header("Content-Type", "application/javascript")
         self.send_header("Content-Length", str(len(body)))
         self.end_headers()
+        return body
+
+    def do_GET(self):
+        body = self.generated()
+        if body is None:
+            return super().do_GET()
         self.wfile.write(body)
+
+    def do_HEAD(self):
+        # Must go through the same branch as GET, or HEAD advertises the length
+        # of the file on disk while GET sends the generated one.
+        if self.generated() is None:
+            return super().do_HEAD()
+
+    def send_error(self, code, message=None, explain=None):
+        # SimpleHTTPRequestHandler's built-in 404 is an unstyled scrap of HTML.
+        # Vercel serves docs/404.html for this automatically; do the same here
+        # so a bad link looks the same on both hosts.
+        page = ROOT / "404.html"
+        if code == 404 and page.exists():
+            body = page.read_bytes()
+            self.send_response(404)
+            self.send_header("Content-Type", "text/html; charset=utf-8")
+            self.send_header("Content-Length", str(len(body)))
+            self.end_headers()
+            if self.command != "HEAD":
+                self.wfile.write(body)
+            return
+        super().send_error(code, message, explain)
 
     def end_headers(self):
         path = self.path.split("?")[0]

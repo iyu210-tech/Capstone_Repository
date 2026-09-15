@@ -42,6 +42,55 @@ python -m http.server -d docs 8000
 
 Then open `http://localhost:8000`.
 
+### Deploying it
+
+The site is static: the build regenerates `docs/topics.js` from the real `.py`
+files, and the host serves `docs/`. Three hosts are wired up, and all three
+serve the same folder.
+
+| Host | Config | Build | Serves |
+|---|---|---|---|
+| Vercel | [`vercel.json`](vercel.json) | `python3 build_site.py` | `docs/` as static files |
+| Render | [`render.yaml`](render.yaml) | `python build_site.py` | `python server.py` |
+| GitHub Pages | repo settings | none | `docs/` on `main` |
+
+On Vercel, [`.vercelignore`](.vercelignore) hides `server.py` and
+`requirements.txt`. Without it Vercel sniffs those, decides the repo is a Python
+app, and fails the build looking for a WSGI entrypoint that does not exist.
+
+On Render, [`server.py`](server.py) is what runs: a web service has to bind
+`$PORT`, and the stock `http.server` defaults are wrong for a deployed site
+(localhost-only, no cache headers, `.js` typed as `text/plain` on some images -
+which stops a module from executing at all). It is stdlib only, so the build
+never installs matplotlib, scipy or jupyter. Note that the free instance sleeps
+after 15 minutes idle and takes about 50 seconds to wake.
+
+### Sign-in
+
+Google and email/password sign-in run on Supabase. Nothing on the site is gated
+by it - every topic stays free to read and run - so an account only exists to
+remember a reader between visits.
+
+The credentials live in [`docs/auth-config.js`](docs/auth-config.js). Both are
+public by design: the publishable key is a browser key and reaches every
+visitor whichever way it is set. **Row Level Security on every table is what
+protects the data, not hiding that key.** The `service_role` / `sb_secret` key
+must never appear in `docs/`.
+
+`server.py` can override the file from `SUPABASE_URL` and
+`SUPABASE_PUBLISHABLE_KEY`, so Render can point at a different Supabase project
+than local does. That only works on Render - Vercel and GitHub Pages serve
+`docs/` as plain files, with no process to generate a response, so there the
+committed values are what ship.
+
+Each deployed origin has to be registered twice before sign-in works:
+
+1. **Google Cloud -> Credentials -> Authorized JavaScript origins**: add the
+   site's origin. The Authorized redirect URI stays the Supabase callback,
+   `https://<project-ref>.supabase.co/auth/v1/callback`, on every host.
+2. **Supabase -> Authentication -> URL Configuration**: set Site URL, and add
+   `<origin>/**` to Redirect URLs.
+
 ### After changing any topic
 
 The site does not keep its own copy of the code — `docs/topics.js` is generated
