@@ -370,3 +370,56 @@ canvas {
   margin: 1.1rem 0 0; color: var(--ink-soft); font-size: .8rem;
   display: flex; gap: .4rem; flex-wrap: wrap;
 }
+
+/* phone navigation ------------------------------------------------------- */
+/* Above 720px the header carries these actions and the bar is not rendered. */
+.mobile-nav { display: none; }
+
+.mnav-item svg {
+  width: 22px; height: 22px; flex: none;
+  fill: none; stroke: currentColor; stroke-width: 1.7;
+  stroke-linecap: round; stroke-linejoin: round;
+}
+/* The home glyph is a solid shape; the rest are line icons. */
+.mnav-item[data-route="home"] svg { fill: currentColor; stroke: none; }
+
+@media (max-width: 720px) {
+  .mobile-nav {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 40;
+    display: flex; justify-content: space-around; align-items: stretch;
+    background: color-mix(in srgb, var(--surface) 92%, transparent);
+    border-top: 1px solid var(--border);
+    /* Keeps the bar legible over a scrolling page without hiding it. */
+    backdrop-filter: saturate(1.4) blur(10px);
+    -webkit-backdrop-filter: saturate(1.4) blur(10px);
+    /* Clears the iOS home indicator instead of sitting under it. */
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  .mnav-item {
+    flex: 1; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: .2rem;
+    /* 56px of height, so every tab clears the 44px touch target minimum. */
+    min-height: 56px; padding: .5rem .25rem;
+    border: 0; background: none; cursor: pointer;
+    font: inherit; font-size: .68rem; letter-spacing: .01em;
+    color: var(--ink-soft); text-decoration: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .mnav-item.is-on { color: var(--accent); }
+  .mnav-item:focus-visible { outline-offset: -3px; }
+
+  /* The bar floats over the page, so the last thing on it needs room to clear
+     the bar - otherwise the footer sits permanently underneath. */
+  body { padding-bottom: calc(56px + env(safe-area-inset-bottom, 0px)); }
+
+  /* The header was three wrapped lines plus two stacked buttons on a phone -
+     about a fifth of the first screen before any topic showed. The bar below
+     carries those actions now, so the header can shrink to the brand. */
+  .head-actions { display: none; }
+  .site-head { padding: .85rem 1.25rem; }
+  .brand small { display: none; }
+  .brand strong { font-size: .95rem; }
+}
+
+@media print { .mobile-nav { display: none !important; } }

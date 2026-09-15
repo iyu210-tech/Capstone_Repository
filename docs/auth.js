@@ -108,12 +108,21 @@ function friendly(error) {
 
 /* -------------------------------------------------------------- header UI */
 
+// The phone nav forwards its account tab to the header button, so the label
+// has to say which button that is - a tab reading "Sign in" that silently
+// signs you out would be the worst kind of surprise.
+function mirrorToNav(text) {
+  const el = document.getElementById("mnav-account-label");
+  if (el) el.textContent = text;
+}
+
 function label(user) {
   const name = (user.user_metadata && (user.user_metadata.full_name || user.user_metadata.name)) || "";
   return name || user.email || "Signed in";
 }
 
 function renderSignedOut() {
+  mirrorToNav("Sign in");
   slot.innerHTML = "";
   const btn = document.createElement("button");
   btn.className = "ghost-btn";
@@ -124,6 +133,7 @@ function renderSignedOut() {
 }
 
 function renderSignedIn(user) {
+  mirrorToNav("Sign out");
   slot.innerHTML = "";
 
   const who = document.createElement("span");

@@ -134,7 +134,9 @@
     var w = this.c.clientWidth || 900;
 
     // A 900x480 plot squeezed to phone width is 176px tall and unreadable.
-    var ratio = w < 560 ? 0.82 : w < 760 ? 0.66 : 480 / 900;
+    // Below ~400px the axis padding alone eats most of the height, so the
+    // plot area needs a taller box again to keep the curve worth looking at.
+    var ratio = w < 400 ? 0.95 : w < 560 ? 0.82 : w < 760 ? 0.66 : 480 / 900;
     var h = Math.round(w * ratio);
 
     this.fs = w < 560 ? 10 : 11;

@@ -97,11 +97,15 @@ class Handler(SimpleHTTPRequestHandler):
 
     def end_headers(self):
         path = self.path.split("?")[0]
-        # index.html and the generated topics.js change on every deploy and are
-        # tiny; the rest is fingerprint-free too, so nothing here may be cached
-        # hard or a student sees last week's build. A short revalidate keeps
-        # repeat visits fast without ever serving stale code.
-        if path.endswith((".html", "/")) or path.endswith(("topics.js", "auth-config.js")):
+        # No filename here is fingerprinted, so a cached .js or .css is served
+        # against a newer .html for as long as the cache lives - the page loads,
+        # and one stale script quietly behaves like last week's build. Caching
+        # markup for five minutes and code for five minutes is the same bug.
+        #
+        # Everything the site is made of is small and revalidates in one round
+        # trip, so all of it is no-cache. Longer lives are for assets that can
+        # carry a hash in the name, and there are none yet.
+        if path.endswith((".html", ".js", ".css", "/")):
             self.send_header("Cache-Control", "no-cache")
         else:
             self.send_header("Cache-Control", "public, max-age=300, must-revalidate")
