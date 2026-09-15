@@ -5,61 +5,105 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>IB HL Visualisations</title>
 <meta name="description" content="Runnable Python visualisations for hard IB Higher Level topics in Maths, Physics and Chemistry.">
+<meta name="theme-color" content="#b4341f" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14140f" media="(prefers-color-scheme: dark)">
+<link rel="canonical" href="https://iyu210-tech.github.io/Capstone_Repository/">
+
+<!-- Link previews. Without these the capstone shares as a blank grey card. -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="IB HL Visualisations">
+<meta property="og:title" content="Hard IB topics you can run">
+<meta property="og:description" content="Interactive visualisations of difficult IB Higher Level Maths, Physics and Chemistry topics - play with them in the browser, then download the Python.">
+<meta property="og:url" content="https://iyu210-tech.github.io/Capstone_Repository/">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Hard IB topics you can run">
+<meta name="twitter:description" content="Interactive visualisations of difficult IB Higher Level Maths, Physics and Chemistry topics.">
+
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23b4341f'/%3E%3Ctext x='16' y='24' font-size='23' font-family='Georgia,serif' fill='%23fff' text-anchor='middle'%3E%E2%88%AB%3C/text%3E%3C/svg%3E">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
+<a class="skip-link" href="#view">Skip to content</a>
+
 <header class="site-head">
   <a class="brand" href="#/">
-    <span class="brand-mark">∫</span>
+    <span class="brand-mark" aria-hidden="true">&#8747;</span>
     <span>
       <strong>IB HL Visualisations</strong>
       <small>Hard topics, made runnable</small>
     </span>
   </a>
-  <a class="ghost-btn" href="https://github.com/iyu210-tech/Capstone_Repository" target="_blank" rel="noopener">GitHub ↗</a>
+  <a class="ghost-btn" href="https://github.com/iyu210-tech/Capstone_Repository" target="_blank" rel="noopener">GitHub &#8599;</a>
 </header>
 
-<main id="view"></main>
+<main id="view" tabindex="-1">
+  <!-- Replaced by the first route. Exists so a cold load shows structure
+       rather than a white page while topics.js / app.js parse. -->
+  <div class="skeleton" aria-hidden="true">
+    <div class="sk sk-title"></div>
+    <div class="sk sk-text"></div>
+    <div class="sk sk-text short"></div>
+    <div class="sk sk-search"></div>
+    <div class="sk-cards">
+      <div class="sk sk-card"></div>
+      <div class="sk sk-card"></div>
+      <div class="sk sk-card"></div>
+    </div>
+  </div>
+  <noscript>
+    <div class="noscript">
+      <h2>This page needs JavaScript</h2>
+      <p>The interactive animations and the search run entirely in your browser,
+         so there is nothing to show without JavaScript enabled.</p>
+      <p>Every topic is still readable as plain Python on
+         <a href="https://github.com/iyu210-tech/Capstone_Repository">the GitHub
+         repository</a> &mdash; each folder holds a script, a notebook with the
+         graphs already saved, and a README explaining the concept.</p>
+    </div>
+  </noscript>
+</main>
 
 <footer class="site-foot">
-  <p>Capstone project by Ian Yu — Maths AA HL, Physics HL, Chemistry HL.
+  <p>Capstone project by Ian Yu &mdash; Maths AA HL, Physics HL, Chemistry HL.
      Every animation here is a browser port of the Python in the same folder.</p>
 </footer>
 
 <!-- templates ------------------------------------------------------------ -->
 <template id="tpl-home">
   <section class="hero">
-    <h1>Hard IB topics you can <em>run</em>.</h1>
+    <h1 tabindex="-1">Hard IB topics you can <em>run</em>.</h1>
     <p>Each topic is a small, self-contained Python program that makes one
        difficult idea visible. Play with it here in the browser, then download
        the code and change the numbers yourself.</p>
   </section>
 
   <section class="controls">
+    <label class="sr-only" for="search">Search topics</label>
     <input id="search" type="search" placeholder="Search topics, e.g. &ldquo;why does heating speed up a reaction&rdquo;" autocomplete="off">
-    <div id="filters" class="filters"></div>
+    <div id="filters" class="filters" role="group" aria-label="Filter by subject"></div>
   </section>
 
+  <p id="count" class="count" role="status" aria-live="polite"></p>
   <section id="cards" class="cards"></section>
-  <p id="empty" class="empty" hidden>No topic matches that yet — the collection grows each week.</p>
+  <p id="empty" class="empty" hidden></p>
 </template>
 
 <template id="tpl-topic">
-  <a class="back" href="#/">← All topics</a>
+  <a class="back" href="#/">&#8592; All topics</a>
   <article class="topic">
     <header class="topic-head">
       <span class="pill" data-subject></span>
-      <h1 data-title></h1>
+      <h1 data-title tabindex="-1"></h1>
       <p class="syllabus" data-syllabus></p>
     </header>
 
-    <section class="panel">
+    <section class="panel" id="demo-panel">
       <h2>Try it</h2>
       <div class="demo">
-        <canvas id="stage" width="900" height="480"></canvas>
+        <canvas id="stage" width="900" height="480" role="img" aria-label="Interactive plot"></canvas>
         <div id="demo-controls" class="demo-controls"></div>
-        <p id="demo-readout" class="readout"></p>
+        <p id="demo-readout" class="readout" aria-live="off"></p>
       </div>
     </section>
 
@@ -86,14 +130,25 @@
          simplified version. Run it with
          <code>pip install -r requirements.txt</code> and you get the same
          figures as the animation above.</p>
-      <pre class="code"><code id="source"></code></pre>
+      <pre class="code" tabindex="0"><code id="source"></code></pre>
       <p class="hint">
         Prefer a notebook? <a data-notebook target="_blank" rel="noopener">View on GitHub</a>
-        · <a data-colab target="_blank" rel="noopener">Open in Colab</a>
+        &middot; <a data-colab target="_blank" rel="noopener">Open in Colab</a>
         (runs in the browser, nothing to install).
       </p>
+      <p class="sr-only" id="copy-status" role="status" aria-live="polite"></p>
     </section>
   </article>
+</template>
+
+<template id="tpl-missing">
+  <section class="notfound">
+    <h1 tabindex="-1">That topic is not here</h1>
+    <p>Nothing in the collection matches <code data-wanted></code>. It may have
+       been renamed since the link was shared, or it may not be written yet
+       &mdash; the collection grows each week.</p>
+    <p><a href="#/">Browse all topics &#8594;</a></p>
+  </section>
 </template>
 
 <script src="topics.js"></script>

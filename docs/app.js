@@ -6,6 +6,7 @@
   var TOPICS = window.TOPICS || [];
   var active = null;          // currently mounted demo, so we can stop its loop
   var state = { q: "", subject: "All" };
+  var booted = false;         // first paint should not steal focus
 
   function tpl(id) {
     return document.getElementById(id).content.cloneNode(true);
@@ -52,14 +53,26 @@
   }
 
   /* -------------------------------------------------------------- thumb */
-  function thumb(topic) {
-    // tiny static preview so the cards are not just text
+  // Cards are rebuilt on every keystroke. Drawing three canvases is cheap
+  // now, but the collection is meant to reach dozens of topics, so the
+  // previews are drawn once and reused.
+  var thumbCache = {};
+
+  var TW = 560, TH = 192, TP = 10;   // inset, so curves never touch the edge
+  function tx(u) { return TP + u * (TW - 2 * TP); }
+  function ty(v) { return TH - TP - Math.max(0, Math.min(1, v)) * (TH - 2 * TP); }
+
+  function buildThumb(topic) {
+    var dpr = window.devicePixelRatio || 1;
     var c = document.createElement("canvas");
     c.className = "thumb";
-    c.width = 560; c.height = 192;
+    c.width = Math.round(TW * dpr); c.height = Math.round(TH * dpr);
+    c.setAttribute("aria-hidden", "true");
     var g = c.getContext("2d");
+    g.setTransform(dpr, 0, 0, dpr, 0, 0);
+
     var accent = getComputedStyle(document.body).getPropertyValue("--accent").trim() || "#b4341f";
-    var soft = getComputedStyle(document.body).getPropertyValue("--border").trim() || "#ddd";
+    var soft = getComputedStyle(document.body).getPropertyValue("--plot-ref").trim() || "#999";
     g.lineWidth = 3; g.lineJoin = "round";
 
     function curve(fn, color, dash) {
@@ -67,8 +80,8 @@
       for (var i = 0; i <= 120; i++) {
         var u = i / 120;
         var p = fn(u);
-        if (i === 0) g.moveTo(p[0] * 560, 192 - p[1] * 192);
-        else g.lineTo(p[0] * 560, 192 - p[1] * 192);
+        if (i === 0) g.moveTo(tx(p[0]), ty(p[1]));
+        else g.lineTo(tx(p[0]), ty(p[1]));
       }
       g.stroke(); g.setLineDash([]);
     }
@@ -77,25 +90,40 @@
       curve(function (u) { return [u, 0.5 + 0.32 * Math.sin(u * 12 - 6)]; }, soft);
       curve(function (u) {
         var x = u * 12 - 6, y = x - Math.pow(x, 3) / 6 + Math.pow(x, 5) / 120;
-        return [u, 0.5 + 0.32 * Math.max(-1.6, Math.min(1.6, y))];
+        return [u, 0.5 + 0.32 * Math.max(-1.5, Math.min(1.5, y))];
       }, accent);
     } else if (topic.demo === "projectile") {
       curve(function (u) { return [u, 3.4 * u * (1 - u)]; }, soft, [7, 6]);
       curve(function (u) { return [u * 0.78, 3.4 * (u * 0.78) * (1 - u * 0.92) * 0.86]; }, accent);
     } else {
-      curve(function (u) {
+      var mb = function (u) {
         var x = u * 3.2;
-        return [u, Math.min(0.92, x * x * Math.exp(-x * x / 1.1) * 0.95)];
-      }, accent);
-      g.fillStyle = accent; g.globalAlpha = 0.18;
-      g.beginPath(); g.moveTo(0.52 * 560, 192);
-      for (var i = 62; i <= 120; i++) {
-        var u = i / 120, x = u * 3.2;
-        g.lineTo(u * 560, 192 - Math.min(0.92, x * x * Math.exp(-x * x / 1.1) * 0.95) * 192);
-      }
-      g.lineTo(560, 192); g.closePath(); g.fill(); g.globalAlpha = 1;
+        return Math.min(0.92, x * x * Math.exp(-x * x / 1.1) * 0.95);
+      };
+      g.fillStyle = getComputedStyle(document.body).getPropertyValue("--plot-fill").trim()
+        || "rgba(180,52,31,.3)";
+      g.beginPath(); g.moveTo(tx(0.52), ty(0));
+      for (var i = 62; i <= 120; i++) g.lineTo(tx(i / 120), ty(mb(i / 120)));
+      g.lineTo(tx(1), ty(0)); g.closePath(); g.fill();
+      curve(function (u) { return [u, mb(u)]; }, accent);
     }
     return c;
+  }
+
+  function thumb(topic) {
+    if (!thumbCache[topic.id]) thumbCache[topic.id] = buildThumb(topic);
+    return thumbCache[topic.id];
+  }
+
+  // Previews bake in the theme colours, so redraw them when the theme flips.
+  if (window.matchMedia) {
+    var mq = window.matchMedia("(prefers-color-scheme: dark)");
+    var onScheme = function () {
+      thumbCache = {};
+      if (document.getElementById("cards")) renderCards();
+    };
+    if (mq.addEventListener) mq.addEventListener("change", onScheme);
+    else if (mq.addListener) mq.addListener(onScheme);
   }
 
   /* --------------------------------------------------------------- home */
@@ -133,14 +161,46 @@
     renderCards();
   }
 
+  function clearAll() {
+    state.q = ""; state.subject = "All";
+    var search = document.getElementById("search");
+    if (search) search.value = "";
+    var filters = document.getElementById("filters");
+    if (filters) {
+      filters.querySelectorAll(".chip").forEach(function (c) {
+        c.setAttribute("aria-pressed", String(c.textContent === "All"));
+      });
+    }
+    renderCards();
+  }
+
   function renderCards() {
     var host = document.getElementById("cards");
     var empty = document.getElementById("empty");
+    var count = document.getElementById("count");
     if (!host) return;
     host.innerHTML = "";
 
     var found = matches();
+    var filtered = state.q || state.subject !== "All";
+
+    // Say how many matched. Without this the grid just silently changes
+    // length and there is nothing for a screen reader to announce.
+    if (count) {
+      count.textContent = !filtered
+        ? TOPICS.length + (TOPICS.length === 1 ? " topic" : " topics")
+        : found.length + " of " + TOPICS.length + " topics";
+    }
+
     empty.hidden = found.length > 0;
+    if (!found.length) {
+      empty.textContent = "No topic matches that yet — the collection grows each week. ";
+      var btn = document.createElement("button");
+      btn.type = "button";
+      btn.textContent = "Clear search and filters";
+      btn.addEventListener("click", clearAll);
+      empty.appendChild(btn);
+    }
 
     found.forEach(function (t) {
       var a = document.createElement("a");
@@ -190,9 +250,16 @@
     return out;
   }
 
+  function renderMissing(id) {
+    view.innerHTML = "";
+    view.appendChild(tpl("tpl-missing"));
+    view.querySelector("[data-wanted]").textContent = "#/" + id;
+    document.title = "Topic not found — IB HL Visualisations";
+  }
+
   function renderTopic(id) {
     var t = TOPICS.filter(function (x) { return x.id === id; })[0];
-    if (!t) { location.hash = "#/"; return; }
+    if (!t) { renderMissing(id); return; }
 
     view.innerHTML = "";
     view.appendChild(tpl("tpl-topic"));
@@ -209,10 +276,12 @@
     document.title = t.title + " — IB HL Visualisations";
 
     var copyBtn = document.getElementById("copy-btn");
+    var copyStatus = document.getElementById("copy-status");
     copyBtn.addEventListener("click", function () {
       navigator.clipboard.writeText(t.source).then(function () {
         copyBtn.textContent = "Copied ✓";
-        setTimeout(function () { copyBtn.textContent = "Copy"; }, 1600);
+        copyStatus.textContent = "Source copied to clipboard.";
+        setTimeout(function () { copyBtn.textContent = "Copy"; copyStatus.textContent = ""; }, 1600);
       }, function () {
         // clipboard blocked (some browsers over file://) - select it instead
         var r = document.createRange();
@@ -220,7 +289,8 @@
         var sel = window.getSelection();
         sel.removeAllRanges(); sel.addRange(r);
         copyBtn.textContent = "Selected — press Ctrl+C";
-        setTimeout(function () { copyBtn.textContent = "Copy"; }, 2600);
+        copyStatus.textContent = "Clipboard unavailable. The source is selected; press Control C to copy.";
+        setTimeout(function () { copyBtn.textContent = "Copy"; copyStatus.textContent = ""; }, 2600);
       });
     });
 
@@ -232,6 +302,14 @@
       document.body.appendChild(a); a.click(); a.remove();
       setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
     });
+
+    // A topic without a browser port still gets a page - but it gets it
+    // without an empty canvas sitting under a "Try it" heading.
+    if (!window.hasDemo || !window.hasDemo(t.demo)) {
+      var panel = document.getElementById("demo-panel");
+      if (panel) panel.remove();
+      return;
+    }
 
     active = window.mountDemo(
       t.demo,
@@ -252,7 +330,27 @@
     } else {
       renderTopic(hash);
     }
+
+    // Move focus to the new heading so the view change is announced instead
+    // of leaving a keyboard user stranded at the top of the document.
+    if (booted) {
+      var h = view.querySelector("h1[tabindex]");
+      if (h) h.focus();
+    }
+    booted = true;
   }
+
+  // "/" jumps to the search box, the way most doc sites behave.
+  document.addEventListener("keydown", function (e) {
+    if (e.key !== "/" || e.ctrlKey || e.metaKey || e.altKey) return;
+    var el = document.activeElement, tag = el && el.tagName;
+    if (tag === "INPUT" || tag === "TEXTAREA" || (el && el.isContentEditable)) return;
+    var search = document.getElementById("search");
+    if (!search) return;
+    e.preventDefault();
+    search.focus();
+    search.select();
+  });
 
   window.addEventListener("hashchange", route);
   route();
