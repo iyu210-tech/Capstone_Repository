@@ -1,0 +1,25 @@
+# Render Blueprint. Render -> New -> Blueprint, point it at this repo, and the
+# service below is created with these settings already filled in.
+services:
+  - type: web
+    name: ib-hl-visualisations
+    runtime: python
+    plan: free
+    region: singapore
+    branch: main
+    # No pip install: build_site.py is stdlib only. requirements.txt is for
+    # running the topic scripts locally and would drag matplotlib, scipy and
+    # jupyter into an image that only serves files.
+    buildCommand: python build_site.py
+    startCommand: python server.py
+    healthCheckPath: /
+    autoDeploy: true
+    # Both are browser-visible by design - server.py writes them into
+    # auth-config.js, which every visitor downloads. Set them here only so the
+    # repo can point at a different Supabase project than local does. Never put
+    # the service_role / sb_secret key in this list.
+    envVars:
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_PUBLISHABLE_KEY
+        sync: false
