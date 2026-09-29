@@ -713,6 +713,22 @@ canvas {
 }
 @media (hover: none) { .search-hint { display: none; } }
 
+/* previous / next / related ----------------------------------------------- */
+.topic-nav { margin-top: 2rem; }
+.prev-next { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.prev-next a, .related-link {
+  display: block; text-decoration: none; color: var(--ink);
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: .8rem 1rem;
+}
+.prev-next a:hover, .related-link:hover { border-color: var(--accent); }
+.prev-next .next { grid-column: 2; text-align: right; }
+.prev-next small, .related-link small { display: block; color: var(--ink-soft); font-size: .78rem; }
+.topic-nav h2 { font-size: .95rem; text-transform: uppercase; letter-spacing: .05em; color: var(--ink-soft); margin: 1.5rem 0 .6rem; }
+.related { list-style: none; padding: 0; margin: 0; display: grid; gap: .6rem; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
+@media (max-width: 560px) { .prev-next { grid-template-columns: 1fr; } .prev-next .next { grid-column: 1; } }
+@media print { .topic-nav { display: none !important; } }
+
 /* progress and sharing --------------------------------------------------- */
 /* Deliberately plain: built from the existing .btn / .chip / .ctl-row pieces
    so it sits in whatever look the rest of the site has. */

@@ -336,6 +336,67 @@
     return out;
   }
 
+  /* Where to go next. Previous/next follow the collection's order (the
+     order topics were written in), and "related" ranks by shared tags - a
+     cheap signal, but the tags are written as the questions a stuck student
+     asks, so topics that share them tend to share the confusion too. */
+  function related(t, n) {
+    var mine = {};
+    t.tags.forEach(function (tag) { mine[tag.toLowerCase()] = true; });
+    return TOPICS.filter(function (x) { return x.id !== t.id; })
+      .map(function (x) {
+        var shared = x.tags.filter(function (tag) { return mine[tag.toLowerCase()]; }).length;
+        return { t: x, score: shared + (x.subject === t.subject ? 0.5 : 0) };
+      })
+      .filter(function (r) { return r.score >= 1; })
+      .sort(function (a, b) { return b.score - a.score; })
+      .slice(0, n)
+      .map(function (r) { return r.t; });
+  }
+
+  function topicLink(x, cls, lead) {
+    var a = document.createElement("a");
+    a.className = cls;
+    a.href = "#/" + x.id;
+    if (lead) {
+      var small = document.createElement("small");
+      small.textContent = lead;
+      a.appendChild(small);
+    }
+    var strong = document.createElement("span");
+    strong.textContent = x.title;
+    a.appendChild(strong);
+    return a;
+  }
+
+  function topicNav(t) {
+    var nav = document.createElement("nav");
+    nav.className = "topic-nav";
+    nav.setAttribute("aria-label", "More topics");
+
+    var i = TOPICS.indexOf(t);
+    var pn = document.createElement("div");
+    pn.className = "prev-next";
+    if (i > 0) pn.appendChild(topicLink(TOPICS[i - 1], "prev", "← Previous"));
+    if (i < TOPICS.length - 1) pn.appendChild(topicLink(TOPICS[i + 1], "next", "Next →"));
+    nav.appendChild(pn);
+
+    var rel = related(t, 3);
+    if (rel.length) {
+      var h = document.createElement("h2");
+      h.textContent = "Related topics";
+      var ul = document.createElement("ul");
+      ul.className = "related";
+      rel.forEach(function (x) {
+        var li = document.createElement("li");
+        li.appendChild(topicLink(x, "related-link", x.subject));
+        ul.appendChild(li);
+      });
+      nav.append(h, ul);
+    }
+    return nav;
+  }
+
   function renderMissing(id) {
     view.innerHTML = "";
     view.appendChild(tpl("tpl-missing"));
@@ -394,6 +455,8 @@
       document.body.appendChild(a); a.click(); a.remove();
       setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
     });
+
+    view.querySelector(".topic").appendChild(topicNav(t));
 
     // A topic without a browser port still gets a page - but it gets it
     // without an empty canvas sitting under a "Try it" heading.
