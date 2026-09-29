@@ -1773,6 +1773,12 @@
     orbitals: demoOrbitals
   };
 
+  // app.js asks this before mounting, so a topic without a browser port gets
+  // a page without an empty canvas. Removing it silently disables every demo.
+  window.hasDemo = function (name) {
+    return !!(name && BUILDERS[name]);
+  };
+
   window.mountDemo = function (name, canvas, controls, readout) {
     var build = BUILDERS[name];
     if (!build) return null;
@@ -1831,7 +1837,8 @@
       destroy: function () {
         stopped = true;
         if (raf) cancelAnimationFrame(raf);
-        window.removeEventListener("resize", onResize);
+        if (io) io.disconnect();
+        if (ro) ro.disconnect(); else window.removeEventListener("resize", onResize);
         if (demo.destroy) demo.destroy();
       }
     };
