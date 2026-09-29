@@ -1833,10 +1833,24 @@
       window.addEventListener("resize", onResize);
     }
 
+    // Every colour is read from CSS at draw time, so a paused demo keeps the
+    // old theme's ink on the new theme's ground until something redraws it -
+    // near-invisible axes after the OS flips to dark mode at sunset.
+    var scheme = window.matchMedia ? window.matchMedia("(prefers-color-scheme: dark)") : null;
+    function onScheme() { demo.draw(); }
+    if (scheme) {
+      if (scheme.addEventListener) scheme.addEventListener("change", onScheme);
+      else if (scheme.addListener) scheme.addListener(onScheme);
+    }
+
     return {
       destroy: function () {
         stopped = true;
         if (raf) cancelAnimationFrame(raf);
+        if (scheme) {
+          if (scheme.removeEventListener) scheme.removeEventListener("change", onScheme);
+          else if (scheme.removeListener) scheme.removeListener(onScheme);
+        }
         if (io) io.disconnect();
         if (ro) ro.disconnect(); else window.removeEventListener("resize", onResize);
         if (demo.destroy) demo.destroy();
