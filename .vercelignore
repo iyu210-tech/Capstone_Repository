@@ -1,0 +1,12 @@
+# Vercel picks a runtime by sniffing the repo, and this is a static site - the
+# build just regenerates docs/topics.js and Vercel serves the folder.
+#
+# Without these two lines it finds server.py in its entrypoint list and tries
+# to run the repo as a Python serverless function, which fails the build with
+# "No python entrypoint found". server.py is for Render, where a long-running
+# process makes sense; on Vercel there is no server to run.
+server.py
+
+# Only the topic scripts need matplotlib/scipy/jupyter. build_site.py is
+# stdlib, and leaving this visible is the other half of the runtime sniffing.
+requirements.txt

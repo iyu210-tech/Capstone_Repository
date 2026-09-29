@@ -5,61 +5,131 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>IB HL Visualisations</title>
 <meta name="description" content="Runnable Python visualisations for hard IB Higher Level topics in Maths, Physics and Chemistry.">
+<meta name="theme-color" content="#b4341f" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14140f" media="(prefers-color-scheme: dark)">
+<link rel="canonical" href="https://iyu210-tech.github.io/Capstone_Repository/">
+
+<!-- Link previews. Without these the capstone shares as a blank grey card. -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="IB HL Visualisations">
+<meta property="og:title" content="Hard IB topics you can run">
+<meta property="og:description" content="Interactive visualisations of difficult IB Higher Level Maths, Physics and Chemistry topics - play with them in the browser, then download the Python.">
+<meta property="og:url" content="https://iyu210-tech.github.io/Capstone_Repository/">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Hard IB topics you can run">
+<meta name="twitter:description" content="Interactive visualisations of difficult IB Higher Level Maths, Physics and Chemistry topics.">
+
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23b4341f'/%3E%3Ctext x='16' y='24' font-size='23' font-family='Georgia,serif' fill='%23fff' text-anchor='middle'%3E%E2%88%AB%3C/text%3E%3C/svg%3E">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
+<a class="skip-link" href="#view">Skip to content</a>
+
 <header class="site-head">
   <a class="brand" href="#/">
-    <span class="brand-mark">∫</span>
+    <span class="brand-mark" aria-hidden="true">&#8747;</span>
     <span>
       <strong>IB HL Visualisations</strong>
       <small>Hard topics, made runnable</small>
     </span>
   </a>
-  <a class="ghost-btn" href="https://github.com/iyu210-tech/Capstone_Repository" target="_blank" rel="noopener">GitHub ↗</a>
+  <nav class="head-actions">
+    <a class="ghost-btn" href="https://github.com/iyu210-tech/Capstone_Repository" target="_blank" rel="noopener">GitHub &#8599;</a>
+    <!-- Filled by auth.js: a "Sign in" button, or the account name plus "Sign out". -->
+    <div id="account" class="account"></div>
+  </nav>
 </header>
 
-<main id="view"></main>
+<main id="view" tabindex="-1">
+  <!-- Replaced by the first route. Exists so a cold load shows structure
+       rather than a white page while topics.js / app.js parse. -->
+  <div class="skeleton" aria-hidden="true">
+    <div class="sk sk-title"></div>
+    <div class="sk sk-text"></div>
+    <div class="sk sk-text short"></div>
+    <div class="sk sk-search"></div>
+    <div class="sk-cards">
+      <div class="sk sk-card"></div>
+      <div class="sk sk-card"></div>
+      <div class="sk sk-card"></div>
+    </div>
+  </div>
+  <noscript>
+    <div class="noscript">
+      <h2>This page needs JavaScript</h2>
+      <p>The interactive animations and the search run entirely in your browser,
+         so there is nothing to show without JavaScript enabled.</p>
+      <p>Every topic is still readable as plain Python on
+         <a href="https://github.com/iyu210-tech/Capstone_Repository">the GitHub
+         repository</a> &mdash; each folder holds a script, a notebook with the
+         graphs already saved, and a README explaining the concept.</p>
+    </div>
+  </noscript>
+</main>
+
+<!-- Phone navigation. Hidden above 720px, where the header has room for the
+     same actions. The account tab defers to the header button so auth.js stays
+     the only owner of the sign-in flow. -->
+<nav class="mobile-nav" aria-label="Main">
+  <a class="mnav-item" data-route="home" href="#/">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10.5 12 4l8 6.5V20a1 1 0 0 1-1 1h-4v-6H9v6H5a1 1 0 0 1-1-1z"/></svg>
+    <span>Topics</span>
+  </a>
+  <button type="button" class="mnav-item" id="mnav-search">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg>
+    <span>Search</span>
+  </button>
+  <button type="button" class="mnav-item" id="mnav-account">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8.5" r="3.75"/><path d="M4.5 20c.9-4 3.9-6 7.5-6s6.6 2 7.5 6"/></svg>
+    <span id="mnav-account-label">Sign in</span>
+  </button>
+  <a class="mnav-item" href="https://github.com/iyu210-tech/Capstone_Repository" target="_blank" rel="noopener">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 19c-4 1.4-4-2.2-6-2.7m12 5.3v-3.9c0-1.1.1-1.6-.6-2.2 3-.3 5.6-1.5 5.6-6.2A4.8 4.8 0 0 0 18.7 5 4.5 4.5 0 0 0 18.4 1s-1.2-.3-3.9 1.5a13 13 0 0 0-7 0C4.8.7 3.6 1 3.6 1a4.5 4.5 0 0 0-.3 4A4.8 4.8 0 0 0 2 9.3c0 4.7 2.6 5.9 5.6 6.2-.7.6-.7 1.2-.6 2.2V21"/></svg>
+    <span>GitHub</span>
+  </a>
+</nav>
 
 <footer class="site-foot">
-  <p>Capstone project by Ian Yu — Maths AA HL, Physics HL, Chemistry HL.
+  <p>Capstone project by Ian Yu &mdash; Maths AA HL, Physics HL, Chemistry HL.
      Every animation here is a browser port of the Python in the same folder.</p>
 </footer>
 
 <!-- templates ------------------------------------------------------------ -->
 <template id="tpl-home">
   <section class="hero">
-    <h1>Hard IB topics you can <em>run</em>.</h1>
+    <h1 tabindex="-1">Hard IB topics you can <em>run</em>.</h1>
     <p>Each topic is a small, self-contained Python program that makes one
        difficult idea visible. Play with it here in the browser, then download
        the code and change the numbers yourself.</p>
   </section>
 
   <section class="controls">
+    <label class="sr-only" for="search">Search topics</label>
     <input id="search" type="search" placeholder="Search topics, e.g. &ldquo;why does heating speed up a reaction&rdquo;" autocomplete="off">
-    <div id="filters" class="filters"></div>
+    <div id="filters" class="filters" role="group" aria-label="Filter by subject"></div>
   </section>
 
+  <p id="count" class="count" role="status" aria-live="polite"></p>
   <section id="cards" class="cards"></section>
-  <p id="empty" class="empty" hidden>No topic matches that yet — the collection grows each week.</p>
+  <p id="empty" class="empty" hidden></p>
 </template>
 
 <template id="tpl-topic">
-  <a class="back" href="#/">← All topics</a>
+  <a class="back" href="#/">&#8592; All topics</a>
   <article class="topic">
     <header class="topic-head">
       <span class="pill" data-subject></span>
-      <h1 data-title></h1>
+      <h1 data-title tabindex="-1"></h1>
       <p class="syllabus" data-syllabus></p>
     </header>
 
     <section class="panel">
       <h2>Explore</h2>
       <div class="demo">
-        <canvas id="stage" width="900" height="480"></canvas>
+        <canvas id="stage" width="900" height="480" role="img" aria-label="Interactive plot"></canvas>
         <div id="demo-controls" class="demo-controls"></div>
-        <p id="demo-readout" class="readout"></p>
+        <p id="demo-readout" class="readout" aria-live="off"></p>
       </div>
     </section>
 
@@ -86,18 +156,81 @@
          simplified version. Run it with
          <code>pip install -r requirements.txt</code> and you get the same
          figures as the animation above.</p>
-      <pre class="code"><code id="source"></code></pre>
+      <pre class="code" tabindex="0"><code id="source"></code></pre>
       <p class="hint">
         Prefer a notebook? <a data-notebook target="_blank" rel="noopener">View on GitHub</a>
-        · <a data-colab target="_blank" rel="noopener">Open in Colab</a>
+        &middot; <a data-colab target="_blank" rel="noopener">Open in Colab</a>
         (runs in the browser, nothing to install).
       </p>
+      <p class="sr-only" id="copy-status" role="status" aria-live="polite"></p>
     </section>
   </article>
 </template>
 
+<template id="tpl-missing">
+  <section class="notfound">
+    <h1 tabindex="-1">That topic is not here</h1>
+    <p>Nothing in the collection matches <code data-wanted></code>. It may have
+       been renamed since the link was shared, or it may not be written yet
+       &mdash; the collection grows each week.</p>
+    <p><a href="#/">Browse all topics &#8594;</a></p>
+  </section>
+</template>
+
+<!-- sign in ---------------------------------------------------------------
+     One dialog for both routes. Google is offered first because it is one
+     click and needs no new password; email and password is there for anyone
+     who would rather not link a Google account. -->
+<dialog id="auth-dialog" class="auth-dialog" aria-labelledby="auth-title">
+  <form method="dialog" class="auth-close-form">
+    <button class="auth-close" aria-label="Close">&#10005;</button>
+  </form>
+
+  <h2 id="auth-title">Sign in</h2>
+  <p class="auth-lede">Every topic stays free to read and run either way &mdash;
+     an account just remembers you between visits.</p>
+
+  <p id="auth-setup" class="auth-setup" hidden>
+    Sign-in is not switched on yet: add the project URL and anon key to
+    <code>auth-config.js</code>, from Supabase &rarr; Project Settings &rarr; API.
+  </p>
+
+  <button type="button" id="auth-google" class="google-btn">
+    <svg class="google-mark" width="18" height="18" viewBox="0 0 18 18" aria-hidden="true">
+      <path fill="#4285F4" d="M17.64 9.2c0-.64-.06-1.25-.16-1.84H9v3.48h4.84a4.14 4.14 0 0 1-1.8 2.72v2.26h2.92c1.7-1.57 2.68-3.88 2.68-6.62z"/>
+      <path fill="#34A853" d="M9 18c2.43 0 4.47-.8 5.96-2.18l-2.92-2.26c-.8.54-1.84.86-3.04.86-2.34 0-4.32-1.58-5.03-3.7H.96v2.33A9 9 0 0 0 9 18z"/>
+      <path fill="#FBBC05" d="M3.97 10.72a5.4 5.4 0 0 1 0-3.44V4.95H.96a9 9 0 0 0 0 8.1l3.01-2.33z"/>
+      <path fill="#EA4335" d="M9 3.58c1.32 0 2.5.46 3.44 1.35l2.58-2.58C13.46.9 11.43 0 9 0A9 9 0 0 0 .96 4.95l3.01 2.33C4.68 5.16 6.66 3.58 9 3.58z"/>
+    </svg>
+    Continue with Google
+  </button>
+
+  <div class="auth-or" id="auth-or"><span>or</span></div>
+
+  <form id="auth-form" class="auth-form" novalidate>
+    <label for="auth-email">Email</label>
+    <input id="auth-email" type="email" autocomplete="email" required>
+
+    <label for="auth-password">Password</label>
+    <input id="auth-password" type="password" autocomplete="current-password" required minlength="6">
+
+    <button type="submit" id="auth-submit" class="btn primary auth-submit">Sign in</button>
+    <button type="button" id="auth-reset" class="linkish">Forgot your password?</button>
+  </form>
+
+  <p id="auth-msg" class="auth-msg" role="status" aria-live="polite" hidden></p>
+
+  <p class="auth-switch" id="auth-switch-row">
+    <span id="auth-switch-text">New here?</span>
+    <button type="button" id="auth-switch" class="linkish">Create an account</button>
+  </p>
+</dialog>
+
 <script src="topics.js"></script>
 <script src="demos.js"></script>
 <script src="app.js"></script>
+<script src="nav.js"></script>
+<script src="auth-config.js"></script>
+<script type="module" src="auth.js"></script>
 </body>
 </html>
