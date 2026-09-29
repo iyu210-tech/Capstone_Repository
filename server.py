@@ -51,6 +51,31 @@ def auth_config_js():
 mimetypes.add_type("application/javascript", ".js")
 mimetypes.add_type("text/css", ".css")
 mimetypes.add_type("image/svg+xml", ".svg")
+mimetypes.add_type("application/manifest+json", ".webmanifest")
+
+
+def content_security_policy():
+    """The CSP from vercel.json, so both hosts enforce one policy.
+
+    Kept in vercel.json because Vercel can only read headers from there;
+    reading it here means a change to the policy cannot reach one host and
+    not the other. If SUPABASE_URL points this server at a different
+    project, that project is added to connect-src - otherwise sign-in
+    would be blocked by the very policy meant to protect it.
+    """
+    try:
+        cfg = json.loads((Path(__file__).parent / "vercel.json").read_text(encoding="utf-8"))
+        csp = next(h["value"] for rule in cfg.get("headers", []) if rule.get("source") == "/(.*)"
+                   for h in rule["headers"] if h["key"] == "Content-Security-Policy")
+    except (OSError, ValueError, StopIteration):
+        return ""
+    if SUPABASE_URL and SUPABASE_URL not in csp:
+        ws = "wss://" + SUPABASE_URL.split("://", 1)[-1]
+        csp = csp.replace("connect-src ", "connect-src %s %s " % (SUPABASE_URL, ws), 1)
+    return csp
+
+
+CSP = content_security_policy()
 
 
 class Handler(SimpleHTTPRequestHandler):
@@ -117,6 +142,8 @@ class Handler(SimpleHTTPRequestHandler):
 
         self.send_header("X-Content-Type-Options", "nosniff")
         self.send_header("Referrer-Policy", "strict-origin-when-cross-origin")
+        if CSP:
+            self.send_header("Content-Security-Policy", CSP)
         super().end_headers()
 
     def log_message(self, fmt, *args):

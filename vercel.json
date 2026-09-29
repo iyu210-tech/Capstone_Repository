@@ -15,6 +15,10 @@
         {
           "key": "Referrer-Policy",
           "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "Content-Security-Policy",
+          "value": "default-src 'self'; script-src 'self' https://esm.sh 'sha256-ZAEwAr/NDQvgOwY8mqAvcVioiFjMXt7Kw9ra/MiLuSo=' 'sha256-XiToy2EYqQ7eatuX9XkwPSsCyNJhi3fuOBAdCDmx578='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self' https://esm.sh https://vilvxunldjqawkknphip.supabase.co wss://vilvxunldjqawkknphip.supabase.co; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'"
         }
       ]
     },

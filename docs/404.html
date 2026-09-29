@@ -10,17 +10,24 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23b4341f'/%3E%3Ctext x='16' y='24' font-size='23' font-family='Georgia,serif' fill='%23fff' text-anchor='middle'%3E%E2%88%AB%3C/text%3E%3C/svg%3E">
 <!-- A 404 can be served for any URL depth, so relative paths would resolve
      against the wrong folder, and "/" is wrong on GitHub Pages, where the
-     site lives under /Capstone_Repository/. This works out the site root
-     before the stylesheet is requested. Vercel and Render serve at "/". -->
+     site lives under /Capstone_Repository/. This works out the site root and
+     only then adds the stylesheet - a plain <link> would be fetched by the
+     preload scanner from the wrong folder before this ran. Vercel and Render
+     serve at "/". Its hash is in the CSP (vercel.json); tests/test_csp.py
+     says what to paste there if this changes. -->
 <script>
   (function () {
     var m = location.pathname.match(/^\/Capstone_Repository\//i);
     var base = document.createElement("base");
     base.href = m ? m[0] : "/";
     document.head.appendChild(base);
+    var css = document.createElement("link");
+    css.rel = "stylesheet";
+    css.href = "style.css";
+    document.head.appendChild(css);
   })();
 </script>
-<link rel="stylesheet" href="style.css">
+<noscript><link rel="stylesheet" href="/style.css"></noscript>
 </head>
 <body>
 
