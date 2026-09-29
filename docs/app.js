@@ -394,7 +394,11 @@
     } else if (!id || known(id)) {
       // An old #/<id> link becomes the page's own URL, so the next copy of
       // it is the good one. An unknown id keeps its hash for "not here".
-      go(id, true);
+      // Not until the parser is done, though: the scripts after this one
+      // resolve their relative src against the address bar, and would 404.
+      var fix = function () { go(id, true); };
+      if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", fix);
+      else fix();
     }
     if (id === shown) return;
     shown = id;
