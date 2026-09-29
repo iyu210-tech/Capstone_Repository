@@ -587,7 +587,7 @@ main { flex: 1; width: 100%; max-width: var(--page); margin: 0 auto; padding: 0 
 .notfound { padding: var(--space-8) 0; max-width: 36rem; }
 .notfound h1 { font: 600 var(--step-4)/1.1 var(--font-prose); margin: 0 0 var(--space-4); letter-spacing: -.02em; }
 .notfound p { color: var(--ink-soft); margin: 0 0 var(--space-5); font: 1.1rem/1.6 var(--font-prose); }
-.notfound code, .hint code, .prose code, .try-list code, .quiz code {
+.notfound code, .hint code, .prose code, .try-list code, .quiz code, .eq figcaption code {
   font-size: .86em; background: var(--code-bg); border: 1px solid var(--border);
   border-radius: 4px; padding: .05rem .3rem;
 }
@@ -789,6 +789,11 @@ main { flex: 1; width: 100%; max-width: var(--page); margin: 0 auto; padding: 0 
 .quiz details[open] summary .reveal { color: var(--ink-soft); }
 .quiz .answer { margin: 0; padding: 0 var(--space-5) var(--space-4) calc(var(--space-5) + 2.2rem); font: 1.05rem/1.65 var(--font-prose); color: var(--ink-soft); }
 .quiz details[open] { border-color: var(--accent); }
+@media (max-width: 560px) {
+  .quiz summary { grid-template-columns: auto 1fr; padding: var(--space-3) var(--space-4); }
+  .quiz summary .reveal { grid-column: 2; justify-self: start; }
+  .quiz .answer { padding: 0 var(--space-4) var(--space-4) calc(var(--space-4) + 2.2rem); }
+}
 
 /* code ------------------------------------------------------------------ */
 .hint { color: var(--ink-soft); font-size: var(--step--1); margin: 0 0 var(--space-3); }

@@ -678,6 +678,22 @@
     });
   }
 
+  // topics.json marks code the README way, with `backticks`. Built from text
+  // nodes, never innerHTML, so nothing in the file can inject markup.
+  function inline(el, text) {
+    String(text).split("`").forEach(function (part, i) {
+      if (!part) return;
+      if (i % 2) {
+        var c = document.createElement("code");
+        c.textContent = part;
+        el.appendChild(c);
+      } else {
+        el.appendChild(document.createTextNode(part));
+      }
+    });
+    return el;
+  }
+
   // try_changing, equations and questions are optional in topics.json.
   // Each section stays hidden until a topic has something to put in it.
   function renderExtras(t) {
@@ -693,7 +709,7 @@
         tex.textContent = e.tex;
         tex.dataset.tex = e.tex;
         var cap = document.createElement("figcaption");
-        cap.textContent = e.caption;
+        inline(cap, e.caption);
         fig.append(tex, cap);
         host.appendChild(fig);
       });
@@ -706,7 +722,7 @@
       var ul = view.querySelector("[data-try]");
       tries.forEach(function (x) {
         var li = document.createElement("li");
-        li.textContent = x;
+        inline(li, x);
         ul.appendChild(li);
       });
       view.querySelector('[data-block="try"]').hidden = false;
@@ -722,7 +738,7 @@
         num.className = "qn";
         num.textContent = "Q" + (i + 1);
         var text = document.createElement("span");
-        text.textContent = q.q;
+        inline(text, q.q);
         var reveal = document.createElement("span");
         reveal.className = "reveal";
         reveal.setAttribute("aria-hidden", "true");
@@ -730,7 +746,7 @@
         s.append(num, text, reveal);
         var a = document.createElement("p");
         a.className = "answer";
-        a.textContent = q.a;
+        inline(a, q.a);
         d.append(s, a);
         d.addEventListener("toggle", function () {
           reveal.textContent = d.open ? "Hide" : "Show answer";
