@@ -1,4 +1,5 @@
-"""Taylor series visualisation (IB Maths AA HL - AHL 5.19: Maclaurin series).
+"""Taylor series visualisation
+(IB Maths AA HL, first assessment 2021 - AHL 5.19: Maclaurin series).
 
 Idea: a Maclaurin polynomial is the "best possible" polynomial copy of a
 function near x = 0. Adding terms widens the region where the copy is good -
