@@ -9,10 +9,10 @@
  * Only same-origin GETs are touched. Supabase and the sign-in library are
  * cross-origin and pass straight through: offline, sign-in is simply off.
  */
-var CACHE = "ib-hl-v1";
+var CACHE = "ib-hl-v2";
 
-// The shell a first offline visit needs. Topic pages and anything else are
-// added as they are visited.
+// The shell a first offline visit needs; topic pages come from the sitemap
+// below, and anything else is added as it is visited.
 var CORE = [
   "./",
   "index.html",
@@ -27,15 +27,30 @@ var CORE = [
   "auth.js",
   "404.html",
   "icon.svg",
-  "manifest.webmanifest"
+  "manifest.webmanifest",
+  "sitemap.xml"
 ];
+
+// Every topic page too, so a topic never opened online still opens offline.
+// The build lists them in sitemap.xml; its URLs carry the canonical host, so
+// only the t/<id>/ tail is kept and resolved against this worker's scope.
+function topicPages() {
+  return fetch("sitemap.xml", { cache: "reload" }).then(function (res) {
+    return res.ok ? res.text() : "";
+  }).then(function (xml) {
+    var out = [], re = /\/t\/([^/<\s]+)\//g, m;
+    while ((m = re.exec(xml))) out.push("t/" + m[1] + "/");
+    return out;
+  }, function () { return []; });
+}
 
 self.addEventListener("install", function (event) {
   event.waitUntil(
-    caches.open(CACHE).then(function (cache) {
+    Promise.all([caches.open(CACHE), topicPages()]).then(function (r) {
+      var cache = r[0];
       // One missing file must not abort the whole install, or a single
       // renamed script would switch offline support off without a word.
-      return Promise.all(CORE.map(function (url) {
+      return Promise.all(CORE.concat(r[1]).map(function (url) {
         return cache.add(new Request(url, { cache: "reload" })).catch(function () {});
       }));
     }).then(function () { return self.skipWaiting(); })
@@ -69,7 +84,11 @@ self.addEventListener("fetch", function (event) {
       // so an offline ?setup=... link still finds the cached page.
       return caches.match(req, { ignoreSearch: true }).then(function (hit) {
         if (hit) return hit;
-        if (req.mode === "navigate") return caches.match("index.html");
+        // Only the home page can stand in for itself: served at a topic's
+        // URL, index.html would look for its scripts one folder too deep.
+        if (req.mode === "navigate" && url.pathname === new URL("./", self.location).pathname) {
+          return caches.match("index.html");
+        }
         return Response.error();
       });
     })
