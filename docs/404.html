@@ -8,12 +8,24 @@
 <meta name="theme-color" content="#b4341f" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#14140f" media="(prefers-color-scheme: dark)">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23b4341f'/%3E%3Ctext x='16' y='24' font-size='23' font-family='Georgia,serif' fill='%23fff' text-anchor='middle'%3E%E2%88%AB%3C/text%3E%3C/svg%3E">
-<link rel="stylesheet" href="/style.css">
+<!-- A 404 can be served for any URL depth, so relative paths would resolve
+     against the wrong folder, and "/" is wrong on GitHub Pages, where the
+     site lives under /Capstone_Repository/. This works out the site root
+     before the stylesheet is requested. Vercel and Render serve at "/". -->
+<script>
+  (function () {
+    var m = location.pathname.match(/^\/Capstone_Repository\//i);
+    var base = document.createElement("base");
+    base.href = m ? m[0] : "/";
+    document.head.appendChild(base);
+  })();
+</script>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <header class="site-head">
-  <a class="brand" href="/">
+  <a class="brand" href="./">
     <span class="brand-mark" aria-hidden="true">&#8747;</span>
     <span>
       <strong>IB HL Visualisations</strong>
@@ -31,7 +43,7 @@
     <h1>That page is not here</h1>
     <p>The link may be out of date, or the topic may have been renamed since it
        was shared &mdash; the collection grows each week.</p>
-    <p><a href="/">Browse all topics &#8594;</a></p>
+    <p><a href="./">Browse all topics &#8594;</a></p>
   </section>
 </main>
 
