@@ -543,6 +543,11 @@
       if (h) h.focus();
     }
     booted = true;
+
+    // pushState navigations fire no event of their own, so anything outside
+    // the router that cares which page is showing (nav.js's current tab)
+    // hears it from here instead of guessing from hashchange.
+    window.dispatchEvent(new CustomEvent("routechange", { detail: { id: id } }));
   }
 
   // "/" jumps to the search box, the way most doc sites behave.

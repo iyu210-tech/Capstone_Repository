@@ -32,6 +32,7 @@ if (!/\/(index\.html)?$/.test(location.pathname)) location.replace(location.path
 <meta name="twitter:image" content="https://iyu210-tech.github.io/Capstone_Repository/og/maxwell-boltzmann.png">
 
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23b4341f'/%3E%3Ctext x='16' y='24' font-size='23' font-family='Georgia,serif' fill='%23fff' text-anchor='middle'%3E%E2%88%AB%3C/text%3E%3C/svg%3E">
+<link rel="manifest" href="../../manifest.webmanifest">
 <link rel="stylesheet" href="../../style.css">
 </head>
 <body>
@@ -119,6 +120,7 @@ if (!/\/(index\.html)?$/.test(location.pathname)) location.replace(location.path
   <section class="controls">
     <label class="sr-only" for="search">Search topics</label>
     <input id="search" type="search" placeholder="Search topics, e.g. &ldquo;why does heating speed up a reaction&rdquo;" autocomplete="off">
+    <p class="search-hint" aria-hidden="true">Press <kbd>/</kbd> from anywhere to jump here.</p>
     <div id="filters" class="filters" role="group" aria-label="Filter by subject"></div>
   </section>
 
@@ -242,6 +244,8 @@ if (!/\/(index\.html)?$/.test(location.pathname)) location.replace(location.path
 <script src="../../demos.js"></script>
 <script src="../../app.js"></script>
 <script src="../../nav.js"></script>
+<script src="../../share.js"></script>
+<script src="../../progress.js"></script>
 <script src="../../auth-config.js"></script>
 <script type="module" src="../../auth.js"></script>
 </body>

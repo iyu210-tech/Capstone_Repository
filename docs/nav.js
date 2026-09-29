@@ -29,8 +29,12 @@
   var links = nav.querySelectorAll("[data-route]");
 
   // A tab is current when the route it points at is the route being shown.
-  function sync() {
-    var home = !location.hash.replace(/^#\/?/, "");
+  function sync(e) {
+    // The router says which topic is showing; before it has spoken, fall
+    // back to reading the URL in either shape it uses (#/<id> or t/<id>/).
+    var id = e && e.detail ? e.detail.id
+      : (/^#\/./.test(location.hash) || /\/t\/[^/]+\/?$/.test(location.pathname));
+    var home = !id;
     links.forEach(function (el) {
       var on = (el.dataset.route === "home") === home;
       el.classList.toggle("is-on", on);
@@ -70,6 +74,6 @@
     if (btn) btn.click();
   });
 
-  window.addEventListener("hashchange", sync);
+  window.addEventListener("routechange", sync);
   sync();
 }());
