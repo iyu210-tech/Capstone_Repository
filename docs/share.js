@@ -87,9 +87,15 @@
     return p;
   }
 
+  // Drop a setup that no longer applies, leaving anything else in the query
+  // alone - the home page keeps its search there (?q=...&subject=...).
   function clearUrl() {
-    if (!location.search) return;
-    history.replaceState(history.state, "", location.pathname + location.hash);
+    var q = new URLSearchParams(location.search);
+    if (!q.has("setup")) return;
+    var keep = new URLSearchParams();
+    ["q", "subject"].forEach(function (k) { if (q.has(k)) keep.set(k, q.get(k)); });
+    var qs = keep.toString();
+    history.replaceState(history.state, "", location.pathname + (qs ? "?" + qs : "") + location.hash);
   }
 
   // Keep the address bar in step with the sliders, so copying it from the

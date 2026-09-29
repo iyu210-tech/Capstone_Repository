@@ -704,6 +704,15 @@ canvas {
 
 @media print { .mobile-nav { display: none !important; } }
 
+/* The "/" shortcut is only any use with a keyboard, so touch screens skip it. */
+.search-hint { margin: -.35rem 0 0; font-size: .78rem; color: var(--ink-soft); }
+.search-hint kbd {
+  font: 600 .75rem/1 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  border: 1px solid var(--border); border-bottom-width: 2px; border-radius: 4px;
+  padding: .1rem .35rem; background: var(--surface); color: var(--ink);
+}
+@media (hover: none) { .search-hint { display: none; } }
+
 /* progress and sharing --------------------------------------------------- */
 /* Deliberately plain: built from the existing .btn / .chip / .ctl-row pieces
    so it sits in whatever look the rest of the site has. */

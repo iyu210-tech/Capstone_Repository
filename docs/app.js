@@ -20,6 +20,31 @@
     + 'about at as by from if not so up down more less than then there here'
   ).split(' ');
 
+  // A stuck student types their own word for the idea, not ours. Each entry
+  // lets a query word also match the phrases listed, so "drag" finds the
+  // topic that says "air resistance" and "hot" finds "temperature". Keys are
+  // stems, so they are checked after the -ing/-ed/-s strip below too.
+  var SYNONYMS = {
+    drag: ["air resistance"], air: ["drag"], friction: ["drag", "air resistance"],
+    heat: ["temperature"], hot: ["temperature"], warm: ["temperature"], cold: ["temperature"],
+    fast: ["speed", "rate"], quick: ["rate"], speed: ["rate", "velocity"],
+    velocity: ["speed"], throw: ["projectile", "launch"], thrown: ["projectile"],
+    angle: ["launch angle"], polynomial: ["series"], approximat: ["approximation", "series"],
+    energy: ["activation energy", "kinetic"], electron: ["orbital", "configuration"],
+    shell: ["orbital", "subshell"], configuration: ["aufbau", "orbital"],
+    transition: ["d-block", "metal"], exception: ["chromium", "copper"]
+  };
+
+  function hit(hay, w) {
+    if (hay.indexOf(w) !== -1) return true;
+    // match the stem too, so 'heating' finds 'heat' and 'reactions' finds 'reaction'
+    var stem = w.replace(/(ing|ed|es|s)$/, "");
+    if (stem.length > 3 && hay.indexOf(stem) !== -1) return true;
+    var alts = SYNONYMS[w] || SYNONYMS[stem] || [];
+    for (var i = 0; i < alts.length; i++) if (hay.indexOf(alts[i]) !== -1) return true;
+    return false;
+  }
+
   function score(topic, q) {
     if (!q) return 1;
     var hay = [
@@ -34,12 +59,7 @@
     if (!words.length) return 1;
 
     var hits = 0;
-    for (var i = 0; i < words.length; i++) {
-      var w = words[i];
-      // match the stem too, so 'heating' finds 'heat' and 'reactions' finds 'reaction'
-      var stem = w.replace(/(ing|ed|es|s)$/, "");
-      if (hay.indexOf(w) !== -1 || (stem.length > 3 && hay.indexOf(stem) !== -1)) hits++;
-    }
+    for (var i = 0; i < words.length; i++) if (hit(hay, words[i])) hits++;
     return hits;
   }
 
@@ -167,9 +187,34 @@
   }
 
   /* --------------------------------------------------------------- home */
+  // The search lives in the query string (?q=...&subject=...) as well as in
+  // memory, so a reload, a shared link or Back from a topic all come back to
+  // the same filtered list rather than to an empty box.
+  function readSearchFromUrl() {
+    var params = new URLSearchParams(location.search);
+    if (params.has("q")) state.q = params.get("q");
+    if (params.has("subject")) state.subject = params.get("subject");
+  }
+
+  var urlTimer = null;
+  function writeSearchToUrl() {
+    clearTimeout(urlTimer);
+    urlTimer = setTimeout(function () {
+      if (!document.getElementById("cards")) return;   // left home meanwhile
+      var params = new URLSearchParams(location.search);
+      if (state.q) params.set("q", state.q); else params.delete("q");
+      if (state.subject !== "All") params.set("subject", state.subject);
+      else params.delete("subject");
+      var qs = params.toString();
+      history.replaceState(history.state, "",
+        location.pathname + (qs ? "?" + qs : "") + location.hash);
+    }, 300);
+  }
+
   function renderHome() {
     view.innerHTML = "";
     view.appendChild(tpl("tpl-home"));
+    readSearchFromUrl();
 
     var subjects = ["All"].concat(TOPICS.map(function (t) { return t.subject; })
       .filter(function (s, i, a) { return a.indexOf(s) === i; }));
@@ -223,6 +268,7 @@
 
     var found = matches();
     var filtered = state.q || state.subject !== "All";
+    writeSearchToUrl();
 
     // Say how many matched. Without this the grid just silently changes
     // length and there is nothing for a screen reader to announce.
