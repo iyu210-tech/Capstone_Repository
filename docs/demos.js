@@ -87,6 +87,9 @@
     return v || fallback;
   }
 
+  // Canvas text has no stylesheet, so the plot face is a token too.
+  function plotFont() { return cssVar("--plot-font", "system-ui, sans-serif"); }
+
   function roundRect(ctx, x, y, w, h, r) {
     ctx.beginPath();
     ctx.moveTo(x + r, y);
@@ -173,11 +176,11 @@
 
   Plot.prototype.frame = function () {
     var ctx = this.ctx, p = this.pad;
-    var ink = cssVar("--ink", "#000"), soft = cssVar("--ink-soft", "#666");
+    var ink = cssVar("--plot-ink", "#000"), soft = cssVar("--plot-label", "#666");
     var grid = cssVar("--plot-grid", "#ddd");
 
     ctx.clearRect(0, 0, this.w, this.h);
-    ctx.font = this.fs + "px ui-sans-serif, system-ui, sans-serif";
+    ctx.font = this.fs + "px " + plotFont();
     ctx.lineWidth = 1;
 
     ctx.strokeStyle = grid;
@@ -210,8 +213,8 @@
     ctx.fillText(this.fit(this.ylabel, this.h - p.t - p.b, this.ylabelShort), 0, 0);
     ctx.restore();
 
-    ctx.strokeStyle = ink;
-    ctx.globalAlpha = 0.35;
+    ctx.strokeStyle = cssVar("--plot-axis", ink);
+    ctx.globalAlpha = 0.75;
     ctx.beginPath();
     ctx.moveTo(p.l, p.t); ctx.lineTo(p.l, this.h - p.b); ctx.lineTo(this.w - p.r, this.h - p.b);
     ctx.stroke();
@@ -272,10 +275,10 @@
     var ctx = this.ctx;
     ctx.save();
     ctx.globalAlpha = 0.9;
-    ctx.fillStyle = cssVar("--surface", "#fff");
+    ctx.fillStyle = cssVar("--plot-plate", "#fff");
     roundRect(ctx, x, y, w, h, 6); ctx.fill();
     ctx.globalAlpha = 1;
-    ctx.strokeStyle = cssVar("--border", "#ddd");
+    ctx.strokeStyle = cssVar("--plot-grid-strong", "#ddd");
     ctx.lineWidth = 1;
     roundRect(ctx, x, y, w, h, 6); ctx.stroke();
     ctx.restore();
@@ -289,7 +292,7 @@
     ctx.beginPath(); ctx.moveTo(X, p.t); ctx.lineTo(X, this.h - p.b); ctx.stroke();
     ctx.setLineDash([]);
     if (label) {
-      ctx.font = "600 " + this.fs + "px ui-sans-serif, system-ui, sans-serif";
+      ctx.font = "600 " + this.fs + "px " + plotFont();
       var tw = ctx.measureText(label).width;
       var right = X + tw + 16 < this.w - p.r;
       var bx = right ? X + 6 : X - tw - 18;
@@ -315,7 +318,7 @@
   Plot.prototype.legend = function (items) {
     var ctx = this.ctx, p = this.pad, fs = this.fs, self = this;
     ctx.save();
-    ctx.font = fs + "px ui-sans-serif, system-ui, sans-serif";
+    ctx.font = fs + "px " + plotFont();
 
     var sw = 20, gap = 8, padX = 9, lh = fs + 8;
     var tw = 0;
@@ -335,7 +338,7 @@
       ctx.moveTo(x0 + padX, y); ctx.lineTo(x0 + padX + sw, y);
       ctx.stroke();
       ctx.setLineDash([]);
-      ctx.fillStyle = cssVar("--ink", "#000");
+      ctx.fillStyle = cssVar("--plot-ink", "#000");
       ctx.textAlign = "left"; ctx.textBaseline = "middle";
       ctx.fillText(it.label, x0 + padX + sw + gap, y);
       y += lh;
@@ -441,12 +444,12 @@
 
     function draw() {
       plot.frame();
-      plot.line(xs, exact, cssVar("--ink", "#000"), 2);
+      plot.line(xs, exact, cssVar("--plot-ink", "#000"), 2);
       var approx = xs.map(function (x) { return taylorSin(x, n); });
-      plot.line(xs, approx, cssVar("--accent", "#b4341f"), 2.5);
+      plot.line(xs, approx, cssVar("--plot-line", "#b4341f"), 2.5);
       plot.legend([
-        { label: "sin(x)", color: cssVar("--ink", "#000") },
-        { label: n + " term" + (n === 1 ? "" : "s"), color: cssVar("--accent", "#b4341f") }
+        { label: "sin(x)", color: cssVar("--plot-ink", "#000") },
+        { label: n + " term" + (n === 1 ? "" : "s"), color: cssVar("--plot-line", "#b4341f") }
       ]);
 
       var good = 0;
@@ -615,12 +618,12 @@
     function draw() {
       plot.frame();
       plot.line(vac.xs, vac.ys, cssVar("--plot-ref", "#999"), 1.5, [6, 5]);
-      plot.line(drag.xs, drag.ys, cssVar("--accent", "#b4341f"), 2.5);
+      plot.line(drag.xs, drag.ys, cssVar("--plot-line", "#b4341f"), 2.5);
 
       var idx = Math.min(drag.xs.length - 1, Math.floor(progress * (drag.xs.length - 1)));
-      plot.dot(drag.xs[idx], drag.ys[idx], cssVar("--accent", "#b4341f"), 6);
+      plot.dot(drag.xs[idx], drag.ys[idx], cssVar("--plot-line", "#b4341f"), 6);
       plot.legend([
-        { label: "with drag", color: cssVar("--accent", "#b4341f") },
+        { label: "with drag", color: cssVar("--plot-line", "#b4341f") },
         { label: "vacuum", color: cssVar("--plot-ref", "#999"), width: 1.5, dash: [6, 5] }
       ]);
 
@@ -765,10 +768,10 @@
       // --plot-fill, not --accent-soft: the old fill measured 1.1:1 against
       // the canvas, so the one thing this topic exists to show was invisible.
       plot.fillUnder(vs, ys, cssVar("--plot-fill", "rgba(180,52,31,.3)"), ve);
-      plot.line(vs, ys, cssVar("--accent", "#b4341f"), 2.5);
-      plot.vline(ve, cssVar("--ink", "#000"), "Ea = " + eaKJ + " kJ/mol");
+      plot.line(vs, ys, cssVar("--plot-line", "#b4341f"), 2.5);
+      plot.vline(ve, cssVar("--plot-ink", "#000"), "Ea = " + eaKJ + " kJ/mol");
       plot.legend([
-        { label: Math.round(T) + " K", color: cssVar("--accent", "#b4341f") },
+        { label: Math.round(T) + " K", color: cssVar("--plot-line", "#b4341f") },
         { label: "300 K / 500 K", color: cssVar("--plot-ref", "#999"), width: 1.5 }
       ]);
 
@@ -816,7 +819,9 @@
 
   var FILL_ORDER = AUFBAU.map(function (x) { return x[0] + x[1]; });
 
-  var BLOCK_COLORS = { s: "#b4341f", p: "#2f6f8f", d: "#c47a1a", f: "#5a6b3b" };
+  // CSS colours, not hex: the legend swatches then follow the theme (style.css
+  // --block-*), the same tokens that tint the periodic-table cells.
+  var BLOCK_COLORS = { s: "var(--block-s)", p: "var(--block-p)", d: "var(--block-d)", f: "var(--block-f)" };
 
   var PT_ELEMENTS = [
     { z: 1, sym: "H", row: 1, col: 1, block: "s" },
@@ -916,10 +921,10 @@
   function drawOrbitalShape(canvas, kind) {
     var fit = fitCanvas(canvas, 176);
     var g = fit.g, w = fit.w, h = fit.h;
-    var ink = cssVar("--ink", "#000");
-    var soft = cssVar("--ink-soft", "#666");
-    var accent = cssVar("--accent", "#b4341f");
-    var pCol = "#2f6f8f";
+    var ink = cssVar("--plot-ink", "#000");
+    var soft = cssVar("--plot-label", "#666");
+    var accent = cssVar("--plot-line", "#b4341f");
+    var pCol = cssVar("--block-p", "#2f6f8f");
     g.clearRect(0, 0, w, h);
     // Leave room for axis labels at the edges (esp. x on px).
     var cx = w / 2 - 2, cy = h / 2 + 4;
@@ -967,7 +972,7 @@
         var x2 = cx + a.dx * L;
         var y2 = cy + a.dy * L;
         g.fillStyle = hot ? ink : soft;
-        g.font = (hot ? "700 " : "600 ") + "12px ui-sans-serif, system-ui, sans-serif";
+        g.font = (hot ? "700 " : "600 ") + "12px " + plotFont();
         if (name === "x") {
           g.textAlign = "left";
           g.textBaseline = "middle";
@@ -1044,12 +1049,13 @@
   function drawDiagonalChart(canvas, fillStep) {
     var fit = fitCanvas(canvas, 460);
     var g = fit.g, w = fit.w, h = fit.h;
-    var ink = cssVar("--ink", "#000");
-    var soft = cssVar("--ink-soft", "#666");
-    var accent = cssVar("--accent", "#b4341f");
-    var border = cssVar("--border", "#ddd");
-    var surface = cssVar("--surface", "#fff");
+    var ink = cssVar("--plot-ink", "#000");
+    var soft = cssVar("--plot-label", "#666");
+    var accent = cssVar("--plot-line", "#b4341f");
+    var border = cssVar("--plot-grid-strong", "#ddd");
+    var surface = cssVar("--plot-cell", "#fff");
     var accentSoft = cssVar("--accent-soft", "#fbeeeb");
+    var onAccent = cssVar("--on-accent", "#fff");
     g.clearRect(0, 0, w, h);
 
     var diagonals = [
@@ -1071,10 +1077,13 @@
     fillOrder.forEach(function (k, i) { orderIndex[k] = i + 1; });
 
     var colOf = { s: 0, p: 1, d: 2, f: 3 };
-    var bw = 58, bh = 40;
-    var gapX = 26, gapY = 16;
+    // Tighter on a phone: at the desktop spacing the f column fell off a
+    // 300px-wide canvas.
+    var narrow = w < 420;
+    var bw = narrow ? 50 : 58, bh = 40;
+    var gapX = narrow ? 14 : 26, gapY = 16;
     var gridW = 4 * bw + 3 * gapX;
-    var left = Math.max(40, (w - gridW) / 2);
+    var left = Math.max(narrow ? 26 : 40, (w - gridW) / 2);
     var top = 28;
 
     var pos = {};
@@ -1132,7 +1141,7 @@
     });
 
     g.fillStyle = soft;
-    g.font = "600 12px ui-sans-serif, system-ui, sans-serif";
+    g.font = "600 12px " + plotFont();
     g.textAlign = "center";
     g.textBaseline = "bottom";
     ["s", "p", "d", "f"].forEach(function (letter, i) {
@@ -1141,7 +1150,7 @@
 
     g.textAlign = "right";
     g.textBaseline = "middle";
-    g.font = "600 11px ui-sans-serif, system-ui, sans-serif";
+    g.font = "600 11px " + plotFont();
     for (var n = 1; n <= 7; n++) {
       g.fillText(String(n), left - 14, top + (n - 1) * (bh + gapY) + bh / 2);
     }
@@ -1163,24 +1172,24 @@
       var by = p.y - 6;
       g.beginPath();
       g.arc(bx, by, 8, 0, Math.PI * 2);
-      g.fillStyle = st.cur ? "#fff" : accent;
+      g.fillStyle = st.cur ? onAccent : accent;
       g.globalAlpha = st.cur || st.done ? 1 : 0.85;
       g.fill();
       g.globalAlpha = 1;
-      g.fillStyle = st.cur ? accent : "#fff";
-      g.font = "700 8px ui-sans-serif, system-ui, sans-serif";
+      g.fillStyle = st.cur ? accent : onAccent;
+      g.font = "700 8px " + plotFont();
       g.textAlign = "center";
       g.textBaseline = "middle";
       g.fillText(String(ord), bx, by + 0.5);
 
-      g.fillStyle = st.cur ? "#fff" : ink;
-      g.font = "700 12px ui-sans-serif, system-ui, sans-serif";
+      g.fillStyle = st.cur ? onAccent : ink;
+      g.font = "700 12px " + plotFont();
       g.textAlign = "center";
       g.textBaseline = "middle";
       g.fillText(key, p.x + 6, p.y - 7);
 
-      g.fillStyle = st.cur ? "rgba(255,255,255,0.9)" : soft;
-      g.font = "600 9px ui-sans-serif, system-ui, sans-serif";
+      g.fillStyle = st.cur ? onAccent : soft;
+      g.font = "600 9px " + plotFont();
       g.fillText(els, p.x + 2, p.y + 10);
     });
   }
@@ -1196,7 +1205,9 @@
   }
 
   function demoOrbitals(ctx) {
-    var host = ctx.canvas.parentElement; // .demo
+    // The whole figure (.demo), not just the canvas's own wrapper: the
+    // walkthrough replaces the plot and its side panel together.
+    var host = ctx.canvas.closest(".demo") || ctx.canvas.parentElement;
     host.innerHTML = "";
     host.classList.add("orb-demo");
 
@@ -1314,9 +1325,9 @@
     function paintPair() {
       var fit = fitCanvas(pairCap, 140);
       var g = fit.g, w = fit.w, h = fit.h;
-      var ink = cssVar("--ink", "#000");
-      var soft = cssVar("--ink-soft", "#666");
-      var accent = cssVar("--accent", "#b4341f");
+      var ink = cssVar("--plot-ink", "#000");
+      var soft = cssVar("--plot-label", "#666");
+      var accent = cssVar("--plot-line", "#b4341f");
       g.clearRect(0, 0, w, h);
       var bx = w / 2 - 28, by = 24, bw = 56, bh = 90;
       g.strokeStyle = accent; g.lineWidth = 2.5;
@@ -1334,7 +1345,7 @@
       }
       if (paired >= 1) arrow(true, w / 2 - (paired === 2 ? 10 : 0));
       if (paired === 2) arrow(false, w / 2 + 10);
-      g.fillStyle = soft; g.font = "12px ui-sans-serif, system-ui, sans-serif";
+      g.fillStyle = soft; g.font = "12px " + plotFont();
       g.textAlign = "center"; g.textBaseline = "top";
       g.fillText(paired + " / 2 electrons", w / 2, by + bh + 10);
 
@@ -1837,16 +1848,21 @@
     // old theme's ink on the new theme's ground until something redraws it -
     // near-invisible axes after the OS flips to dark mode at sunset.
     var scheme = window.matchMedia ? window.matchMedia("(prefers-color-scheme: dark)") : null;
-    function onScheme() { demo.draw(); }
+    function onScheme() { if (!stopped) demo.draw(); }
     if (scheme) {
       if (scheme.addEventListener) scheme.addEventListener("change", onScheme);
       else if (scheme.addListener) scheme.addListener(onScheme);
     }
+    // The same for the site's own light/dark toggle (theme.js), and once the
+    // web font lands - labels drawn before it are in the fallback face.
+    window.addEventListener("themechange", onScheme);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(onScheme);
 
     return {
       destroy: function () {
         stopped = true;
         if (raf) cancelAnimationFrame(raf);
+        window.removeEventListener("themechange", onScheme);
         if (scheme) {
           if (scheme.removeEventListener) scheme.removeEventListener("change", onScheme);
           else if (scheme.removeListener) scheme.removeListener(onScheme);
