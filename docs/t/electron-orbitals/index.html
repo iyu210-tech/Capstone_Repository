@@ -94,7 +94,7 @@ if (!/\/(index\.html)?$/.test(location.pathname)) location.replace(location.path
     <header class="topic-head">
       <span class="pill">Chemistry HL</span>
       <h1 tabindex="-1">Electron orbitals — shapes, fill order, metals</h1>
-      <p class="syllabus">Structure 1.3 &middot; chemistry/electron-orbitals</p>
+      <p class="syllabus">Structure 1.3.4 and 1.3.5 &middot; chemistry/electron-orbitals</p>
     </header>
     <section class="two-up">
       <div class="panel">
@@ -105,6 +105,25 @@ if (!/\/(index\.html)?$/.test(location.pathname)) location.replace(location.path
         <h2>What this shows</h2>
         <p>Interactive walkthrough: s/px/py/pz shapes, two electrons per orbital, periodic-table blocks with the diagonal fill order (4s before 3d), then Fe vs Cr/Cu exceptions.</p>
       </div>
+    </section>
+    <section class="panel">
+      <h2>Try changing</h2>
+      <ul>
+        <li>In section 4 of the script, swap Cr for Cu (`fill_aufbau(29)`).</li>
+        <li>Add Mn (Z = 25) - Aufbau works: `[Ar] 4s² 3d⁵`, already half-filled.</li>
+        <li>Try other ions with `ion_config`: `ion_config(25, 2)` gives Mn²⁺ as `[Ar] 3d⁵`, and `ion_config(17, -1)` gives Cl⁻ as `[Ne] 3s² 3p⁶`.</li>
+      </ul>
+    </section>
+    <section class="panel">
+      <h2>The maths</h2>
+      <p><code>\text{electrons in shell } n \le 2n^2</code> &mdash; The most electrons a main energy level can hold</p>
+      <p><code>\text{fill order: lower } n + l \text{ first; for a tie, lower } n \qquad (s, p, d, f:\ l = 0, 1, 2, 3)</code> &mdash; The Madelung rule behind the diagonal chart - it puts 4s (4 + 0) before 3d (3 + 2)</p>
+      <p><code>\text{Cr: [Ar]}\,4s^1\,3d^5 \qquad \text{Cu: [Ar]}\,4s^1\,3d^{10}</code> &mdash; The two exceptions IB asks for: a half-filled or full 3d sublevel</p>
+    </section>
+    <section class="panel">
+      <h2>Check yourself</h2>
+      <details><summary>Fe is [Ar] 4s² 3d⁶, and 3d was filled last. When Fe forms Fe²⁺, which two electrons does it lose? Predict, then pick Fe in part 4.</summary><p>The two 4s electrons, not two 3d ones: the ions line shows Fe²⁺ as [Ar] 3d⁶ (and Fe³⁺ as [Ar] 3d⁵). 4s fills before 3d, but once 3d holds electrons the 4s electrons are the outermost, so a positive ion loses them first. [Ar] 4s² 3d⁴ is the classic wrong answer.</p></details>
+      <details><summary>Cr is [Ar] 4s¹ 3d⁵ rather than the Aufbau guess 4s² 3d⁴. How many unpaired electrons does each arrangement have?</summary><p>4 for the Aufbau guess and 6 for the real one - the two Cr panels count them. Moving one electron from 4s into the empty 3d orbital gives a half-filled 3d sublevel with every electron unpaired and parallel (Hund). Half-filled and full d sublevels are especially stable, and 4s and 3d are close in energy, so the move lowers the energy.</p></details>
     </section>
     <noscript>
       <div class="noscript">

@@ -1,6 +1,24 @@
 /* Browser ports of the Python visualisations.
-   The maths here deliberately mirrors the .py files line for line, so the
-   animation and the code you download agree with each other. */
+   The maths uses the same formulas, constants and step sizes as the .py
+   files, so the animation and the code you download give the same numbers.
+   tests/test_science_parity.py runs these functions under node and checks
+   them against the Python. It is not line for line; the differences are:
+
+   - Projectile: the same semi-implicit Euler step and DT, and the same
+     interpolated landing point. The drawn path keeps every STRIDE-th point,
+     and loops carry a guard so a bad input cannot hang the page. bestAngle
+     climbs uphill from a starting guess instead of scanning all 71 angles
+     like best_angle; range against angle has one peak, so it lands on the
+     same angle (checked for every speed and drag the sliders allow).
+   - Taylor: coefficients come from a float factorial table rather than
+     math.factorial. Every factorial up to 22! is exact in a double, so for
+     the 10 terms used the coefficients are identical.
+   - Maxwell-Boltzmann: JavaScript has no erfc, so the closed-form fraction
+     past Ea uses a polynomial fit (Numerical Recipes erfcc, relative error
+     below 1.2e-7) where Python uses math.erfc.
+   - Orbitals: the same fill order, exceptions and ion rule, line for line.
+   Last-digit differences remain where Math.cos / Math.pow round differently
+   from numpy; they are around 1e-16 relative and never change an answer. */
 (function () {
   "use strict";
 
@@ -403,30 +421,83 @@
   }
 
   /* --------------------------------------------------------- 1. Taylor */
+  // Every factorial up to 22! is exact in a double, so these coefficients
+  // are the same numbers Python gets from math.factorial.
   var FACT = [1];
   for (var f = 1; f < 30; f++) FACT[f] = FACT[f - 1] * f;
 
-  function taylorSin(x, nTerms) {
-    var total = 0;
+  /* Same registry as SERIES in taylor_series.py. term(k) gives
+     [coefficient, power] of the k-th NON-ZERO term, all centred on x = 0.
+     radius is how far from 0 the series converges. */
+  var SERIES = {
+    "sin(x)": {
+      exact: Math.sin,
+      term: function (k) { return [Math.pow(-1, k) / FACT[2 * k + 1], 2 * k + 1]; },
+      xlim: [-4 * Math.PI, 4 * Math.PI], ylim: [-3, 3], radius: Infinity
+    },
+    "cos(x)": {
+      exact: Math.cos,
+      term: function (k) { return [Math.pow(-1, k) / FACT[2 * k], 2 * k]; },
+      xlim: [-4 * Math.PI, 4 * Math.PI], ylim: [-3, 3], radius: Infinity
+    },
+    "e^x": {
+      exact: Math.exp,
+      term: function (k) { return [1 / FACT[k], k]; },
+      xlim: [-6, 6], ylim: [-5, 30], radius: Infinity
+    },
+    "ln(1+x)": {
+      // ln(1+x) only exists for x > -1; NaN leaves a gap in the curve
+      exact: function (x) { return x > -1 ? Math.log1p(x) : NaN; },
+      term: function (k) { return [Math.pow(-1, k) / (k + 1), k + 1]; },
+      xlim: [-2, 3], ylim: [-4, 3], radius: 1
+    }
+  };
+
+  function taylor(x, nTerms, name) {
+    var total = 0, term = SERIES[name].term;
     for (var k = 0; k < nTerms; k++) {
-      var p = 2 * k + 1;
-      total += Math.pow(-1, k) * Math.pow(x, p) / FACT[p];
+      var cp = term(k);
+      total += cp[0] * Math.pow(x, cp[1]);
     }
     return total;
   }
 
+  // What the readout says about convergence, per function.
+  var SERIES_NOTE = {
+    "sin(x)": "The series for sin(x) converges for <b>every</b> x, so each extra term pushes that edge further out — it just takes more terms the further you go.",
+    "cos(x)": "Like sin(x), the series for cos(x) converges for <b>every</b> x: more terms always widen the good region.",
+    "e^x": "The series for e<sup>x</sup> converges for <b>every</b> x too — but the further from 0 you go, the more terms it takes to get close.",
+    "ln(1+x)": "This series has <b>radius of convergence 1</b>: it converges only for −1 &lt; x ≤ 1 (shaded). Past x = 1 every extra term makes the polynomial <b>worse</b>, however many you add."
+  };
+
   function demoTaylor(ctx) {
     var MAX_TERMS = 10;
+    var name = "sin(x)";
     var plot = new Plot(ctx.canvas, {
       xmin: -4 * Math.PI, xmax: 4 * Math.PI, ymin: -3, ymax: 3,
       xlabel: "x", ylabel: "y", xticks: 8, yticks: 6
     });
 
-    var xs = [];
-    for (var i = 0; i <= 700; i++) xs.push(-4 * Math.PI + (8 * Math.PI) * i / 700);
-    var exact = xs.map(Math.sin);
+    var xs = [], exact = [];
+    function setFunction(which) {
+      name = which;
+      var s = SERIES[name];
+      plot.set({
+        xmin: s.xlim[0], xmax: s.xlim[1], ymin: s.ylim[0], ymax: s.ylim[1],
+        xlabel: "x", ylabel: "y", xticks: 8, yticks: 6
+      });
+      xs = [];
+      for (var i = 0; i <= 700; i++) xs.push(s.xlim[0] + (s.xlim[1] - s.xlim[0]) * i / 700);
+      exact = xs.map(s.exact);
+      fnButtons.forEach(function (b) { b.setAttribute("aria-pressed", String(b.textContent === name)); });
+    }
 
     var n = 1, playing = !REDUCED, lastStep = 0;
+
+    var fnRow = buttonRow(ctx.controls);
+    var fnButtons = Object.keys(SERIES).map(function (key) {
+      return button(fnRow, key, function () { setFunction(key); draw(); });
+    });
 
     var nSlider = slider(ctx.controls, {
       label: "Terms", min: 1, max: MAX_TERMS, value: 1,
@@ -439,34 +510,55 @@
       function () { return playing; },
       function (v) { playing = v; });
     button(row, "Reset", function () {
-      n = 1; nSlider.set(1); play.stop(); draw();
+      n = 1; nSlider.set(1); play.stop(); setFunction("sin(x)"); draw();
     });
 
+    function fmtX(v) { return (Math.abs(v) < 0.05 ? 0 : v).toFixed(1); }
+
     function draw() {
+      var s = SERIES[name];
+      var accent = cssVar("--plot-line", "#b4341f"), ink = cssVar("--plot-ink", "#000");
       plot.frame();
-      plot.line(xs, exact, cssVar("--plot-ink", "#000"), 2);
-      var approx = xs.map(function (x) { return taylorSin(x, n); });
-      plot.line(xs, approx, cssVar("--plot-line", "#b4341f"), 2.5);
+      if (s.radius < Infinity) {
+        // shade where the series converges, so the boundary is not a guess
+        var c = plot.ctx, p = plot.pad;
+        plot.clip(function () {
+          c.fillStyle = cssVar("--plot-band", "#fbeeeb");
+          c.fillRect(plot.px(-s.radius), p.t,
+            plot.px(s.radius) - plot.px(-s.radius), plot.h - p.t - p.b);
+        });
+        plot.vline(-s.radius, cssVar("--plot-label", "#666"));
+        plot.vline(s.radius, cssVar("--plot-label", "#666"), "|x| = " + s.radius);
+      }
+      plot.line(xs, exact, ink, 2);
+      var approx = xs.map(function (x) { return taylor(x, n, name); });
+      plot.line(xs, approx, accent, 2.5);
       plot.legend([
-        { label: "sin(x)", color: cssVar("--plot-ink", "#000") },
-        { label: n + " term" + (n === 1 ? "" : "s"), color: cssVar("--plot-line", "#b4341f") }
+        { label: name, color: ink },
+        { label: n + " term" + (n === 1 ? "" : "s"), color: accent }
       ]);
 
-      var good = 0;
-      for (var i = 0; i < xs.length; i++) {
-        if (xs[i] < 0) continue;
-        if (Math.abs(approx[i] - exact[i]) > 0.05) break;
-        good = xs[i];
-      }
+      // The good region: walk out from x = 0 both ways until the error
+      // first passes 0.05.
+      var i0 = 0, lo, hi, i;
+      for (i = 1; i < xs.length; i++) if (Math.abs(xs[i]) < Math.abs(xs[i0])) i0 = i;
+      function ok(j) { return isFinite(exact[j]) && Math.abs(approx[j] - exact[j]) <= 0.05; }
+      for (i = i0; i < xs.length && ok(i); i++) hi = xs[i];
+      for (i = i0; i >= 0 && ok(i); i--) lo = xs[i];
+      var highest = s.term(n - 1)[1];
+      var region = lo === undefined
+        ? "It is not within 0.05 of " + name + " even at x = 0."
+        : "It tracks " + name + " to within 0.05 from <b>x = " + fmtX(lo) +
+          "</b> to <b>x = " + fmtX(hi) + "</b>.";
       ctx.say(
-        "Polynomial up to <b>x<sup>" + (2 * n - 1) + "</sup></b>. " +
-        "It tracks sin(x) to within 0.05 out to about <b>x = ±" + good.toFixed(1) + "</b>" +
-        " — then it escapes to infinity."
+        "Polynomial up to <b>x<sup>" + highest + "</sup></b>. " + region + " " + SERIES_NOTE[name]
       );
       ctx.setAlt(
-        "Plot of sin(x) against its Maclaurin polynomial with " + n +
-        " term" + (n === 1 ? "" : "s") + ". The polynomial follows the curve out to " +
-        "about x = plus or minus " + good.toFixed(1) + ", then diverges."
+        "Plot of " + name + " against its Maclaurin polynomial with " + n +
+        " term" + (n === 1 ? "" : "s") + "." +
+        (lo === undefined ? "" : " The polynomial stays within 0.05 of the curve from x = " +
+          fmtX(lo) + " to x = " + fmtX(hi) + ", then diverges.") +
+        (s.radius < Infinity ? " The series only converges for x between -1 and 1." : "")
       );
     }
 
@@ -479,18 +571,25 @@
       draw();
     }
 
+    setFunction(name);
     draw();
     return { draw: draw, tick: tick, plot: plot };
   }
 
   /* ------------------------------------------------------ 2. Projectile */
-  var G = 9.81, MASS = 0.145, DT = 0.001, SEARCH_DT = 0.004, STRIDE = 4;
+  var G = 9.81, MASS = 0.145, DT = 0.001, STRIDE = 4;
 
-  // Full integration, kept at DT so the drawn curve matches the Python.
-  // Points are decimated for drawing and the ground hit is interpolated,
+  // Degrees to radians the way numpy's np.radians does it: x * (pi / 180).
+  // (x * pi) / 180 rounds differently in the last bit, and near a tie that
+  // bit is enough to pick a different "best" angle from the Python.
+  function toRad(deg) { return deg * (Math.PI / 180); }
+
+  // Same semi-implicit Euler step as projectile_drag.py, same DT: velocity
+  // first, then position with the new velocity. Points are decimated for
+  // drawing, and the ground hit is interpolated exactly as the Python does,
   // so the reported range is the real crossing rather than one step past it.
   function simulate(speed, angleDeg, dragK) {
-    var th = angleDeg * Math.PI / 180;
+    var th = toRad(angleDeg);
     var vx = speed * Math.cos(th), vy = speed * Math.sin(th);
     var x = 0, y = 0, px = 0, py = 0;
     var xs = [0], ys = [0], guard = 0;
@@ -507,35 +606,40 @@
     return { xs: xs, ys: ys, range: hit };
   }
 
-  // Range only: no arrays, coarser step. Used for the optimum-angle sweep,
-  // which is the expensive part and never needs the drawn resolution.
+  // Range only: the same flight, without building arrays. It used to run at
+  // a 4x coarser step to save time, which moved the optimum a degree away
+  // from the Python's in places; at the same DT the two agree everywhere on
+  // the sliders (tests/test_science_parity.py checks it).
   function rangeOnly(speed, angleDeg, dragK) {
-    var th = angleDeg * Math.PI / 180;
+    var th = toRad(angleDeg);
     var vx = speed * Math.cos(th), vy = speed * Math.sin(th);
     var x = 0, y = 0, px = 0, py = 0, guard = 0;
-    while (y >= 0 && guard++ < 60000) {
+    while (y >= 0 && guard++ < 200000) {
       px = x; py = y;
       var v = Math.hypot(vx, vy);
-      vx += (-dragK * v * vx / MASS) * SEARCH_DT;
-      vy += (-G - dragK * v * vy / MASS) * SEARCH_DT;
-      x += vx * SEARCH_DT; y += vy * SEARCH_DT;
+      vx += (-dragK * v * vx / MASS) * DT;
+      vy += (-G - dragK * v * vy / MASS) * DT;
+      x += vx * DT; y += vy * DT;
     }
     return py > y ? px + (x - px) * (py / (py - y)) : x;
   }
 
-  // Coarse 5-degree sweep, then refine. ~24 flights instead of 71.
-  function bestAngle(speed, dragK) {
-    var best = 45, bestR = -1, a, r;
-    for (a = 10; a <= 80; a += 5) {
-      r = rangeOnly(speed, a, dragK);
-      if (r > bestR) { bestR = r; best = a; }
+  /* The Python scans every angle from 10 to 80: 71 flights, which at 90 m/s
+     is ~60 ms here and several times that on a phone. Range against angle
+     has a single peak, so climbing uphill one degree at a time from a good
+     guess finds the same angle - and the demo's guess is the previous
+     answer, so a slider nudge costs about three flights. Ties go to the
+     smaller angle, as numpy's argmax does. */
+  function bestAngle(speed, dragK, start) {
+    var a = Math.min(80, Math.max(10, Math.round(start || 45)));
+    var r = rangeOnly(speed, a, dragK), next, moved = false;
+    while (a > 10 && (next = rangeOnly(speed, a - 1, dragK)) >= r) {
+      a--; r = next; moved = true;
     }
-    var lo = Math.max(10, best - 4), hi = Math.min(80, best + 4);
-    for (a = lo; a <= hi; a++) {
-      r = rangeOnly(speed, a, dragK);
-      if (r > bestR) { bestR = r; best = a; }
+    while (!moved && a < 80 && (next = rangeOnly(speed, a + 1, dragK)) > r) {
+      a++; r = next;
     }
-    return best;
+    return a;
   }
 
   function demoProjectile(ctx) {
@@ -552,9 +656,9 @@
     var optimaPending = false, optimaTimer = null;
 
     /* The trajectory costs a few ms and must track the slider. The optimum
-       angle is a 24-flight sweep and must not: running it on every input
-       event blocked the main thread for 50-130ms a time, which read as the
-       page freezing. It is debounced, and the readout says so meanwhile. */
+       angle is a search over many flights and must not: running it on every
+       input event blocked the main thread for 50-130ms a time, which read as
+       the page freezing. It is debounced, and the readout says so meanwhile. */
     function recomputeCurves() {
       drag = simulate(speed, angle, dragK);
       vac = simulate(speed, angle, 0);
@@ -574,8 +678,8 @@
       if (optimaTimer) clearTimeout(optimaTimer);
       optimaTimer = setTimeout(function () {
         optimaTimer = null;
-        optDrag = bestAngle(speed, dragK);
-        optVac = bestAngle(speed, 0);
+        optDrag = bestAngle(speed, dragK, optDrag);
+        optVac = bestAngle(speed, 0, optVac);
         optimaPending = false;
         jumpBtn.disabled = false;
         draw();
@@ -666,64 +770,91 @@
   }
 
   /* ------------------------------------------------------- 3. Boltzmann */
-  var K_B = 1.380649e-23, N_A = 6.02214076e23;
+  var K_B = 1.380649e-23, N_A = 6.02214076e23, R_GAS = K_B * N_A;
 
+  // Speed distribution f(v), a fraction of molecules per (m s^-1).
   function mbDistribution(v, T, mass) {
     var a = mass / (2 * K_B * T);
     return 4 * Math.PI * v * v * Math.pow(a / Math.PI, 1.5) * Math.exp(-a * v * v);
   }
 
-  function fractionAbove(vEa, T, mass) {
-    var hi = Math.max(vEa * 4, 6000), n = 2000;
-    var h = (hi - vEa) / n, s = mbDistribution(vEa, T, mass) + mbDistribution(hi, T, mass);
-    for (var i = 1; i < n; i++) {
-      s += mbDistribution(vEa + i * h, T, mass) * (i % 2 ? 4 : 2);
-    }
-    return s * h / 3;
+  /* Energy distribution f(E), a fraction per (kJ mol^-1) - the IB curve.
+     f(E) dE = f(v) dv with E = mv^2/2 gives 2 sqrt(E/pi) (RT)^-3/2 e^(-E/RT);
+     the mass cancels, so every gas shares this curve at a given T. */
+  function mbEnergy(E, T) {
+    var RT = R_GAS * T / 1000;
+    return 2 * Math.sqrt(E / Math.PI) * Math.pow(RT, -1.5) * Math.exp(-E / RT);
+  }
+
+  /* JavaScript has no erfc. This is the Chebyshev fit from Numerical
+     Recipes (erfcc): fractional error below 1.2e-7 for every x, far finer
+     than the three figures the readout shows. */
+  function erfc(x) {
+    var z = Math.abs(x), t = 1 / (1 + 0.5 * z);
+    var r = t * Math.exp(-z * z - 1.26551223 + t * (1.00002368 + t * (0.37409196 +
+      t * (0.09678418 + t * (-0.18628806 + t * (0.27886807 + t * (-1.13520398 +
+      t * (1.48851587 + t * (-0.82215223 + t * 0.17087277)))))))));
+    return x >= 0 ? r : 2 - r;
+  }
+
+  // The shaded area past Ea, in closed form - the same formula as
+  // fraction_above_ea in maxwell_boltzmann.py, with x = Ea / RT.
+  function fractionAboveEa(eaKJ, T) {
+    var x = eaKJ * 1000 / (R_GAS * T);
+    return erfc(Math.sqrt(x)) + 2 * Math.sqrt(x / Math.PI) * Math.exp(-x);
   }
 
   function demoBoltzmann(ctx) {
     var MASS = 0.028 / N_A;
     var D = { T: 300, eaKJ: 50 };
     var T = D.T, eaKJ = D.eaKJ, playing = !REDUCED, dir = 1, logY = true;
-    var FLOOR = -14;
+    var energyView = true;   // IB draws energy on the x-axis; speed is the extra
+    var FLOOR_V = -14, FLOOR_E = -18;
+
+    function xmaxNow() {
+      if (!energyView) return 2500;
+      // On a linear axis the peak sits near RT/2 (~1.2 kJ/mol), so a fixed
+      // 90 kJ/mol axis would squash the whole curve into a spike at the left.
+      return logY ? 90 : Math.max(20, eaKJ * 1.25);
+    }
 
     function applyScale() {
+      var xl = energyView ? "kinetic energy / kJ mol⁻¹" : "molecular speed / m s⁻¹";
+      var per = energyView ? "per kJ mol⁻¹" : "per m s⁻¹";
       if (logY) {
         plot.set({
-          xmin: 0, xmax: 2500, ymin: FLOOR, ymax: -2,
-          xlabel: "molecular speed / m s⁻¹",
-          ylabel: "fraction of molecules (log scale)",
-          ylabelShort: "fraction (log)",
+          xmin: 0, xmax: xmaxNow(), ymin: energyView ? FLOOR_E : FLOOR_V,
+          ymax: energyView ? 0 : -2,
+          xlabel: xl,
+          ylabel: "fraction of molecules " + per + " (log scale)",
+          ylabelShort: per + " (log)",
           xticks: 5, yticks: 6, yIntegral: true,
           fmtY: function (v) { return "10" + sup(Math.round(v)); }
         });
       } else {
         plot.set({
-          xmin: 0, xmax: 2500, ymin: 0, ymax: 0.0022,
-          xlabel: "molecular speed / m s⁻¹",
-          ylabel: "fraction of molecules",
-          ylabelShort: "fraction",
+          xmin: 0, xmax: xmaxNow(), ymin: 0, ymax: energyView ? 0.25 : 0.0022,
+          xlabel: xl,
+          ylabel: "fraction of molecules " + per,
+          ylabelShort: per,
           xticks: 5, yticks: 4,
-          fmtY: function (v) { return v === 0 ? "0" : sciText(v, 1); }
+          fmtY: energyView ? null : function (v) { return v === 0 ? "0" : sciText(v, 1); }
         });
       }
     }
 
     var plot = new Plot(ctx.canvas, {
-      xmin: 0, xmax: 2500, ymin: 0, ymax: 0.0022,
-      xlabel: "molecular speed / m s⁻¹", ylabel: "fraction of molecules",
+      xmin: 0, xmax: 90, ymin: FLOOR_E, ymax: 0,
+      xlabel: "kinetic energy / kJ mol⁻¹", ylabel: "fraction of molecules per kJ mol⁻¹",
       xticks: 5, yticks: 4
     });
     applyScale();
 
     function ymap(y) {
       if (!logY) return y;
-      return y <= 0 ? FLOOR : Math.max(FLOOR, Math.log(y) / Math.LN10);
+      var floor = energyView ? FLOOR_E : FLOOR_V;
+      return y <= 0 ? floor : Math.max(floor, Math.log(y) / Math.LN10);
     }
-
-    var vs = [];
-    for (var i = 0; i <= 600; i++) vs.push(2500 * i / 600);
 
     var tSlider = slider(ctx.controls, {
       label: "Temperature", min: 250, max: 600, value: T,
@@ -733,13 +864,20 @@
     var eSlider = slider(ctx.controls, {
       label: "Activation energy", min: 10, max: 80, value: eaKJ,
       format: function (v) { return v + " kJ/mol"; },
-      onInput: function (v) { eaKJ = v; draw(); }
+      onInput: function (v) { eaKJ = v; if (energyView && !logY) applyScale(); draw(); }
     });
 
     var row = buttonRow(ctx.controls);
     var play = playButton(row, ctx,
       function () { return playing; },
       function (v) { playing = v; });
+    var viewBtn = button(row, "Speed axis", function (b) {
+      energyView = !energyView;
+      b.setAttribute("aria-pressed", String(!energyView));
+      applyScale();
+      draw();
+    });
+    viewBtn.setAttribute("aria-pressed", "false");
     var logBtn = button(row, "Log scale", function (b) {
       logY = !logY;
       b.setAttribute("aria-pressed", String(logY));
@@ -750,44 +888,55 @@
     button(row, "Reset", function () {
       T = D.T; eaKJ = D.eaKJ; dir = 1;
       tSlider.set(T); eSlider.set(eaKJ);
+      applyScale();
       play.stop(); draw();
     });
 
     function vEa() { return Math.sqrt(2 * (eaKJ * 1000 / N_A) / MASS); }
 
     function draw() {
-      var ve = vEa();
+      var xs = [], xmax = xmaxNow(), i;
+      for (i = 0; i <= 600; i++) xs.push(xmax * i / 600);
+      var f = energyView
+        ? function (x, Tk) { return mbEnergy(x, Tk); }
+        : function (x, Tk) { return mbDistribution(x, Tk, MASS); };
+      var edge = energyView ? eaKJ : vEa();
       plot.frame();
 
       [300, 500].forEach(function (Tref) {
-        var ysr = vs.map(function (v) { return ymap(mbDistribution(v, Tref, MASS)); });
-        plot.line(vs, ysr, cssVar("--plot-ref", "#999"), 1.5);
+        var ysr = xs.map(function (x) { return ymap(f(x, Tref)); });
+        plot.line(xs, ysr, cssVar("--plot-ref", "#999"), 1.5);
       });
 
-      var ys = vs.map(function (v) { return ymap(mbDistribution(v, T, MASS)); });
+      var ys = xs.map(function (x) { return ymap(f(x, T)); });
       // --plot-fill, not --accent-soft: the old fill measured 1.1:1 against
       // the canvas, so the one thing this topic exists to show was invisible.
-      plot.fillUnder(vs, ys, cssVar("--plot-fill", "rgba(180,52,31,.3)"), ve);
-      plot.line(vs, ys, cssVar("--plot-line", "#b4341f"), 2.5);
-      plot.vline(ve, cssVar("--plot-ink", "#000"), "Ea = " + eaKJ + " kJ/mol");
+      plot.fillUnder(xs, ys, cssVar("--plot-fill", "rgba(180,52,31,.3)"), edge);
+      plot.line(xs, ys, cssVar("--plot-line", "#b4341f"), 2.5);
+      plot.vline(edge, cssVar("--plot-ink", "#000"),
+        energyView ? "Ea = " + eaKJ + " kJ/mol" : "KE = Ea at " + Math.round(edge) + " m/s");
       plot.legend([
         { label: Math.round(T) + " K", color: cssVar("--plot-line", "#b4341f") },
         { label: "300 K / 500 K", color: cssVar("--plot-ref", "#999"), width: 1.5 }
       ]);
 
-      var frac = fractionAbove(ve, T, MASS);
-      var base = fractionAbove(ve, 300, MASS);
+      var Tn = Math.round(T);
+      var frac = fractionAboveEa(eaKJ, T);
+      var base = fractionAboveEa(eaKJ, 300);
+      var tenK = fractionAboveEa(eaKJ, Tn + 10) / fractionAboveEa(eaKJ, Tn);
       ctx.say(
-        "At <b>" + Math.round(T) + " K</b>, <b>" + sciHTML(frac) +
-        "</b> of molecules clear the barrier — that is <b>" +
-        (frac / base).toFixed(2) + "×</b> the fraction at 300 K. " +
+        "At <b>" + Tn + " K</b>, <b>" + sciHTML(frac) +
+        "</b> of molecules have at least Ea — <b>" + (frac / base).toFixed(2) +
+        "×</b> the fraction at 300 K. Another 10 K would multiply it by <b>" +
+        tenK.toFixed(2) + "</b>. " +
         (logY
           ? "On this log axis every gridline is 10× — watch the shaded tail climb."
-          : "Notice how little the peak moves. The tail past Ea is far too small to see here, which is exactly why it needs a log axis.")
+          : "Notice how little the peak moves. Unless Ea is small, the tail past it is far too thin to see here, which is exactly why it needs a log axis.") +
+        (energyView ? "" : " The area past the line is the same fraction as on the energy axis: these are the molecules fast enough to carry Ea.")
       );
       ctx.setAlt(
-        "Maxwell-Boltzmann speed distribution at " + Math.round(T) +
-        " kelvin, with the area past the activation energy shaded. " +
+        "Maxwell-Boltzmann " + (energyView ? "kinetic energy" : "speed") + " distribution at " +
+        Tn + " kelvin, with the area past the activation energy shaded. " +
         frac.toExponential(2) + " of molecules exceed the barrier, " +
         (frac / base).toFixed(2) + " times the fraction at 300 kelvin."
       );
@@ -810,10 +959,14 @@
   /* Long-form interactive explainer: shapes → 2e/orbital → Aufbau → metals.
      Builds its own HTML layout inside .demo (not a single autoplaying canvas). */
 
+  // Madelung (n + l) order, the same list as electron_orbitals.py. It runs to
+  // 7p because the diagonal chart has a box for every subshell up to 7p, and
+  // stepping onto 7s / 5f / 6d / 7p used to read past the end of a shorter list.
   var AUFBAU = [
     [1, "s", 2], [2, "s", 2], [2, "p", 6], [3, "s", 2], [3, "p", 6],
     [4, "s", 2], [3, "d", 10], [4, "p", 6], [5, "s", 2], [4, "d", 10],
-    [5, "p", 6], [6, "s", 2], [4, "f", 14], [5, "d", 10], [6, "p", 6]
+    [5, "p", 6], [6, "s", 2], [4, "f", 14], [5, "d", 10], [6, "p", 6],
+    [7, "s", 2], [5, "f", 14], [6, "d", 10], [7, "p", 6]
   ];
   var ORB_EXCEPTIONS = { 24: { "4s": 1, "3d": 5 }, 29: { "4s": 1, "3d": 10 } };
 
@@ -865,6 +1018,25 @@
     if (applyException && ORB_EXCEPTIONS[z]) {
       var ex = ORB_EXCEPTIONS[z];
       Object.keys(ex).forEach(function (k) { config[k] = ex[k]; });
+    }
+    return config;
+  }
+
+  /* Positive ions lose electrons from the highest shell n first (and within
+     it p before s) - NOT in reverse fill order. So Fe2+ is [Ar] 3d6, not
+     [Ar] 4s2 3d4: once 3d is occupied, the 4s electrons are the outermost.
+     Mirrors ion_config in electron_orbitals.py. */
+  function ionConfig(z, charge) {
+    if (charge <= 0) return fillAufbau(z - charge, false);
+    var config = fillAufbau(z, true), i, best, rank;
+    for (i = 0; i < charge; i++) {
+      best = null;
+      Object.keys(config).forEach(function (key) {
+        var r = parseInt(key.charAt(0), 10) * 10 + "spdf".indexOf(key.charAt(1));
+        if (best === null || r > rank) { best = key; rank = r; }
+      });
+      config[best] -= 1;
+      if (config[best] === 0) delete config[best];
     }
     return config;
   }
@@ -926,16 +1098,18 @@
     var accent = cssVar("--plot-line", "#b4341f");
     var pCol = cssVar("--block-p", "#2f6f8f");
     g.clearRect(0, 0, w, h);
-    // Leave room for axis labels at the edges (esp. x on px).
-    var cx = w / 2 - 2, cy = h / 2 + 4;
+    // Leave room for axis labels at the edges (x on the right, z bottom-left).
+    var cx = w / 2 + 2, cy = h / 2 - 2;
     var S = Math.min(w, h);
 
     // x and y form a square of half-side L; z runs to that square's corner.
+    // z is drawn down-left, i.e. out of the page towards you, so the axes
+    // are right-handed (x × y = z). Up-right would make them left-handed.
     var inv = 1 / Math.SQRT2;
     var axes = {
       x: { dx: 1, dy: 0, label: "x", scale: 1 },
       y: { dx: 0, dy: -1, label: "y", scale: 1 },
-      z: { dx: inv, dy: -inv, label: "z", scale: Math.SQRT2 }
+      z: { dx: -inv, dy: inv, label: "z", scale: Math.SQRT2 }
     };
 
     function drawAxisLines(len, emphasize) {
@@ -982,9 +1156,9 @@
           g.textBaseline = "bottom";
           g.fillText(a.label, x2, y2 - 6);
         } else {
-          g.textAlign = "left";
-          g.textBaseline = "bottom";
-          g.fillText(a.label, x2 + 4, y2 - 2);
+          g.textAlign = "right";
+          g.textBaseline = "top";
+          g.fillText(a.label, Math.max(10, x2 - 3), Math.min(h - 14, y2 + 2));
         }
       });
     }
@@ -1289,7 +1463,8 @@
         return "<b>pᵧ</b>: lobes along the <b>y</b>-axis. Same energy as pₓ and p_z in a free atom. " +
           "Holds up to <b>two electrons of opposite spin</b>.";
       }
-      return "<b>p_z</b>: lobes along the <b>z</b>-axis. The three p orbitals are mutually perpendicular. " +
+      return "<b>p_z</b>: lobes along the <b>z</b>-axis, which points out of the screen towards you. " +
+        "The three p orbitals are mutually perpendicular. " +
         "Holds up to <b>two electrons of opposite spin</b>.";
     }
 
@@ -1305,8 +1480,9 @@
     /* ---------- 2. two electrons ---------- */
     var s2 = section(
       "2. Two electrons per orbital",
-      "Each orbital is one box. <b>Pauli</b>: at most two electrons, opposite spins (↑↓). " +
-      "Click the box to add or clear. <b>Hund</b>: for p/d/f, one electron per box before pairing."
+      "Each orbital is one box. <b>Pauli</b>: an orbital holds at most two electrons, and they must " +
+      "have opposite spins (↑↓). Click the box to add or clear. <b>Hund</b>: orbitals of the same " +
+      "sublevel (the three p, five d) fill singly, with parallel spins, before any electrons pair up."
     );
     var pairWrap = document.createElement("div");
     pairWrap.className = "orb-pair-wrap";
@@ -1514,7 +1690,8 @@
           "Step " + fillStep + ": filling <b>" + key + "</b> (" + els + ", up to " + cap + " e⁻).<br>" +
           "<span class='orb-path'>" + path + "</span>" +
           (key === "4s" ? "<br>↑ This is why Ca is <code>[Ar] 4s²</code> and Sc begins the d-block with 3d." :
-           key === "3d" ? "<br>↑ d-block starts: Sc → Zn fill 3d while 4s is already occupied." : "");
+           key === "3d" ? "<br>↑ d-block starts: Sc → Zn fill 3d while 4s is already occupied. " +
+             "(When these metals form ions, though, the 4s electrons are lost first — see part 4.)" : "");
       }
       nextBtn.disabled = fillStep >= FILL_ORDER.length;
       backBtn.disabled = fillStep <= 0;
@@ -1559,26 +1736,29 @@
       "<div class='orb-why-grid'>" +
         "<div class='orb-why-card'>" +
           "<strong>1. 4s and 3d are almost the same energy</strong>" +
-          "<p>Once the atom has more than 20 electrons, 3d drops close to 4s. " +
-          "Shifting one electron between them costs very little — so a small " +
+          "<p>In the first-row transition metals the 4s and 3d sublevels are very close " +
+          "in energy. Shifting one electron between them costs very little — so a small " +
           "stabilising effect can tip the balance.</p>" +
         "</div>" +
         "<div class='orb-why-card'>" +
-          "<strong>2. Exchange energy (Hund)</strong>" +
-          "<p>Electrons in different orbitals with the <em>same</em> spin avoid each other " +
-          "better (exchange stabilisation). A half-full d⁵ has <b>five</b> unpaired, " +
-          "parallel-spin electrons — maximum exchange for the d set. A full d¹⁰ is a " +
-          "closed sublevel with a symmetrical, low-repulsion cloud.</p>" +
+          "<strong>2. Half-filled and full sublevels are especially stable</strong>" +
+          "<p>That is the IB-level statement. Going further (beyond the syllabus): electrons " +
+          "with <em>parallel</em> spins in different orbitals keep further apart, which lowers " +
+          "their repulsion — the <em>exchange energy</em> behind Hund's rule. A half-filled d⁵ " +
+          "has five parallel spins, the most a d sublevel can hold. Why a full d¹⁰ is favoured " +
+          "is subtler, and IB does not ask for it.</p>" +
         "</div>" +
         "<div class='orb-why-card'>" +
           "<strong>3. The energy tradeoff</strong>" +
-          "<p>Promoting / moving one e⁻ from 4s → 3d costs a little. Reaching d⁵ or d¹⁰ " +
-          "pays that back (and more) via exchange + lower repulsion. For Cr and Cu the " +
-          "payback wins; for neighbours like V, Mn, Ni, Zn it does not.</p>" +
+          "<p>Moving one e⁻ from 4s to 3d costs a little energy. Reaching d⁵ or d¹⁰ " +
+          "pays it back, so for Cr and Cu the 4s¹ arrangement is lower in energy overall. " +
+          "For V and Ni the move would not reach d⁵ or d¹⁰; Mn (d⁵) and Zn (d¹⁰) are " +
+          "there already.</p>" +
         "</div>" +
       "</div>" +
-      "<p class='orb-why-note'>IB shorthand: <b>half-full and full sublevels are especially stable</b> — " +
-      "but only Cr (d⁵) and Cu (d¹⁰) in period 4 gain enough to rewrite the configuration.</p>";
+      "<p class='orb-why-note'>IB shorthand: <b>half-filled and full d sublevels are especially stable, " +
+      "and 4s and 3d are close in energy</b> — and in period 4 only Cr (d⁵) and Cu (d¹⁰) gain " +
+      "enough to rewrite the configuration.</p>";
     s4.appendChild(whyPrimer);
 
     var metalRow = document.createElement("div");
@@ -1662,6 +1842,20 @@
       panel.appendChild(up);
     }
 
+    // Common ions of each metal, for the "4s is lost first" note.
+    var METAL_IONS = { 21: [3], 24: [3], 26: [2, 3], 29: [1, 2], 30: [2] };
+    var SUP_CHARGE = { 1: "⁺", 2: "²⁺", 3: "³⁺" };
+
+    function ionsHTML(m) {
+      var list = (METAL_IONS[m.z] || []).map(function (q) {
+        return m.sym + SUP_CHARGE[q] + " <code>" + configString(ionConfig(m.z, q)) + "</code>";
+      }).join(", ");
+      return "<p class='orb-ions'><b>Ions — 4s is lost first:</b> " + list + ". 4s fills " +
+        "before 3d, but once 3d holds electrons the 4s electrons are the outermost, so a " +
+        "positive ion loses them first. A classic exam trap: Fe²⁺ is <code>[Ar] 3d6</code>, " +
+        "not <code>[Ar] 4s2 3d4</code>.</p>";
+    }
+
     function paintMetals() {
       Array.prototype.forEach.call(metalRow.children, function (b, i) {
         b.setAttribute("aria-pressed", String(i === selectedMetal));
@@ -1690,12 +1884,13 @@
             "<li><b>Aufbau guess:</b> <code>4s² 3d⁴</code>. Four 3d orbitals have one e⁻ each; " +
             "one 3d orbital is empty; 4s is paired. That is <b>4 unpaired</b> in 3d, and the " +
             "d set is neither half-full nor full.</li>" +
-            "<li><b>What actually happens:</b> one 4s electron drops into the empty 3d orbital → " +
+            "<li><b>What actually happens:</b> one 4s electron moves into the empty 3d orbital → " +
             "<code>4s¹ 3d⁵</code>. Now every 3d orbital has exactly one electron (↑↑↑↑↑). " +
             "That is <b>5 unpaired</b> in 3d — half-full.</li>" +
-            "<li><b>Why that wins:</b> five parallel-spin d electrons maximise exchange energy. " +
-            "The 4s–3d gap is tiny, so the exchange payoff outweighs leaving 4s half-occupied. " +
-            "Count the unpaired electrons in the panels above: Aufbau gives fewer.</li>" +
+            "<li><b>Why that wins:</b> a half-filled 3d sublevel is especially stable, and 4s and " +
+            "3d are so close in energy that the move costs very little. (Beyond IB: six parallel " +
+            "spins instead of four means more exchange stabilisation — count the unpaired " +
+            "electrons in the panels above.)</li>" +
             "<li><b>Exam line:</b> Cr is <code>[Ar] 4s¹ 3d⁵</code> because a half-full d sublevel " +
             "is particularly stable.</li>" +
             "</ul>";
@@ -1708,13 +1903,14 @@
             "a full d set.</li>" +
             "<li><b>What actually happens:</b> one 4s electron fills that hole → " +
             "<code>4s¹ 3d¹⁰</code>. The 3d sublevel is completely full; 4s keeps one electron.</li>" +
-            "<li><b>Why that wins:</b> a full d¹⁰ sublevel is a closed, symmetrical shell with " +
-            "lower electron–electron repulsion. Again 4s and 3d are close in energy, so " +
-            "completing d¹⁰ is worth thinning 4s to one electron.</li>" +
+            "<li><b>Why that wins:</b> a completely filled 3d sublevel is especially stable, and " +
+            "again 4s and 3d are close enough in energy that moving one electron costs little. " +
+            "Unlike Cr this is not about unpaired spins: both arrangements have just one.</li>" +
             "<li><b>Exam line:</b> Cu is <code>[Ar] 4s¹ 3d¹⁰</code> because a full d sublevel " +
             "is particularly stable (the Cu analogue of Cr’s half-full case).</li>" +
             "</ul>";
         }
+        metalNote.innerHTML += ionsHTML(m);
       } else {
         transfer.innerHTML =
           "<div class='orb-transfer-eq orb-transfer-ok'>" +
@@ -1723,12 +1919,12 @@
         var extra = "";
         if (m.z === 21) {
           extra =
-            "<p><b>Why Sc does not exception:</b> Aufbau gives <code>4s² 3d¹</code>. Moving the " +
+            "<p><b>Why Sc is not an exception:</b> Aufbau gives <code>4s² 3d¹</code>. Moving the " +
             "4s pair into 3d would not create d⁵ or d¹⁰ — there is no half-full/full prize to " +
             "claim, so the atom keeps the Aufbau arrangement.</p>";
         } else if (m.z === 26) {
           extra =
-            "<p><b>Why Fe does not exception:</b> <code>4s² 3d⁶</code> already has a paired d " +
+            "<p><b>Why Fe is not an exception:</b> <code>4s² 3d⁶</code> already has a paired d " +
             "orbital. Shifting one 4s electron into 3d would give <code>4s¹ 3d⁷</code> — still " +
             "not d⁵ or d¹⁰ — so there is no special stability jackpot. Aufbau wins.</p>";
         } else if (m.z === 30) {
@@ -1739,6 +1935,7 @@
         metalNote.innerHTML =
           "<p><b>" + m.sym + " (Z = " + m.z + ")</b> — " + m.blurb + "</p>" +
           extra +
+          ionsHTML(m) +
           "<p>Open <b>Cr★</b> or <b>Cu★</b> to see the cases where the half-full / full payoff " +
           "is large enough to rewrite the configuration.</p>";
       }

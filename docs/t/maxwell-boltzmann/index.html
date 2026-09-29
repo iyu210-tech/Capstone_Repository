@@ -94,7 +94,7 @@ if (!/\/(index\.html)?$/.test(location.pathname)) location.replace(location.path
     <header class="topic-head">
       <span class="pill">Chemistry HL</span>
       <h1 tabindex="-1">Maxwell-Boltzmann and activation energy</h1>
-      <p class="syllabus">Reactivity 2.2 &middot; chemistry/maxwell-boltzmann</p>
+      <p class="syllabus">Reactivity 2.2.4 &middot; chemistry/maxwell-boltzmann</p>
     </header>
     <section class="two-up">
       <div class="panel">
@@ -105,6 +105,24 @@ if (!/\/(index\.html)?$/.test(location.pathname)) location.replace(location.path
         <h2>What this shows</h2>
         <p>Raising the temperature barely moves the peak - it stretches the tail past Ea. Drag the temperature slider and watch the shaded area multiply while the curve itself hardly shifts.</p>
       </div>
+    </section>
+    <section class="panel">
+      <h2>Try changing</h2>
+      <ul>
+        <li>`EA_KJ` - a higher barrier makes the temperature sensitivity much stronger: at 80 kJ/mol a 10 K rise multiplies the fraction past Ea by 2.77, at 25 kJ/mol only by 1.36. This is the same reason catalysts (lower Ea) work.</li>
+        <li>`MASS` - compare hydrogen (0.002 / N_A) against nitrogen at the same temperature. The speed curve changes completely; the energy curve and the fraction past Ea do not change at all.</li>
+      </ul>
+    </section>
+    <section class="panel">
+      <h2>The maths</h2>
+      <p><code>f(E) = 2\sqrt{\frac{E}{\pi}}\,(RT)^{-3/2}\,e^{-E/RT}</code> &mdash; Maxwell-Boltzmann energy distribution, a fraction of molecules per unit energy; the mass cancels</p>
+      <p><code>\text{fraction with } E \ge E_a = \operatorname{erfc}\sqrt{x} + 2\sqrt{\frac{x}{\pi}}\,e^{-x}, \qquad x = \frac{E_a}{RT}</code> &mdash; The exact shaded area past Ea</p>
+      <p><code>k = A\,e^{-E_a/RT}</code> &mdash; The Arrhenius equation (AHL Reactivity 2.2.12)</p>
+    </section>
+    <section class="panel">
+      <h2>Check yourself</h2>
+      <details><summary>With Ea = 50 kJ/mol, does raising the temperature from 300 K to 310 K really double the fraction of molecules that can react?</summary><p>Nearly: set 300 K and the readout says another 10 K multiplies the fraction by 1.88 (the Arrhenius factor alone gives 1.91). &#x27;Doubles per 10 K&#x27; is a rule of thumb for barriers near 50 kJ/mol at room temperature; drop Ea to 25 kJ/mol and the same 10 K gives only 1.36×.</p></details>
+      <details><summary>Heat the gas from 300 K to 600 K. Does the peak of the energy curve move anywhere near Ea = 50 kJ/mol?</summary><p>No. The peak sits at RT/2, which only moves from about 1.2 to 2.5 kJ/mol - switch off the log scale to see it barely shift. Yet the shaded fraction past Ea rises from 1.0 × 10⁻⁸ to 1.7 × 10⁻⁴, about 16,000 times more. Temperature works by stretching the tail, not by moving the whole curve past the barrier.</p></details>
     </section>
     <noscript>
       <div class="noscript">

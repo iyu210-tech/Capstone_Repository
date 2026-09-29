@@ -225,6 +225,7 @@ body {
   --accent-fill: rgba(180, 52, 31, .30);
   --plot-line: var(--accent);
   --plot-fill: var(--accent-fill);
+  --plot-band: var(--accent-soft);   /* a region, e.g. where a series converges */
 }
 body[data-accent="maths"] { --accent: var(--maths); --accent-soft: var(--maths-soft); --accent-fill: var(--maths-fill); }
 body[data-accent="physics"] { --accent: var(--physics); --accent-soft: var(--physics-soft); --accent-fill: var(--physics-fill); }

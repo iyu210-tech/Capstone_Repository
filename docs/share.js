@@ -58,7 +58,13 @@
   // Set each control through the same event a person would fire, so the
   // demo's own onInput/onClick runs and nothing here knows any demo's maths.
   function apply(params) {
-    controls().forEach(function (c) {
+    // Toggles first: picking a function or an axis can reset the sliders
+    // (a new function starting again from one term), so the slider values
+    // only stick if they land after the choice they belong to.
+    var all = controls();
+    var ordered = all.filter(function (c) { return c.kind === "toggle"; })
+      .concat(all.filter(function (c) { return c.kind !== "toggle"; }));
+    ordered.forEach(function (c) {
       if (!(c.key in params)) return;
       var want = params[c.key];
       if (c.kind === "toggle") {

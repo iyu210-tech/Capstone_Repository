@@ -94,7 +94,7 @@ if (!/\/(index\.html)?$/.test(location.pathname)) location.replace(location.path
     <header class="topic-head">
       <span class="pill">Physics HL</span>
       <h1 tabindex="-1">Projectile motion with air resistance</h1>
-      <p class="syllabus">Theme A &middot; physics/projectile-drag</p>
+      <p class="syllabus">A.1 Kinematics &middot; physics/projectile-drag</p>
     </header>
     <section class="two-up">
       <div class="panel">
@@ -105,6 +105,26 @@ if (!/\/(index\.html)?$/.test(location.pathname)) location.replace(location.path
         <h2>What this shows</h2>
         <p>Real trajectories against the vacuum parabola, and range plotted against launch angle. The optimum slides below 45 degrees, and the faster you launch, the further it slides.</p>
       </div>
+    </section>
+    <section class="panel">
+      <h2>Try changing</h2>
+      <ul>
+        <li>`speed` in `main()` - push it to 80 m/s and watch the optimum drop from 40 to 35 degrees.</li>
+        <li>`DRAG_K` - set it to 0 to recover the textbook result: the best angle is 45 degrees, and the range matches v² sin 2θ / g to within one step.</li>
+        <li>`MASS` - a ping-pong ball vs a cannonball at the same speed.</li>
+        <li>`DT` - make it 0.05 and compare with the exact vacuum range. Big steps drift, which is why step size matters in any numerical method.</li>
+      </ul>
+    </section>
+    <section class="panel">
+      <h2>The maths</h2>
+      <p><code>\vec F_{\text{drag}} = -k\,|\vec v|\,\vec v</code> &mdash; Drag of size kv², always pointing against the velocity</p>
+      <p><code>\vec v_{n+1} = \vec v_n + \vec a(\vec v_n)\,\Delta t, \qquad \vec x_{n+1} = \vec x_n + \vec v_{n+1}\,\Delta t</code> &mdash; Semi-implicit Euler: update the velocity first, then move with the new velocity</p>
+      <p><code>R_{\text{vacuum}} = \frac{v^2 \sin 2\theta}{g}</code> &mdash; The no-drag range the dashed curve reproduces, greatest at 45°</p>
+    </section>
+    <section class="panel">
+      <h2>Check yourself</h2>
+      <details><summary>At the default drag (k = 0.0013), what happens to the best angle if you double the launch speed from 40 m/s to 80 m/s?</summary><p>It drops, from 40° to 35° (press &#x27;Jump to best angle&#x27; at each speed). Drag grows as v², so at 80 m/s it is a much bigger force compared with the weight, and every second in the air costs more range. A lower, flatter launch spends less time in the air and keeps more of its horizontal speed. In a vacuum the best angle stays at 45° at both speeds.</p></details>
+      <details><summary>With drag on, is the path still symmetric - does the ball come down at the same angle it went up?</summary><p>No. Watch the solid curve against the dashed vacuum parabola: with drag the ball comes down more steeply than it went up, and its highest point is more than halfway along the range. Drag keeps removing horizontal speed, so the second half of the flight covers less ground than the first. Set k to 0 and the two curves coincide again.</p></details>
     </section>
     <noscript>
       <div class="noscript">

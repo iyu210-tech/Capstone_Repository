@@ -106,6 +106,25 @@ if (!/\/(index\.html)?$/.test(location.pathname)) location.replace(location.path
         <p>The polynomial is built up one term at a time against sin(x). Each new term grips the curve over a wider interval, and outside that interval it shoots off to infinity - which is what radius of convergence means, visually.</p>
       </div>
     </section>
+    <section class="panel">
+      <h2>Try changing</h2>
+      <ul>
+        <li>`FUNCTION` - one line: `&quot;sin(x)&quot;`, `&quot;cos(x)&quot;`, `&quot;e^x&quot;` or `&quot;ln(1+x)&quot;`. The last one has radius of convergence 1 (it converges for -1 &lt; x &lt;= 1); the shaded band shows where, and past x = 1 more terms make things worse.</li>
+        <li>`MAX_TERMS` - how many non-zero terms to build up to.</li>
+        <li>Add your own entry to `SERIES`, e.g. the geometric series 1/(1-x) = 1 + x + x² + ... (`term=lambda k: (1, k)`, `radius=1`).</li>
+      </ul>
+    </section>
+    <section class="panel">
+      <h2>The maths</h2>
+      <p><code>f(x) = \sum_{n=0}^{\infty} \frac{f^{(n)}(0)}{n!}\,x^n</code> &mdash; Maclaurin series: a Taylor series centred on x = 0</p>
+      <p><code>\sin x = x - \frac{x^3}{3!} + \frac{x^5}{5!} - \cdots</code> &mdash; Only odd powers appear, so n non-zero terms reach x to the power 2n - 1</p>
+      <p><code>\ln(1+x) = x - \frac{x^2}{2} + \frac{x^3}{3} - \cdots \qquad (-1 &lt; x \le 1)</code> &mdash; Radius of convergence 1: no number of terms works beyond x = 1</p>
+    </section>
+    <section class="panel">
+      <h2>Check yourself</h2>
+      <details><summary>With sin(x) selected, will the 10-term polynomial stay within 0.05 of the curve for a whole wave either side of 0 (out to x = 2π ≈ 6.3)? Predict, then drag Terms to 10.</summary><p>Yes, and a bit more: the readout says it tracks sin(x) from about x = -7.5 to 7.5. The series for sin(x) converges for every x, so each extra term pushes that edge further out; with 5 terms the edge is only at about 3.7.</p></details>
+      <details><summary>Select ln(1+x). At x = 2, does going from 5 terms to 10 terms bring the polynomial closer to the curve, or send it further away?</summary><p>Further away. At x = 2 the 5-term polynomial gives about 5.1 and the 10-term one about -64.8, against ln 3 ≈ 1.1. x = 2 is outside the radius of convergence (1), where the terms 2ⁿ/n grow instead of shrinking, so every term added makes it worse. Inside the shaded band the opposite happens: with 10 terms the readout&#x27;s good region reaches x = 1.</p></details>
+    </section>
     <noscript>
       <div class="noscript">
         <p>The interactive version of this page needs JavaScript. The
