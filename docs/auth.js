@@ -23,15 +23,23 @@ function hasStoredSession() {
   try { return Boolean(localStorage.getItem(STORAGE_KEY)); } catch (e) { return false; }
 }
 
+// Pinned to an exact release rather than @2. A floating range means a new
+// supabase-js publish - or a compromised CDN answer for "latest 2.x" - runs
+// on every signed-in visit without anyone reviewing it. Bump this by hand.
+const SUPABASE_JS = "https://esm.sh/@supabase/supabase-js@2.117.2";
+
 const slot = document.getElementById("account");
 const dlg = document.getElementById("auth-dialog");
 const form = document.getElementById("auth-form");
 const emailEl = document.getElementById("auth-email");
+const emailLabel = document.querySelector('label[for="auth-email"]');
 const passEl = document.getElementById("auth-password");
 const submitBtn = document.getElementById("auth-submit");
 const googleBtn = document.getElementById("auth-google");
+const orRow = document.getElementById("auth-or");
 const msgEl = document.getElementById("auth-msg");
 const titleEl = document.getElementById("auth-title");
+const switchRow = document.getElementById("auth-switch-row");
 const switchBtn = document.getElementById("auth-switch");
 const switchTxt = document.getElementById("auth-switch-text");
 const resetBtn = document.getElementById("auth-reset");
@@ -44,24 +52,33 @@ let loading = null;
 function client() {
   if (supabase) return Promise.resolve(supabase);
   if (loading) return loading;
-  loading = import("https://esm.sh/@supabase/supabase-js@2").then(function (mod) {
+  loading = import(SUPABASE_JS).then(function (mod) {
     supabase = mod.createClient(cfg.url, cfg.anonKey, {
       auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true }
     });
     // Fires on every sign-in, sign-out and token refresh, so this is the only
     // place the header is painted and it cannot drift from the real session.
-    supabase.auth.onAuthStateChange(function (_event, session) {
+    supabase.auth.onAuthStateChange(function (event, session) {
       if (session && session.user) renderSignedIn(session.user);
       else renderSignedOut();
-      if (session && dlg.open) dlg.close();
+      // A reset link signs the reader in, but they came to choose a new
+      // password - closing the dialog here would leave them signed in with
+      // the old one forgotten and nowhere to type the new one.
+      if (event === "PASSWORD_RECOVERY") { openRecovery(); return; }
+      if (session && dlg.open && mode !== "recover") dlg.close();
     });
     window.auth = supabase;
     return supabase;
+  }, function (err) {
+    // Forget the failed attempt so the next click tries again, instead of
+    // replaying the same rejection for the rest of the visit.
+    loading = null;
+    throw err;
   });
   return loading;
 }
 
-let mode = "signin";   // "signin" | "signup"
+let mode = "signin";   // "signin" | "signup" | "recover"
 let busy = false;
 
 /* ----------------------------------------------------------------- helpers */
@@ -72,24 +89,31 @@ function say(text, kind) {
   msgEl.hidden = !text;
 }
 
+const SUBMIT_LABEL = { signin: "Sign in", signup: "Create account", recover: "Save new password" };
+
 function setBusy(on) {
   busy = on;
   submitBtn.disabled = on;
   googleBtn.disabled = on;
-  submitBtn.textContent = on
-    ? "Working\u2026"
-    : (mode === "signin" ? "Sign in" : "Create account");
+  resetBtn.disabled = on;
+  submitBtn.textContent = on ? "Working…" : SUBMIT_LABEL[mode];
 }
 
 function setMode(next) {
   mode = next;
   const signin = mode === "signin";
-  titleEl.textContent = signin ? "Sign in" : "Create an account";
-  submitBtn.textContent = signin ? "Sign in" : "Create account";
+  const recover = mode === "recover";
+  titleEl.textContent = recover ? "Choose a new password"
+    : signin ? "Sign in" : "Create an account";
+  submitBtn.textContent = SUBMIT_LABEL[mode];
   switchTxt.textContent = signin ? "New here?" : "Already have an account?";
   switchBtn.textContent = signin ? "Create an account" : "Sign in";
   passEl.autocomplete = signin ? "current-password" : "new-password";
   resetBtn.hidden = !signin;
+  // Recovery is one field. Google, the email box and the sign-up switch
+  // would all be ways to wander off from the one thing they came to do.
+  googleBtn.hidden = orRow.hidden = switchRow.hidden = recover;
+  emailEl.hidden = emailLabel.hidden = recover;
   say("");
 }
 
@@ -101,9 +125,32 @@ function friendly(error) {
   if (/email not confirmed/i.test(m)) return "Check your email and click the confirmation link first.";
   if (/user already registered/i.test(m)) return "There is already an account with that email - try signing in.";
   if (/password should be at least/i.test(m)) return "Passwords need to be at least 6 characters.";
+  if (/should be different from the old/i.test(m)) return "Pick a password you have not used here before.";
   if (/rate limit|too many/i.test(m)) return "Too many attempts. Wait a minute and try again.";
-  if (/failed to fetch|networkerror/i.test(m)) return "Could not reach the server. Check your connection.";
+  // A failed dynamic import: most often a school or office network blocking
+  // the CDN the sign-in code comes from. Checked before the generic network
+  // case, because Firefox words both as a fetch failure.
+  if (/dynamically imported module|importing a module script|module script/i.test(m)) {
+    return "Sign-in could not load - your network may be blocking it. Every topic still works without an account.";
+  }
+  if (/failed to fetch|networkerror|load failed/i.test(m)) return "Could not reach the server. Check your connection.";
   return m;
+}
+
+// Every button here awaits the lazily loaded client, and that load can fail.
+// Without this, a rejection skipped setBusy(false) and the dialog sat on
+// "Working..." for good - so every action goes through the one wrapper.
+async function run(action) {
+  if (busy) return;
+  setBusy(true);
+  say("");
+  try {
+    await action(await client());
+  } catch (err) {
+    say(friendly(err), "err");
+  } finally {
+    setBusy(false);
+  }
 }
 
 /* -------------------------------------------------------------- header UI */
@@ -146,7 +193,16 @@ function renderSignedIn(user) {
   out.textContent = "Sign out";
   out.addEventListener("click", async () => {
     out.disabled = true;
-    await (await client()).auth.signOut();
+    try {
+      const { error } = await (await client()).auth.signOut();
+      if (error) throw error;
+      // Success repaints the header through onAuthStateChange.
+    } catch (err) {
+      // Left disabled, the button would look as if it had worked.
+      out.disabled = false;
+      out.textContent = "Sign out failed - retry";
+      out.title = friendly(err);
+    }
   });
 
   slot.append(who, out);
@@ -154,72 +210,106 @@ function renderSignedIn(user) {
 
 /* ---------------------------------------------------------------- dialog */
 
+// Supabase hands the session back in the URL fragment. A hash route sitting
+// in front of it would read as a topic id, so the return URL carries no hash
+// and the route rides along in sessionStorage instead.
+const RETURN_KEY = "auth-return-hash";
+
+function returnUrl() {
+  try {
+    if (location.hash) sessionStorage.setItem(RETURN_KEY, location.hash);
+  } catch (e) { /* private mode: they land on the page, just not the topic */ }
+  return location.origin + location.pathname + location.search;
+}
+
+function restoreRoute() {
+  let hash = "";
+  try {
+    hash = sessionStorage.getItem(RETURN_KEY) || "";
+    sessionStorage.removeItem(RETURN_KEY);
+  } catch (e) { return; }
+  // Only once supabase-js has cleared its tokens from the fragment.
+  if (hash && !location.hash) location.hash = hash;
+}
+
 function open() {
   setMode("signin");
   // The real controls are always shown, so what the page will look like once
   // the keys are in is never a surprise - they are just inert until then.
-  if (configured) client();   // start the fetch while they read the form
+  if (configured) client().catch(function () {});   // warm it; errors surface on use
   setupEl.hidden = configured;
   submitBtn.disabled = !configured;
   googleBtn.disabled = !configured;
   emailEl.disabled = passEl.disabled = resetBtn.disabled = !configured;
   emailEl.value = "";
   passEl.value = "";
-  dlg.showModal();
+  if (!dlg.open) dlg.showModal();
   if (configured) emailEl.focus();
+}
+
+function openRecovery() {
+  open();
+  setMode("recover");
+  passEl.focus();
 }
 
 switchBtn.addEventListener("click", () => setMode(mode === "signin" ? "signup" : "signin"));
 
-googleBtn.addEventListener("click", async () => {
-  setBusy(true);
-  say("");
-  const { error } = await (await client()).auth.signInWithOAuth({
+googleBtn.addEventListener("click", () => run(async (sb) => {
+  const { error } = await sb.auth.signInWithOAuth({
     provider: "google",
-    // Come back to the exact page they left, hash route included, so signing
-    // in from a topic page does not dump them on the home screen.
-    options: { redirectTo: location.href }
+    options: { redirectTo: returnUrl() }
   });
   // On success the browser navigates away, so reaching here means it failed.
-  if (error) { setBusy(false); say(friendly(error), "err"); }
-});
+  if (error) throw error;
+}));
 
-form.addEventListener("submit", async (e) => {
+form.addEventListener("submit", (e) => {
   e.preventDefault();
-  if (busy) return;
 
   const email = emailEl.value.trim();
   const password = passEl.value;
+
+  if (mode === "recover") {
+    if (password.length < 6) { say("Passwords need to be at least 6 characters.", "err"); return; }
+    run(async (sb) => {
+      const { error } = await sb.auth.updateUser({ password });
+      if (error) throw error;
+      passEl.value = "";
+      setMode("signin");
+      dlg.close();
+    });
+    return;
+  }
+
   if (!email || !password) { say("Enter an email and a password.", "err"); return; }
 
-  setBusy(true);
-  say("");
-
-  if (mode === "signin") {
-    const { error } = await (await client()).auth.signInWithPassword({ email, password });
-    setBusy(false);
-    if (error) { say(friendly(error), "err"); return; }
-    dlg.close();                     // onAuthStateChange repaints the header
-  } else {
-    const { data, error } = await (await client()).auth.signUp({
-      email, password, options: { emailRedirectTo: location.href }
+  run(async (sb) => {
+    if (mode === "signin") {
+      const { error } = await sb.auth.signInWithPassword({ email, password });
+      if (error) throw error;
+      dlg.close();                     // onAuthStateChange repaints the header
+      return;
+    }
+    const { data, error } = await sb.auth.signUp({
+      email, password, options: { emailRedirectTo: returnUrl() }
     });
-    setBusy(false);
-    if (error) { say(friendly(error), "err"); return; }
+    if (error) throw error;
     // With email confirmation on, there is no session yet - saying "done"
     // here would be a lie, and the student would sit waiting on a blank page.
     if (data.session) dlg.close();
     else say("Account created. Check " + email + " for a confirmation link, then sign in.", "ok");
-  }
+  });
 });
 
-resetBtn.addEventListener("click", async () => {
+resetBtn.addEventListener("click", () => {
   const email = emailEl.value.trim();
   if (!email) { say("Type your email above first, then press this.", "err"); emailEl.focus(); return; }
-  setBusy(true);
-  const { error } = await (await client()).auth.resetPasswordForEmail(email, { redirectTo: location.href });
-  setBusy(false);
-  say(error ? friendly(error) : "Password reset link sent to " + email + ".", error ? "err" : "ok");
+  run(async (sb) => {
+    const { error } = await sb.auth.resetPasswordForEmail(email, { redirectTo: returnUrl() });
+    if (error) throw error;
+    say("Password reset link sent to " + email + ".", "ok");
+  });
 });
 
 /* ----------------------------------------------------------------- start */
@@ -227,10 +317,25 @@ resetBtn.addEventListener("click", async () => {
 renderSignedOut();
 
 // Two reasons to load the client immediately: a session is already stored, or
-// we have just come back from Google with a code in the URL to exchange.
+// we have just come back from Supabase with a session or an error in the URL.
 const returning = /[?&#](code|access_token|error)=/.test(location.search + location.hash);
+// Read before supabase-js tidies the URL. An expired confirmation or reset
+// link comes back as an error in the fragment, and saying nothing leaves
+// the student wondering why the link "did nothing".
+const linkError = (location.hash.match(/error_description=([^&]+)/) || [])[1];
 if (configured && (hasStoredSession() || returning)) {
   client().then((sb) => sb.auth.getSession()).then(({ data }) => {
     if (data.session) renderSignedIn(data.session.user);
+    if (returning) restoreRoute();
+    if (linkError && !data.session) {
+      const text = decodeURIComponent(linkError.replace(/\+/g, " "));
+      open();
+      say(/expired|invalid/i.test(text)
+        ? "That link has expired or was already used. Ask for a new one below."
+        : friendly({ message: text }), "err");
+    }
+  }, function (err) {
+    // Only worth interrupting for if they were mid-way through signing in.
+    if (returning) { open(); say(friendly(err), "err"); }
   });
 }
