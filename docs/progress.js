@@ -188,6 +188,17 @@
     var p = document.createElement("p");
     p.id = "progress-strip";
     p.className = "progress-strip";
+    // One segment per topic: solid for understood, hatched for still stuck.
+    var meter = document.createElement("span");
+    meter.className = "meter";
+    meter.setAttribute("aria-hidden", "true");
+    all.forEach(function (t) {
+      var seg = document.createElement("i");
+      var m = marks[t.id];
+      if (m) seg.className = m.status === "understood" ? "got" : "stuck";
+      meter.appendChild(seg);
+    });
+    p.appendChild(meter);
     p.appendChild(document.createTextNode(
       "Your progress: " + got.length + " of " + all.length + " understood"));
     if (stuck.length) {

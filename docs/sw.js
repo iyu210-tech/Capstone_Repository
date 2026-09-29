@@ -9,7 +9,7 @@
  * Only same-origin GETs are touched. Supabase and the sign-in library are
  * cross-origin and pass straight through: offline, sign-in is simply off.
  */
-var CACHE = "ib-hl-v2";
+var CACHE = "ib-hl-v3";
 
 // The shell a first offline visit needs; topic pages come from the sitemap
 // below, and anything else is added as it is visited.
@@ -17,6 +17,12 @@ var CORE = [
   "./",
   "index.html",
   "style.css",
+  "theme.js",
+  "fonts/inter-latin.woff2",
+  "fonts/source-serif-4-latin.woff2",
+  "fonts/source-serif-4-italic-latin.woff2",
+  "vendor/katex/katex.min.css",
+  "vendor/katex/katex.min.js",
   "topics.js",
   "demos.js",
   "app.js",

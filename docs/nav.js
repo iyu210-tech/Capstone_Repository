@@ -67,6 +67,12 @@
     location.hash = "#/";
   });
 
+  // The header's search button does the same as this tab, on wider screens.
+  var headSearch = document.getElementById("head-search");
+  if (headSearch) headSearch.addEventListener("click", function () {
+    document.getElementById("mnav-search").click();
+  });
+
   // The header button is the one auth.js owns; clicking it here keeps a single
   // implementation rather than a second copy of the sign-in logic.
   document.getElementById("mnav-account").addEventListener("click", function () {
