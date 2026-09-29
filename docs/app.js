@@ -126,7 +126,7 @@
       g.fillText("s · p · d · f", 400, 70);
       g.fillText("Cr: 4s¹ 3d⁵", 400, 100);
       g.fillText("Cu: 4s¹ 3d¹⁰", 400, 126);
-    } else {
+    } else if (topic.demo === "boltzmann") {
       var mb = function (u) {
         var x = u * 3.2;
         return Math.min(0.92, x * x * Math.exp(-x * x / 1.1) * 0.95);
@@ -137,6 +137,15 @@
       for (var i = 62; i <= 120; i++) g.lineTo(tx(i / 120), ty(mb(i / 120)));
       g.lineTo(tx(1), ty(0)); g.closePath(); g.fill();
       curve(function (u) { return [u, mb(u)]; }, accent);
+    } else {
+      // A topic with no browser port, or one whose preview is not drawn yet.
+      // This used to fall through to the Boltzmann curve, so every new topic
+      // wore a chemistry thumbnail. A plain rising curve claims nothing.
+      curve(function (u) { return [u, 0.12 + 0.76 * u * u * (3 - 2 * u)]; }, soft, [7, 6]);
+      g.fillStyle = accent;
+      g.font = "600 13px ui-sans-serif, system-ui, sans-serif";
+      g.textAlign = "left"; g.textBaseline = "top";
+      g.fillText(topic.subject || "", TP + 6, TP + 4);
     }
     return c;
   }
@@ -309,7 +318,13 @@
     var copyBtn = document.getElementById("copy-btn");
     var copyStatus = document.getElementById("copy-status");
     copyBtn.addEventListener("click", function () {
-      navigator.clipboard.writeText(t.source).then(function () {
+      // navigator.clipboard only exists in a secure context, so over plain
+      // http it is undefined and .writeText threw before the fallback below
+      // could run. Rejecting instead routes that case to the same fallback.
+      var write = navigator.clipboard && navigator.clipboard.writeText
+        ? navigator.clipboard.writeText(t.source)
+        : Promise.reject(new Error("no clipboard"));
+      write.then(function () {
         copyBtn.textContent = "Copied ✓";
         copyStatus.textContent = "Source copied to clipboard.";
         setTimeout(function () { copyBtn.textContent = "Copy"; copyStatus.textContent = ""; }, 1600);
