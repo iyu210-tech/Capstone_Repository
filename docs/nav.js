@@ -36,11 +36,19 @@
       box.focus();
       return;
     }
-    location.hash = "#/";
-    setTimeout(function () {
+    // Wait for the box to exist rather than for a fixed delay: a guessed
+    // 60ms was a race a slow phone could lose, leaving focus nowhere.
+    var view = document.getElementById("view");
+    var watch = new MutationObserver(function () {
       var el = document.getElementById("search");
-      if (el) { el.scrollIntoView({ block: "center" }); el.focus(); }
-    }, 60);
+      if (!el) return;
+      watch.disconnect();
+      el.scrollIntoView({ block: "center" });
+      el.focus();
+    });
+    watch.observe(view, { childList: true, subtree: true });
+    setTimeout(function () { watch.disconnect(); }, 3000);
+    location.hash = "#/";
   });
 
   // The header button is the one auth.js owns; clicking it here keeps a single
