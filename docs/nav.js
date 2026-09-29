@@ -11,6 +11,18 @@
 (function () {
   "use strict";
 
+  // Offline copy (docs/sw.js). Resolved from this script's own URL rather
+  // than the page's, so it registers the same worker, with the same scope,
+  // from a page at any depth and under the GitHub Pages subpath alike.
+  var here = document.currentScript && document.currentScript.src;
+  if (here && "serviceWorker" in navigator && location.protocol !== "file:") {
+    window.addEventListener("load", function () {
+      navigator.serviceWorker.register(new URL("sw.js", here).href, {
+        scope: new URL("./", here).href
+      }).catch(function () { /* offline support is a bonus, never a blocker */ });
+    });
+  }
+
   var nav = document.querySelector(".mobile-nav");
   if (!nav) return;
 

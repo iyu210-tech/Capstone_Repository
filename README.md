@@ -111,6 +111,14 @@ bar, and **Copy link to this setup** opens the demo with exactly those values
 demo built from the `slider()` / `button()` helpers gets shareable links with
 no extra code.
 
+### Offline
+
+[`docs/sw.js`](docs/sw.js) keeps a copy of every page a reader has visited, so
+the site still opens on a train. It is **network first**: online, every request
+goes to the network and the copy is only refreshed on the way past, so it can
+never serve last week's code over this week's. If you add a new top-level file
+the site needs offline, add it to `CORE` there.
+
 ### After changing any topic
 
 The site does not keep its own copy of the code — `docs/topics.js` is generated

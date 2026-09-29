@@ -1,0 +1,13 @@
+{
+  "name": "IB HL Visualisations",
+  "short_name": "IB HL Viz",
+  "description": "Hard IB Higher Level Maths, Physics and Chemistry topics, made runnable.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f7f7f5",
+  "theme_color": "#b4341f",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}
