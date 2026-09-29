@@ -9,8 +9,8 @@ if (!/\/(index\.html)?$/.test(location.pathname)) location.replace(location.path
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Maxwell-Boltzmann and activation energy — IB HL Visualisations</title>
 <meta name="description" content="Raising the temperature barely moves the peak - it stretches the tail past Ea. Drag the temperature slider and watch the shaded area multiply while the curve itself hardly shifts.">
-<meta name="theme-color" content="#b4341f" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#14140f" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0f1116" media="(prefers-color-scheme: dark)">
 <link rel="canonical" href="https://iyu210-tech.github.io/Capstone_Repository/t/maxwell-boltzmann/">
 
 <!-- Link previews. Without these the capstone shares as a blank grey card.
@@ -33,25 +33,59 @@ if (!/\/(index\.html)?$/.test(location.pathname)) location.replace(location.path
 
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23b4341f'/%3E%3Ctext x='16' y='24' font-size='23' font-family='Georgia,serif' fill='%23fff' text-anchor='middle'%3E%E2%88%AB%3C/text%3E%3C/svg%3E">
 <link rel="manifest" href="../../manifest.webmanifest">
+<!-- Fonts are self-hosted (docs/fonts/, both SIL OFL): the CSP allows fonts
+     from 'self', and a student on a school network that blocks Google still
+     gets the real type. Only the two upright faces are preloaded; the italic
+     is small and fetched when something first uses it. -->
+<link rel="preload" href="../../fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../../fonts/source-serif-4-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="../../style.css">
+<!-- Before first paint, so a saved dark theme never flashes white. -->
+<script src="../../theme.js"></script>
 </head>
 <body>
 
 <a class="skip-link" href="#view">Skip to content</a>
 
 <header class="site-head">
-  <a class="brand" href="#/">
-    <span class="brand-mark" aria-hidden="true">&#8747;</span>
-    <span>
-      <strong>IB HL Visualisations</strong>
-      <small>Hard topics, made runnable</small>
-    </span>
-  </a>
-  <nav class="head-actions">
-    <a class="ghost-btn" href="https://github.com/iyu210-tech/Capstone_Repository" target="_blank" rel="noopener">GitHub &#8599;</a>
-    <!-- Filled by auth.js: a "Sign in" button, or the account name plus "Sign out". -->
-    <div id="account" class="account"></div>
-  </nav>
+  <div class="site-head-inner">
+    <a class="brand" href="#/">
+      <span class="brand-mark" aria-hidden="true">&#8747;</span>
+      <span class="brand-text">
+        <strong>IB HL Visualisations</strong>
+        <small>Ian Yu&rsquo;s lab notebook</small>
+      </span>
+    </a>
+
+    <!-- Search lives on the home page; from anywhere else this takes you
+         there with the box focused (nav.js), the same as the phone tab. -->
+    <button type="button" class="head-search" id="head-search">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg>
+      <span>Search topics</span>
+      <kbd aria-hidden="true">/</kbd>
+    </button>
+
+    <div class="theme-toggle" role="group" aria-label="Colour theme">
+      <button type="button" data-theme-choice="light" aria-pressed="false" title="Light">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M4.6 4.6l1.4 1.4M18 18l1.4 1.4M2.5 12h2M19.5 12h2M4.6 19.4 6 18M18 6l1.4-1.4"/></svg>
+        <span class="sr-only">Light</span>
+      </button>
+      <button type="button" data-theme-choice="system" aria-pressed="true" title="Match the system">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 3.5a8.5 8.5 0 0 1 0 17z" class="fill"/></svg>
+        <span class="sr-only">System</span>
+      </button>
+      <button type="button" data-theme-choice="dark" aria-pressed="false" title="Dark">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19.5 14.5A8 8 0 0 1 9.5 4.5a8 8 0 1 0 10 10z"/></svg>
+        <span class="sr-only">Dark</span>
+      </button>
+    </div>
+
+    <nav class="head-actions" aria-label="Site">
+      <a class="ghost-btn" href="https://github.com/iyu210-tech/Capstone_Repository" target="_blank" rel="noopener">GitHub &#8599;</a>
+      <!-- Filled by auth.js: a "Sign in" button, or the account name plus "Sign out". -->
+      <div id="account" class="account"></div>
+    </nav>
+  </div>
 </header>
 
 <main id="view" tabindex="-1">
@@ -104,90 +138,155 @@ if (!/\/(index\.html)?$/.test(location.pathname)) location.replace(location.path
 </nav>
 
 <footer class="site-foot">
-  <p>Capstone project by Ian Yu &mdash; Maths AA HL, Physics HL, Chemistry HL.
-     Every animation here is a browser port of the Python in the same folder.</p>
+  <div class="site-foot-inner">
+    <p class="foot-sign"><span class="brand-mark small" aria-hidden="true">&#8747;</span>
+       A capstone by Ian Yu &mdash; Maths AA HL, Physics HL, Chemistry HL.
+       One hard topic a week; every animation is a browser port of the Python
+       in the same folder.</p>
+    <p class="foot-credits">Type: Inter and Source Serif 4 (SIL OFL). Maths:
+       KaTeX (MIT). Ideas borrowed from Distill, Mathigon, PhET and Starlight.
+       <a href="https://github.com/iyu210-tech/Capstone_Repository" target="_blank" rel="noopener">Source on GitHub</a>.</p>
+  </div>
 </footer>
 
 <!-- templates ------------------------------------------------------------ -->
 <template id="tpl-home">
   <section class="hero">
-    <h1 tabindex="-1">Hard IB topics you can <em>run</em>.</h1>
-    <p>Each topic is a small, self-contained Python program that makes one
-       difficult idea visible. Play with it here in the browser, then download
-       the code and change the numbers yourself.</p>
+    <div class="hero-text">
+      <p class="eyebrow">A capstone by Ian Yu &middot; Maths AA HL &middot; Physics HL &middot; Chemistry HL</p>
+      <h1 tabindex="-1">Hard IB topics, worked out until they <em>run</em>.</h1>
+      <p class="hero-lede">Every week I take the HL topic that was hardest and
+         turn it into something you can play with here, then take home as the
+         real Python.</p>
+    </div>
+    <ol class="hero-steps" aria-label="How it works">
+      <li><span><b>Type</b> the question you&rsquo;re stuck on.</span></li>
+      <li><span><b>Drag</b> the sliders until it clicks.</span></li>
+      <li><span><b>Take</b> the code: copy, download or open it in Colab.</span></li>
+    </ol>
   </section>
 
-  <section class="controls">
-    <label class="sr-only" for="search">Search topics</label>
-    <input id="search" type="search" placeholder="Search topics, e.g. &ldquo;why does heating speed up a reaction&rdquo;" autocomplete="off">
-    <p class="search-hint" aria-hidden="true">Press <kbd>/</kbd> from anywhere to jump here.</p>
+  <section class="controls" aria-label="Find a topic">
+    <label class="search-label" for="search">What are you stuck on?</label>
+    <div class="search-box">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg>
+      <input id="search" type="search" placeholder="e.g. why does heating speed up a reaction" autocomplete="off" spellcheck="false">
+      <!-- The "/" shortcut, shown where it can be used: touch screens hide it. -->
+      <span class="search-hint" aria-hidden="true">Press <kbd>/</kbd></span>
+    </div>
+    <div class="suggest" data-suggest hidden><span class="suggest-lead">Try</span></div>
     <div id="filters" class="filters" role="group" aria-label="Filter by subject"></div>
   </section>
 
-  <p id="count" class="count" role="status" aria-live="polite"></p>
-  <section id="cards" class="cards"></section>
+  <div class="status-row">
+    <p id="count" class="count" role="status" aria-live="polite"></p>
+  </div>
+  <section id="cards" class="cards" aria-label="Topics"></section>
   <p id="empty" class="empty" hidden></p>
 </template>
 
 <template id="tpl-topic">
-  <a class="back" href="#/">&#8592; All topics</a>
-  <article class="topic">
-    <header class="topic-head">
-      <span class="pill" data-subject></span>
-      <h1 data-title tabindex="-1"></h1>
-      <p class="syllabus" data-syllabus></p>
-    </header>
+  <div class="topic-layout">
+    <!-- Every topic, grouped by subject, so the next one is one click away.
+         Filled by app.js; hidden below 1180px, where prev/next does the job. -->
+    <aside class="topic-side" aria-label="All topics">
+      <a class="side-home" href="#/">&#8592; All topics</a>
+      <nav class="topic-index" data-index aria-label="Topics by subject"></nav>
+    </aside>
 
-    <section class="panel" id="demo-panel">
-      <h2>Explore</h2>
-      <div class="demo">
-        <canvas id="stage" width="900" height="480" role="img" aria-label="Interactive plot"></canvas>
-        <div id="demo-controls" class="demo-controls"></div>
-        <p id="demo-readout" class="readout" aria-live="off"></p>
-      </div>
-    </section>
+    <article class="topic">
+      <header class="topic-head">
+        <p class="crumbs">
+          <a class="back" href="#/">All topics</a>
+          <span aria-hidden="true">/</span>
+          <span class="pill" data-subject></span>
+          <span class="entry-no" data-entry></span>
+        </p>
+        <h1 data-title tabindex="-1"></h1>
+        <p class="syllabus" data-syllabus></p>
+      </header>
 
-    <section class="two-up">
-      <div class="panel">
-        <h2>The hard bit</h2>
-        <p data-hard></p>
-      </div>
-      <div class="panel">
-        <h2>What this shows</h2>
-        <p data-shows></p>
-      </div>
-    </section>
+      <section class="block hard-block" aria-labelledby="h-hard">
+        <h2 class="kicker" id="h-hard"><span class="n"></span>The hard bit</h2>
+        <p class="lede" data-hard></p>
+      </section>
 
-    <section class="panel">
-      <div class="panel-head">
-        <h2>The Python</h2>
-        <div class="actions">
-          <button id="copy-btn" class="btn">Copy</button>
-          <button id="dl-btn" class="btn primary">Download .py</button>
+      <section class="block figure-block" id="demo-panel" aria-labelledby="h-demo">
+        <h2 class="kicker" id="h-demo"><span class="n"></span>Try it</h2>
+        <!-- The figure and its controls: side by side when the article is
+             wide enough, controls under the figure on a phone. The orbitals
+             walkthrough replaces everything inside .demo with its own
+             sections. -->
+        <div class="demo">
+          <div class="demo-stage">
+            <canvas id="stage" width="900" height="480" role="img" aria-label="Interactive plot"></canvas>
+          </div>
+          <div class="demo-side">
+            <div class="observation">
+              <h3>What you&rsquo;re seeing</h3>
+              <p id="demo-readout" class="readout" aria-live="off"></p>
+            </div>
+            <h3 class="demo-side-title">Controls</h3>
+            <div id="demo-controls" class="demo-controls"></div>
+          </div>
         </div>
-      </div>
-      <p class="hint">This is the real file from the repository, not a
-         simplified version. Run it with
-         <code>pip install -r requirements.txt</code> and you get the same
-         figures as the animation above.</p>
-      <pre class="code" tabindex="0"><code id="source"></code></pre>
-      <p class="hint">
-        Prefer a notebook? <a data-notebook target="_blank" rel="noopener">View on GitHub</a>
-        &middot; <a data-colab target="_blank" rel="noopener">Open in Colab</a>
-        (runs in the browser, nothing to install).
-      </p>
-      <p class="sr-only" id="copy-status" role="status" aria-live="polite"></p>
-    </section>
-  </article>
+        <p class="fig-caption" data-caption></p>
+      </section>
+
+      <section class="block" aria-labelledby="h-shows">
+        <h2 class="kicker" id="h-shows"><span class="n"></span>What this shows</h2>
+        <p class="prose" data-shows></p>
+      </section>
+
+      <!-- The next three fill from topics.json when a topic has them
+           (equations, try_changing, questions) and stay hidden otherwise. -->
+      <section class="block" data-block="equations" aria-labelledby="h-eq" hidden>
+        <h2 class="kicker" id="h-eq"><span class="n"></span>Key equations</h2>
+        <div class="equations" data-equations></div>
+      </section>
+
+      <section class="block" data-block="try" aria-labelledby="h-try" hidden>
+        <h2 class="kicker" id="h-try"><span class="n"></span>Try changing</h2>
+        <ul class="try-list" data-try></ul>
+      </section>
+
+      <section class="block" data-block="questions" aria-labelledby="h-quiz" hidden>
+        <h2 class="kicker" id="h-quiz"><span class="n"></span>Check your understanding</h2>
+        <p class="block-note">Answer in your head first, then open it.</p>
+        <div class="quiz" data-questions></div>
+      </section>
+
+      <section class="block code-block" aria-labelledby="h-code">
+        <h2 class="kicker" id="h-code"><span class="n"></span>The Python</h2>
+        <p class="hint">The real file from the repository, not a simplified
+           version. Run it after <code>pip install -r requirements.txt</code>
+           and you get the same figures as above.</p>
+        <div class="code-card">
+          <div class="code-bar">
+            <span class="code-file" data-script></span>
+            <div class="actions">
+              <button id="copy-btn" class="btn">Copy</button>
+              <button id="dl-btn" class="btn primary">Download .py</button>
+              <a class="btn" data-notebook target="_blank" rel="noopener">Notebook &#8599;</a>
+              <a class="btn" data-colab target="_blank" rel="noopener">Open in Colab &#8599;</a>
+            </div>
+          </div>
+          <pre class="code" tabindex="0" aria-label="Python source"><code id="source"></code></pre>
+        </div>
+        <p class="sr-only" id="copy-status" role="status" aria-live="polite"></p>
+      </section>
+    </article>
+  </div>
 </template>
 
 <template id="tpl-missing">
   <section class="notfound">
+    <p class="eyebrow">Error 404 &middot; no such entry</p>
     <h1 tabindex="-1">That topic is not here</h1>
     <p>Nothing in the collection matches <code data-wanted></code>. It may have
        been renamed since the link was shared, or it may not be written yet
        &mdash; the collection grows each week.</p>
-    <p><a href="#/">Browse all topics &#8594;</a></p>
+    <p><a class="btn primary" href="#/">Browse all topics &#8594;</a></p>
   </section>
 </template>
 
