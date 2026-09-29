@@ -475,15 +475,65 @@
   }
 
   /* ------------------------------------------------------------- router */
+  // Every topic has a real page at t/<id>/, written by build_site.py, so a
+  // link can be shared, crawled and reloaded on any static host with no
+  // rewrite rules. app.js always sits at the site root, so its own URL says
+  // where that is - "/" on Vercel and Render, "/Capstone_Repository/" on
+  // GitHub Pages - without hard-coding either.
+  var BASE = new URL(".", (document.currentScript || {}).src || location.href).pathname;
+  var shown = null;           // route on screen, so #view alone does not rebuild it
+
+  function known(id) { return TOPICS.some(function (t) { return t.id === id; }); }
+  function dec(s) { try { return decodeURIComponent(s); } catch (e) { return s; } }
+
+  // The topic the path names (…/t/<id>/), or "" for home.
+  function pathRoute() {
+    var rest = location.pathname.indexOf(BASE) === 0 ? location.pathname.slice(BASE.length) : "";
+    var m = /^t\/([^/]+)\/?(?:index\.html)?$/.exec(rest);
+    return m ? dec(m[1]) : "";
+  }
+
+  // The #/<id> an old shared link or an in-page link carries, or null.
+  // Supabase returns from Google, a confirmation email or a reset link with
+  // tokens in the fragment; those are auth.js's to read, not topic ids.
+  function hashRoute() {
+    var h = location.hash;
+    if (/access_token=|refresh_token=|error_description=/.test(h)
+        || (/error=/.test(h) && /type=/.test(h))) return null;
+    return /^#\//.test(h) ? dec(h.slice(2)).replace(/\/$/, "") : null;
+  }
+
+  // Put the real URL for a route in the address bar. false if the browser
+  // refuses (file:// will not rewrite a path), so the caller keeps the hash.
+  function go(id, replace) {
+    var url = BASE + (id ? "t/" + encodeURIComponent(id) + "/" : "") + (replace ? location.search : "");
+    try { history[replace ? "replaceState" : "pushState"](null, "", url); return true; }
+    catch (e) { return false; }
+  }
+
   function route() {
+    var id = hashRoute();
+    if (id === null) {
+      id = pathRoute();
+    } else if (!id || known(id)) {
+      // An old #/<id> link becomes the page's own URL, so the next copy of
+      // it is the good one. An unknown id keeps its hash for "not here".
+      // Not until the parser is done, though: the scripts after this one
+      // resolve their relative src against the address bar, and would 404.
+      var fix = function () { go(id, true); };
+      if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", fix);
+      else fix();
+    }
+    if (id === shown) return;
+    shown = id;
+
     if (active && active.destroy) { active.destroy(); active = null; }
-    var hash = location.hash.replace(/^#\/?/, "");
     window.scrollTo(0, 0);
-    if (!hash) {
+    if (!id) {
       document.title = "IB HL Visualisations";
       renderHome();
     } else {
-      renderTopic(hash);
+      renderTopic(id);
     }
 
     // Move focus to the new heading so the view change is announced instead
@@ -507,6 +557,23 @@
     search.select();
   });
 
+  // The in-page links still say #/<id> (cards, back link, brand). Catch them
+  // before the browser adds a #/ history entry and push the real URL instead,
+  // so Back and Forward step between pages rather than fragments. Modified
+  // clicks fall through: a new tab opens at #/<id>, and route() redirects it.
+  document.addEventListener("click", function (e) {
+    if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    var a = e.target.closest && e.target.closest('a[href^="#/"]');
+    if (!a) return;
+    var id = dec(a.getAttribute("href").slice(2)).replace(/\/$/, "");
+    if (id && !known(id)) return;
+    if (id === shown && !location.hash) { e.preventDefault(); window.scrollTo(0, 0); return; }
+    if (go(id, false)) { e.preventDefault(); route(); }
+  });
+
+  // popstate covers Back/Forward; hashchange covers a #/<id> typed or set by
+  // script (nav.js does). Both fire for one fragment change - shown dedupes.
+  window.addEventListener("popstate", route);
   window.addEventListener("hashchange", route);
   route();
 })();

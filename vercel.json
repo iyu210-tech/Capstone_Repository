@@ -3,6 +3,7 @@
   "framework": null,
   "buildCommand": "python3 build_site.py",
   "outputDirectory": "docs",
+  "trailingSlash": true,
   "headers": [
     {
       "source": "/(.*)",
@@ -19,6 +20,24 @@
     },
     {
       "source": "/(.*).(html|js|css)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=0, must-revalidate"
+        }
+      ]
+    },
+    {
+      "source": "/",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=0, must-revalidate"
+        }
+      ]
+    },
+    {
+      "source": "/t/(.*)",
       "headers": [
         {
           "key": "Cache-Control",

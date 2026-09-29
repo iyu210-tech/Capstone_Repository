@@ -1,0 +1,54 @@
+# Tests, then the build, then a check that the build changed nothing.
+#
+# GitHub Pages serves the committed docs/ with no build step, so a push that
+# edits a script or topics.json without re-running build_site.py ships a stale
+# site there - while Vercel and Render, which do build, quietly look fine.
+# The last step is what catches that.
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: |
+            requirements.txt
+            requirements-dev.txt
+
+      # Not needed by anything here yet; set up so JavaScript tests can be
+      # added without touching this file.
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install
+        run: pip install -r requirements.txt -r requirements-dev.txt
+
+      - name: Test
+        run: python -m pytest -q
+
+      # SITE_URL deliberately unset: the committed docs/ is the GitHub Pages
+      # build, which uses the default.
+      - name: Build
+        run: python build_site.py
+
+      - name: Generated files are up to date
+        run: |
+          if [ -n "$(git status --porcelain docs/)" ]; then
+            echo "::error::docs/ is out of date - run 'python build_site.py' and commit the result."
+            git status --porcelain docs/
+            git --no-pager diff --stat docs/
+            exit 1
+          fi
