@@ -8,7 +8,7 @@
   --accent-soft: #fbeeeb;
   --code-bg: #faf9f7;
   --radius: 12px;
-  --maxw: 980px;
+  --maxw: 1100px;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -148,6 +148,286 @@ canvas {
 
 .readout { margin-top: .9rem; color: var(--ink-soft); font-size: .88rem; }
 .readout b { color: var(--ink); font-variant-numeric: tabular-nums; }
+
+/* orbitals long-form demo ---------------------------------------------- */
+.orb-demo { display: flex; flex-direction: column; gap: 1.75rem; }
+.orb-section h3 {
+  margin: 0 0 .4rem;
+  font-size: 1.05rem;
+  letter-spacing: -.01em;
+}
+.orb-section h4 {
+  margin: 0 0 .6rem;
+  font-size: .85rem;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  color: var(--ink-soft);
+}
+.orb-lead { margin: 0 0 1rem; color: var(--ink-soft); font-size: .92rem; }
+.orb-lead b { color: var(--ink); }
+.orb-note { margin: .75rem 0 0; color: var(--ink-soft); font-size: .88rem; }
+.orb-note b { color: var(--ink); }
+.orb-warn { color: var(--accent); font-weight: 600; }
+
+.orb-shape-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: .75rem;
+}
+@media (max-width: 640px) {
+  .orb-shape-row { grid-template-columns: repeat(2, 1fr); }
+}
+.orb-shape-card {
+  display: flex; flex-direction: column; align-items: center; gap: .35rem;
+  padding: .6rem .4rem .75rem;
+  border: 1px solid var(--border); border-radius: 10px;
+  background: var(--code-bg); cursor: pointer; font-family: inherit;
+  color: inherit;
+}
+.orb-shape-card canvas {
+  width: 100%; border: none; border-radius: 6px; background: transparent;
+}
+.orb-shape-card[aria-pressed="true"] {
+  border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent);
+}
+.orb-shape-label { font-weight: 600; font-size: .95rem; }
+
+.orb-pair-wrap {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 1.25rem;
+}
+.orb-box-big {
+  border: none; background: transparent; padding: 0; cursor: pointer;
+}
+.orb-box-big canvas {
+  width: 120px; border: none; background: transparent;
+}
+
+.orb-legend {
+  display: flex; flex-wrap: wrap; gap: .75rem 1.25rem;
+  margin-bottom: .75rem; font-size: .85rem; color: var(--ink-soft);
+}
+.orb-legend-item { display: inline-flex; align-items: center; gap: .4rem; }
+.orb-legend-item i {
+  display: inline-block; width: 12px; height: 12px; border-radius: 3px;
+}
+
+.orb-pt {
+  display: grid;
+  grid-template-columns: repeat(18, minmax(0, 1fr));
+  gap: 3px;
+  margin-bottom: .5rem;
+}
+.orb-pt-cell {
+  aspect-ratio: 1;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: var(--surface);
+  padding: 2px;
+  cursor: pointer;
+  font-family: inherit;
+  color: inherit;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  line-height: 1.1;
+  min-height: 0;
+}
+.orb-pt-cell small { font-size: .55rem; color: var(--ink-soft); }
+.orb-pt-cell strong { font-size: clamp(.55rem, 1.4vw, .75rem); font-weight: 600; }
+.orb-pt-cell.block-s { background: color-mix(in srgb, #b4341f 14%, var(--surface)); }
+.orb-pt-cell.block-p { background: color-mix(in srgb, #2f6f8f 14%, var(--surface)); }
+.orb-pt-cell.block-d { background: color-mix(in srgb, #c47a1a 16%, var(--surface)); }
+.orb-pt-cell[aria-pressed="true"] {
+  border-color: var(--accent);
+  box-shadow: inset 0 0 0 1px var(--accent);
+}
+@media (max-width: 720px) {
+  .orb-pt-cell small { display: none; }
+}
+
+.orb-config-card {
+  margin-top: .85rem;
+  padding: 1rem 1.1rem;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--code-bg);
+}
+.orb-config-main {
+  display: flex; align-items: baseline; gap: .75rem; flex-wrap: wrap;
+  margin-bottom: .35rem;
+}
+.orb-config-sym {
+  font-size: 1.6rem; font-weight: 700; letter-spacing: -.02em; line-height: 1;
+}
+.orb-config-z { color: var(--ink-soft); font-size: .88rem; }
+.orb-config-str {
+  display: block;
+  font: 700 1.05rem/1.4 ui-monospace, Menlo, Consolas, monospace;
+  color: var(--ink);
+  margin: .15rem 0 .35rem;
+}
+.orb-config-end {
+  margin: 0; color: var(--ink-soft); font-size: .88rem;
+}
+.orb-config-end code {
+  font: 600 .85rem ui-monospace, Menlo, Consolas, monospace;
+  color: var(--ink);
+}
+.orb-config-boxes { margin-top: .75rem; }
+
+.orb-diag-head {
+  display: flex; flex-wrap: wrap; align-items: center;
+  justify-content: space-between; gap: .75rem;
+  margin: 1.5rem 0 .4rem;
+}
+.orb-diag-hint {
+  margin: 0 0 .65rem;
+  color: var(--ink-soft);
+  font-size: .88rem;
+}
+.orb-diag-hint b { color: var(--ink); }
+.orb-diag-canvas {
+  width: 100%;
+  height: 460px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--code-bg);
+  display: block;
+}
+.orb-path {
+  display: inline-block;
+  margin-top: .25rem;
+  font: 600 .82rem ui-monospace, Menlo, Consolas, monospace;
+  color: var(--ink);
+}
+
+.orb-metal-row { margin-bottom: .75rem; }
+.orb-ex-btn { border-color: var(--accent); color: var(--accent); }
+
+.orb-why-primer {
+  margin: 0 0 1.1rem;
+  padding: 1rem 1.1rem;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--code-bg);
+}
+.orb-why-primer h4 {
+  margin: 0 0 .75rem;
+  font-size: .9rem;
+  text-transform: none;
+  letter-spacing: 0;
+  color: var(--ink);
+}
+.orb-why-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: .75rem;
+}
+@media (max-width: 800px) {
+  .orb-why-grid { grid-template-columns: 1fr; }
+}
+.orb-why-card {
+  padding: .75rem .85rem;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  font-size: .86rem;
+  color: var(--ink-soft);
+}
+.orb-why-card strong {
+  display: block;
+  margin-bottom: .35rem;
+  color: var(--ink);
+  font-size: .88rem;
+}
+.orb-why-card p { margin: 0; }
+.orb-why-note {
+  margin: .85rem 0 0;
+  font-size: .88rem;
+  color: var(--ink-soft);
+}
+.orb-why-note b { color: var(--ink); }
+
+.orb-unpaired {
+  margin: .55rem 0 0;
+  font-size: .82rem;
+  color: var(--ink-soft);
+}
+.orb-unpaired b { color: var(--accent); }
+
+.orb-transfer {
+  margin-bottom: .9rem;
+}
+.orb-transfer-eq {
+  display: flex; flex-wrap: wrap; align-items: center; gap: .6rem .85rem;
+  padding: .85rem 1rem;
+  border-radius: 10px;
+  border: 1px solid var(--accent);
+  background: var(--accent-soft);
+  font-size: .92rem;
+}
+.orb-transfer-eq code {
+  font: 700 .95rem ui-monospace, Menlo, Consolas, monospace;
+  color: var(--ink);
+}
+.orb-transfer-arrow {
+  color: var(--accent); font-weight: 600; font-size: .85rem;
+}
+.orb-transfer-ok {
+  border-color: var(--border);
+  background: var(--code-bg);
+  color: var(--ink-soft);
+}
+.orb-metal-explain {
+  margin-top: .9rem;
+  padding: .9rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface);
+  font-size: .9rem;
+  color: var(--ink-soft);
+}
+.orb-metal-explain p { margin: 0 0 .5rem; color: var(--ink); }
+.orb-metal-explain ul { margin: 0; padding-left: 1.2rem; }
+.orb-metal-explain li { margin: .3rem 0; }
+.orb-metal-explain code {
+  font: 600 .86rem ui-monospace, Menlo, Consolas, monospace;
+  color: var(--ink);
+}
+
+.orb-metal-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: .9rem;
+}
+@media (max-width: 720px) { .orb-metal-grid { grid-template-columns: 1fr; } }
+.orb-metal-panel {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: .9rem;
+  background: var(--code-bg);
+}
+.orb-metal-panel code {
+  display: block;
+  margin-top: .7rem;
+  font: 600 .85rem ui-monospace, Menlo, Consolas, monospace;
+  color: var(--ink);
+}
+.orb-boxes { display: flex; flex-wrap: wrap; gap: .85rem; }
+.orb-box-group.is-hot .orb-box { border-color: var(--accent); }
+.orb-box-group.is-hot .orb-box-lab { color: var(--accent); }
+.orb-box-lab {
+  font-size: .8rem; font-weight: 600; text-align: center; margin-bottom: .25rem;
+}
+.orb-box-row { display: flex; gap: 4px; }
+.orb-box {
+  width: 28px; height: 44px;
+  border: 1.5px solid var(--ink);
+  border-radius: 3px;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  font-size: .95rem; line-height: 1;
+  background: var(--surface);
+}
+.orb-box .dn { color: var(--ink-soft); }
 
 .hint { color: var(--ink-soft); font-size: .85rem; margin: .6rem 0 !important; }
 .hint code { background: var(--code-bg); border: 1px solid var(--border); border-radius: 4px; padding: .1rem .35rem; font-size: .82em; }

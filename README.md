@@ -15,6 +15,7 @@ you can run.
 | [`math/taylor-series`](math/taylor-series) | Maths AA HL | Maclaurin series and convergence |
 | [`physics/projectile-drag`](physics/projectile-drag) | Physics HL | Projectile motion with air resistance |
 | [`chemistry/maxwell-boltzmann`](chemistry/maxwell-boltzmann) | Chemistry HL | Maxwell-Boltzmann and activation energy |
+| [`chemistry/electron-orbitals`](chemistry/electron-orbitals) | Chemistry HL | Orbital shapes, fill order, and metal exceptions |
 
 ## Two ways to use these
 

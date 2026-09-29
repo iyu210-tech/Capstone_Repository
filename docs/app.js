@@ -82,6 +82,37 @@
     } else if (topic.demo === "projectile") {
       curve(function (u) { return [u, 3.4 * u * (1 - u)]; }, soft, [7, 6]);
       curve(function (u) { return [u * 0.78, 3.4 * (u * 0.78) * (1 - u * 0.92) * 0.86]; }, accent);
+    } else if (topic.demo === "orbitals") {
+      // s sphere + p dumbbell silhouette
+      g.fillStyle = accent; g.globalAlpha = 0.28;
+      g.beginPath(); g.arc(90, 96, 42, 0, Math.PI * 2); g.fill();
+      g.globalAlpha = 1; g.strokeStyle = accent; g.lineWidth = 2.5;
+      g.beginPath(); g.arc(90, 96, 42, 0, Math.PI * 2); g.stroke();
+      g.fillStyle = soft; g.font = "600 14px ui-sans-serif, system-ui, sans-serif";
+      g.textAlign = "center"; g.fillText("s", 90, 170);
+
+      g.fillStyle = accent; g.globalAlpha = 0.3;
+      g.beginPath();
+      for (var t = 0; t < Math.PI * 2; t += 0.05) {
+        var r = 55 * Math.pow(Math.abs(Math.cos(t)), 1.2);
+        var x = 280 + r * Math.cos(t), y = 96 + 0.22 * r * Math.sin(t);
+        if (t === 0) g.moveTo(x, y); else g.lineTo(x, y);
+      }
+      g.closePath(); g.fill(); g.globalAlpha = 1;
+      g.strokeStyle = accent; g.beginPath();
+      for (t = 0; t < Math.PI * 2; t += 0.05) {
+        r = 55 * Math.pow(Math.abs(Math.cos(t)), 1.2);
+        x = 280 + r * Math.cos(t); y = 96 + 0.22 * r * Math.sin(t);
+        if (t === 0) g.moveTo(x, y); else g.lineTo(x, y);
+      }
+      g.closePath(); g.stroke();
+      g.fillStyle = soft; g.fillText("p", 280, 170);
+
+      g.fillStyle = soft; g.font = "12px ui-sans-serif, system-ui, sans-serif";
+      g.textAlign = "left";
+      g.fillText("s · p · d · f", 400, 70);
+      g.fillText("Cr: 4s¹ 3d⁵", 400, 100);
+      g.fillText("Cu: 4s¹ 3d¹⁰", 400, 126);
     } else {
       curve(function (u) {
         var x = u * 3.2;
