@@ -193,6 +193,43 @@ goes to the network and the copy is only refreshed on the way past, so it can
 never serve last week's code over this week's. If you add a new top-level file
 the site needs offline, add it to `CORE` there.
 
+### The look
+
+Every colour, size and font is a token at the top of
+[`docs/style.css`](docs/style.css): a type scale, spacing, radii, one accent per
+subject (`--maths`, `--physics`, `--chem`) and a plot palette (`--plot-*`)
+that `docs/demos.js` reads for every line, fill and label it draws. Change a
+token and the pages, the card previews and the demos all follow, in both
+themes. Light, dark or "match the system" is remembered per browser by
+[`docs/theme.js`](docs/theme.js).
+
+A topic page reads top to bottom as: the hard bit, the demo, what this shows,
+key equations, try changing, check your understanding, the Python, then
+previous/next. The equations, "try changing" and questions sections come from
+the optional `equations`, `try_changing` and `questions` fields in
+`topics.json`, and stay hidden for a topic without them. Equations are TeX,
+typeset by KaTeX, which is only downloaded by a page that has one.
+
+Card previews on the home page are drawn by one renderer in `docs/app.js`
+(`SKETCHES`): a new demo needs a small sketch there to get a matching preview,
+and a topic without one gets a neutral card with its subject and syllabus code.
+
+### Credits
+
+- **Inter** (Rasmus Andersson) and **Source Serif 4** (Adobe), both under the
+  SIL Open Font License 1.1, self-hosted in [`docs/fonts/`](docs/fonts) with
+  their licence files.
+- **KaTeX** 0.18.9 (Khan Academy and contributors), MIT licence, self-hosted in
+  [`docs/vendor/katex/`](docs/vendor/katex) with its licence file.
+- The layout borrows ideas, not code, from
+  [Distill](https://github.com/distillpub/template) (a text column with figures
+  that break out wider), [Starlight](https://github.com/withastro/starlight)
+  (grouped sidebar, prev/next, the `/` search shortcut),
+  [PhET](https://github.com/phetsims) (controls beside the figure),
+  [Mathigon](https://github.com/mathigon/textbooks) (think first, then reveal)
+  and [Observable Plot](https://github.com/observablehq/plot) (labels on the
+  curves, quiet grids).
+
 ### After changing any topic
 
 The site does not keep its own copy of the code — `docs/topics.js` is generated
