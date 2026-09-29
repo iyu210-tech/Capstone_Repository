@@ -938,10 +938,14 @@
   /* Long-form interactive explainer: shapes → 2e/orbital → Aufbau → metals.
      Builds its own HTML layout inside .demo (not a single autoplaying canvas). */
 
+  // Madelung (n + l) order, the same list as electron_orbitals.py. It runs to
+  // 7p because the diagonal chart has a box for every subshell up to 7p, and
+  // stepping onto 7s / 5f / 6d / 7p used to read past the end of a shorter list.
   var AUFBAU = [
     [1, "s", 2], [2, "s", 2], [2, "p", 6], [3, "s", 2], [3, "p", 6],
     [4, "s", 2], [3, "d", 10], [4, "p", 6], [5, "s", 2], [4, "d", 10],
-    [5, "p", 6], [6, "s", 2], [4, "f", 14], [5, "d", 10], [6, "p", 6]
+    [5, "p", 6], [6, "s", 2], [4, "f", 14], [5, "d", 10], [6, "p", 6],
+    [7, "s", 2], [5, "f", 14], [6, "d", 10], [7, "p", 6]
   ];
   var ORB_EXCEPTIONS = { 24: { "4s": 1, "3d": 5 }, 29: { "4s": 1, "3d": 10 } };
 
@@ -991,6 +995,25 @@
     if (applyException && ORB_EXCEPTIONS[z]) {
       var ex = ORB_EXCEPTIONS[z];
       Object.keys(ex).forEach(function (k) { config[k] = ex[k]; });
+    }
+    return config;
+  }
+
+  /* Positive ions lose electrons from the highest shell n first (and within
+     it p before s) - NOT in reverse fill order. So Fe2+ is [Ar] 3d6, not
+     [Ar] 4s2 3d4: once 3d is occupied, the 4s electrons are the outermost.
+     Mirrors ion_config in electron_orbitals.py. */
+  function ionConfig(z, charge) {
+    if (charge <= 0) return fillAufbau(z - charge, false);
+    var config = fillAufbau(z, true), i, best, rank;
+    for (i = 0; i < charge; i++) {
+      best = null;
+      Object.keys(config).forEach(function (key) {
+        var r = parseInt(key.charAt(0), 10) * 10 + "spdf".indexOf(key.charAt(1));
+        if (best === null || r > rank) { best = key; rank = r; }
+      });
+      config[best] -= 1;
+      if (config[best] === 0) delete config[best];
     }
     return config;
   }
@@ -1052,16 +1075,18 @@
     var accent = cssVar("--accent", "#b4341f");
     var pCol = "#2f6f8f";
     g.clearRect(0, 0, w, h);
-    // Leave room for axis labels at the edges (esp. x on px).
-    var cx = w / 2 - 2, cy = h / 2 + 4;
+    // Leave room for axis labels at the edges (x on the right, z bottom-left).
+    var cx = w / 2 + 2, cy = h / 2 - 2;
     var S = Math.min(w, h);
 
     // x and y form a square of half-side L; z runs to that square's corner.
+    // z is drawn down-left, i.e. out of the page towards you, so the axes
+    // are right-handed (x × y = z). Up-right would make them left-handed.
     var inv = 1 / Math.SQRT2;
     var axes = {
       x: { dx: 1, dy: 0, label: "x", scale: 1 },
       y: { dx: 0, dy: -1, label: "y", scale: 1 },
-      z: { dx: inv, dy: -inv, label: "z", scale: Math.SQRT2 }
+      z: { dx: -inv, dy: inv, label: "z", scale: Math.SQRT2 }
     };
 
     function drawAxisLines(len, emphasize) {
@@ -1108,9 +1133,9 @@
           g.textBaseline = "bottom";
           g.fillText(a.label, x2, y2 - 6);
         } else {
-          g.textAlign = "left";
-          g.textBaseline = "bottom";
-          g.fillText(a.label, x2 + 4, y2 - 2);
+          g.textAlign = "right";
+          g.textBaseline = "top";
+          g.fillText(a.label, Math.max(10, x2 - 3), Math.min(h - 14, y2 + 2));
         }
       });
     }
@@ -1409,7 +1434,8 @@
         return "<b>pᵧ</b>: lobes along the <b>y</b>-axis. Same energy as pₓ and p_z in a free atom. " +
           "Holds up to <b>two electrons of opposite spin</b>.";
       }
-      return "<b>p_z</b>: lobes along the <b>z</b>-axis. The three p orbitals are mutually perpendicular. " +
+      return "<b>p_z</b>: lobes along the <b>z</b>-axis, which points out of the screen towards you. " +
+        "The three p orbitals are mutually perpendicular. " +
         "Holds up to <b>two electrons of opposite spin</b>.";
     }
 
@@ -1425,8 +1451,9 @@
     /* ---------- 2. two electrons ---------- */
     var s2 = section(
       "2. Two electrons per orbital",
-      "Each orbital is one box. <b>Pauli</b>: at most two electrons, opposite spins (↑↓). " +
-      "Click the box to add or clear. <b>Hund</b>: for p/d/f, one electron per box before pairing."
+      "Each orbital is one box. <b>Pauli</b>: an orbital holds at most two electrons, and they must " +
+      "have opposite spins (↑↓). Click the box to add or clear. <b>Hund</b>: orbitals of the same " +
+      "sublevel (the three p, five d) fill singly, with parallel spins, before any electrons pair up."
     );
     var pairWrap = document.createElement("div");
     pairWrap.className = "orb-pair-wrap";
@@ -1634,7 +1661,8 @@
           "Step " + fillStep + ": filling <b>" + key + "</b> (" + els + ", up to " + cap + " e⁻).<br>" +
           "<span class='orb-path'>" + path + "</span>" +
           (key === "4s" ? "<br>↑ This is why Ca is <code>[Ar] 4s²</code> and Sc begins the d-block with 3d." :
-           key === "3d" ? "<br>↑ d-block starts: Sc → Zn fill 3d while 4s is already occupied." : "");
+           key === "3d" ? "<br>↑ d-block starts: Sc → Zn fill 3d while 4s is already occupied. " +
+             "(When these metals form ions, though, the 4s electrons are lost first — see part 4.)" : "");
       }
       nextBtn.disabled = fillStep >= FILL_ORDER.length;
       backBtn.disabled = fillStep <= 0;
@@ -1679,26 +1707,29 @@
       "<div class='orb-why-grid'>" +
         "<div class='orb-why-card'>" +
           "<strong>1. 4s and 3d are almost the same energy</strong>" +
-          "<p>Once the atom has more than 20 electrons, 3d drops close to 4s. " +
-          "Shifting one electron between them costs very little — so a small " +
+          "<p>In the first-row transition metals the 4s and 3d sublevels are very close " +
+          "in energy. Shifting one electron between them costs very little — so a small " +
           "stabilising effect can tip the balance.</p>" +
         "</div>" +
         "<div class='orb-why-card'>" +
-          "<strong>2. Exchange energy (Hund)</strong>" +
-          "<p>Electrons in different orbitals with the <em>same</em> spin avoid each other " +
-          "better (exchange stabilisation). A half-full d⁵ has <b>five</b> unpaired, " +
-          "parallel-spin electrons — maximum exchange for the d set. A full d¹⁰ is a " +
-          "closed sublevel with a symmetrical, low-repulsion cloud.</p>" +
+          "<strong>2. Half-filled and full sublevels are especially stable</strong>" +
+          "<p>That is the IB-level statement. Going further (beyond the syllabus): electrons " +
+          "with <em>parallel</em> spins in different orbitals keep further apart, which lowers " +
+          "their repulsion — the <em>exchange energy</em> behind Hund's rule. A half-filled d⁵ " +
+          "has five parallel spins, the most a d sublevel can hold. Why a full d¹⁰ is favoured " +
+          "is subtler, and IB does not ask for it.</p>" +
         "</div>" +
         "<div class='orb-why-card'>" +
           "<strong>3. The energy tradeoff</strong>" +
-          "<p>Promoting / moving one e⁻ from 4s → 3d costs a little. Reaching d⁵ or d¹⁰ " +
-          "pays that back (and more) via exchange + lower repulsion. For Cr and Cu the " +
-          "payback wins; for neighbours like V, Mn, Ni, Zn it does not.</p>" +
+          "<p>Moving one e⁻ from 4s to 3d costs a little energy. Reaching d⁵ or d¹⁰ " +
+          "pays it back, so for Cr and Cu the 4s¹ arrangement is lower in energy overall. " +
+          "For V and Ni the move would not reach d⁵ or d¹⁰; Mn (d⁵) and Zn (d¹⁰) are " +
+          "there already.</p>" +
         "</div>" +
       "</div>" +
-      "<p class='orb-why-note'>IB shorthand: <b>half-full and full sublevels are especially stable</b> — " +
-      "but only Cr (d⁵) and Cu (d¹⁰) in period 4 gain enough to rewrite the configuration.</p>";
+      "<p class='orb-why-note'>IB shorthand: <b>half-filled and full d sublevels are especially stable, " +
+      "and 4s and 3d are close in energy</b> — and in period 4 only Cr (d⁵) and Cu (d¹⁰) gain " +
+      "enough to rewrite the configuration.</p>";
     s4.appendChild(whyPrimer);
 
     var metalRow = document.createElement("div");
@@ -1782,6 +1813,20 @@
       panel.appendChild(up);
     }
 
+    // Common ions of each metal, for the "4s is lost first" note.
+    var METAL_IONS = { 21: [3], 24: [3], 26: [2, 3], 29: [1, 2], 30: [2] };
+    var SUP_CHARGE = { 1: "⁺", 2: "²⁺", 3: "³⁺" };
+
+    function ionsHTML(m) {
+      var list = (METAL_IONS[m.z] || []).map(function (q) {
+        return m.sym + SUP_CHARGE[q] + " <code>" + configString(ionConfig(m.z, q)) + "</code>";
+      }).join(", ");
+      return "<p class='orb-ions'><b>Ions — 4s is lost first:</b> " + list + ". 4s fills " +
+        "before 3d, but once 3d holds electrons the 4s electrons are the outermost, so a " +
+        "positive ion loses them first. A classic exam trap: Fe²⁺ is <code>[Ar] 3d6</code>, " +
+        "not <code>[Ar] 4s2 3d4</code>.</p>";
+    }
+
     function paintMetals() {
       Array.prototype.forEach.call(metalRow.children, function (b, i) {
         b.setAttribute("aria-pressed", String(i === selectedMetal));
@@ -1810,12 +1855,13 @@
             "<li><b>Aufbau guess:</b> <code>4s² 3d⁴</code>. Four 3d orbitals have one e⁻ each; " +
             "one 3d orbital is empty; 4s is paired. That is <b>4 unpaired</b> in 3d, and the " +
             "d set is neither half-full nor full.</li>" +
-            "<li><b>What actually happens:</b> one 4s electron drops into the empty 3d orbital → " +
+            "<li><b>What actually happens:</b> one 4s electron moves into the empty 3d orbital → " +
             "<code>4s¹ 3d⁵</code>. Now every 3d orbital has exactly one electron (↑↑↑↑↑). " +
             "That is <b>5 unpaired</b> in 3d — half-full.</li>" +
-            "<li><b>Why that wins:</b> five parallel-spin d electrons maximise exchange energy. " +
-            "The 4s–3d gap is tiny, so the exchange payoff outweighs leaving 4s half-occupied. " +
-            "Count the unpaired electrons in the panels above: Aufbau gives fewer.</li>" +
+            "<li><b>Why that wins:</b> a half-filled 3d sublevel is especially stable, and 4s and " +
+            "3d are so close in energy that the move costs very little. (Beyond IB: six parallel " +
+            "spins instead of four means more exchange stabilisation — count the unpaired " +
+            "electrons in the panels above.)</li>" +
             "<li><b>Exam line:</b> Cr is <code>[Ar] 4s¹ 3d⁵</code> because a half-full d sublevel " +
             "is particularly stable.</li>" +
             "</ul>";
@@ -1828,13 +1874,14 @@
             "a full d set.</li>" +
             "<li><b>What actually happens:</b> one 4s electron fills that hole → " +
             "<code>4s¹ 3d¹⁰</code>. The 3d sublevel is completely full; 4s keeps one electron.</li>" +
-            "<li><b>Why that wins:</b> a full d¹⁰ sublevel is a closed, symmetrical shell with " +
-            "lower electron–electron repulsion. Again 4s and 3d are close in energy, so " +
-            "completing d¹⁰ is worth thinning 4s to one electron.</li>" +
+            "<li><b>Why that wins:</b> a completely filled 3d sublevel is especially stable, and " +
+            "again 4s and 3d are close enough in energy that moving one electron costs little. " +
+            "Unlike Cr this is not about unpaired spins: both arrangements have just one.</li>" +
             "<li><b>Exam line:</b> Cu is <code>[Ar] 4s¹ 3d¹⁰</code> because a full d sublevel " +
             "is particularly stable (the Cu analogue of Cr’s half-full case).</li>" +
             "</ul>";
         }
+        metalNote.innerHTML += ionsHTML(m);
       } else {
         transfer.innerHTML =
           "<div class='orb-transfer-eq orb-transfer-ok'>" +
@@ -1843,12 +1890,12 @@
         var extra = "";
         if (m.z === 21) {
           extra =
-            "<p><b>Why Sc does not exception:</b> Aufbau gives <code>4s² 3d¹</code>. Moving the " +
+            "<p><b>Why Sc is not an exception:</b> Aufbau gives <code>4s² 3d¹</code>. Moving the " +
             "4s pair into 3d would not create d⁵ or d¹⁰ — there is no half-full/full prize to " +
             "claim, so the atom keeps the Aufbau arrangement.</p>";
         } else if (m.z === 26) {
           extra =
-            "<p><b>Why Fe does not exception:</b> <code>4s² 3d⁶</code> already has a paired d " +
+            "<p><b>Why Fe is not an exception:</b> <code>4s² 3d⁶</code> already has a paired d " +
             "orbital. Shifting one 4s electron into 3d would give <code>4s¹ 3d⁷</code> — still " +
             "not d⁵ or d¹⁰ — so there is no special stability jackpot. Aufbau wins.</p>";
         } else if (m.z === 30) {
@@ -1859,6 +1906,7 @@
         metalNote.innerHTML =
           "<p><b>" + m.sym + " (Z = " + m.z + ")</b> — " + m.blurb + "</p>" +
           extra +
+          ionsHTML(m) +
           "<p>Open <b>Cr★</b> or <b>Cu★</b> to see the cases where the half-full / full payoff " +
           "is large enough to rewrite the configuration.</p>";
       }
