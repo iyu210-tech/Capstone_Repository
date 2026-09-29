@@ -105,6 +105,11 @@ class Handler(SimpleHTTPRequestHandler):
         # Everything the site is made of is small and revalidates in one round
         # trip, so all of it is no-cache. Longer lives are for assets that can
         # carry a hash in the name, and there are none yet.
+        #
+        # The topic pages are docs/t/<id>/index.html, requested as /t/<id>/,
+        # so the "/" case is what covers them. A bare /t/<id> never gets here
+        # as a page: SimpleHTTPRequestHandler 301s a directory to its slash
+        # form first, which the pages' ../../ asset paths depend on.
         if path.endswith((".html", ".js", ".css", "/")):
             self.send_header("Cache-Control", "no-cache")
         else:
