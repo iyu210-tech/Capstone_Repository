@@ -1,4 +1,5 @@
-"""Projectile motion with air resistance (IB HL Physics - Topic A.1 / B).
+"""Projectile motion with air resistance
+(IB Physics HL, first assessment 2025 - A.1 Kinematics: fluid resistance).
 
 Idea: the textbook parabola assumes no drag. With a drag force proportional to
 v^2 the range shrinks, the path becomes asymmetric, and the optimal launch
@@ -17,7 +18,15 @@ DT = 0.001        # s
 
 
 def simulate(speed, angle_deg, drag_k):
-    """Euler integration of the trajectory until the projectile lands."""
+    """Step the trajectory forward in time until the projectile lands.
+
+    Semi-implicit (symplectic) Euler: each step updates the velocity from the
+    forces first, then moves the position with that *new* velocity. Plain
+    Euler would move with the old velocity. Both are first-order - halve DT
+    and the error roughly halves - and in a vacuum plain Euler gains a sliver
+    of energy every step while this version loses the same sliver. So DT has
+    to be small either way; the order of the lines just says which one it is.
+    """
     theta = np.radians(angle_deg)
     vx, vy = speed * np.cos(theta), speed * np.sin(theta)
     x, y = 0.0, 0.0
@@ -35,12 +44,21 @@ def simulate(speed, angle_deg, drag_k):
         xs.append(x)
         ys.append(y)
 
+    # The loop only stops once a step has taken the ball *below* the ground,
+    # so the last point is slightly underground and slightly too far. The
+    # real landing is between the last two points: slide along that straight
+    # segment to where y is exactly 0.
+    x_prev, y_prev = xs[-2], ys[-2]
+    xs[-1] = x_prev + (x - x_prev) * (y_prev / (y_prev - y))
+    ys[-1] = 0.0
+
     return np.array(xs), np.array(ys)
 
 
 def best_angle(speed, drag_k):
     """Scan launch angles and return the one giving the greatest range."""
     angles = np.arange(10, 81, 1)
+    # the last x is the interpolated landing point, i.e. the range
     ranges = [simulate(speed, a, drag_k)[0][-1] for a in angles]
     return angles[int(np.argmax(ranges))], angles, np.array(ranges)
 

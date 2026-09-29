@@ -481,13 +481,19 @@
   }
 
   /* ------------------------------------------------------ 2. Projectile */
-  var G = 9.81, MASS = 0.145, DT = 0.001, SEARCH_DT = 0.004, STRIDE = 4;
+  var G = 9.81, MASS = 0.145, DT = 0.001, STRIDE = 4;
 
-  // Full integration, kept at DT so the drawn curve matches the Python.
-  // Points are decimated for drawing and the ground hit is interpolated,
+  // Degrees to radians the way numpy's np.radians does it: x * (pi / 180).
+  // (x * pi) / 180 rounds differently in the last bit, and near a tie that
+  // bit is enough to pick a different "best" angle from the Python.
+  function toRad(deg) { return deg * (Math.PI / 180); }
+
+  // Same semi-implicit Euler step as projectile_drag.py, same DT: velocity
+  // first, then position with the new velocity. Points are decimated for
+  // drawing, and the ground hit is interpolated exactly as the Python does,
   // so the reported range is the real crossing rather than one step past it.
   function simulate(speed, angleDeg, dragK) {
-    var th = angleDeg * Math.PI / 180;
+    var th = toRad(angleDeg);
     var vx = speed * Math.cos(th), vy = speed * Math.sin(th);
     var x = 0, y = 0, px = 0, py = 0;
     var xs = [0], ys = [0], guard = 0;
@@ -504,35 +510,40 @@
     return { xs: xs, ys: ys, range: hit };
   }
 
-  // Range only: no arrays, coarser step. Used for the optimum-angle sweep,
-  // which is the expensive part and never needs the drawn resolution.
+  // Range only: the same flight, without building arrays. It used to run at
+  // a 4x coarser step to save time, which moved the optimum a degree away
+  // from the Python's in places; at the same DT the two agree everywhere on
+  // the sliders (tests/test_science_parity.py checks it).
   function rangeOnly(speed, angleDeg, dragK) {
-    var th = angleDeg * Math.PI / 180;
+    var th = toRad(angleDeg);
     var vx = speed * Math.cos(th), vy = speed * Math.sin(th);
     var x = 0, y = 0, px = 0, py = 0, guard = 0;
-    while (y >= 0 && guard++ < 60000) {
+    while (y >= 0 && guard++ < 200000) {
       px = x; py = y;
       var v = Math.hypot(vx, vy);
-      vx += (-dragK * v * vx / MASS) * SEARCH_DT;
-      vy += (-G - dragK * v * vy / MASS) * SEARCH_DT;
-      x += vx * SEARCH_DT; y += vy * SEARCH_DT;
+      vx += (-dragK * v * vx / MASS) * DT;
+      vy += (-G - dragK * v * vy / MASS) * DT;
+      x += vx * DT; y += vy * DT;
     }
     return py > y ? px + (x - px) * (py / (py - y)) : x;
   }
 
-  // Coarse 5-degree sweep, then refine. ~24 flights instead of 71.
-  function bestAngle(speed, dragK) {
-    var best = 45, bestR = -1, a, r;
-    for (a = 10; a <= 80; a += 5) {
-      r = rangeOnly(speed, a, dragK);
-      if (r > bestR) { bestR = r; best = a; }
+  /* The Python scans every angle from 10 to 80: 71 flights, which at 90 m/s
+     is ~60 ms here and several times that on a phone. Range against angle
+     has a single peak, so climbing uphill one degree at a time from a good
+     guess finds the same angle - and the demo's guess is the previous
+     answer, so a slider nudge costs about three flights. Ties go to the
+     smaller angle, as numpy's argmax does. */
+  function bestAngle(speed, dragK, start) {
+    var a = Math.min(80, Math.max(10, Math.round(start || 45)));
+    var r = rangeOnly(speed, a, dragK), next, moved = false;
+    while (a > 10 && (next = rangeOnly(speed, a - 1, dragK)) >= r) {
+      a--; r = next; moved = true;
     }
-    var lo = Math.max(10, best - 4), hi = Math.min(80, best + 4);
-    for (a = lo; a <= hi; a++) {
-      r = rangeOnly(speed, a, dragK);
-      if (r > bestR) { bestR = r; best = a; }
+    while (!moved && a < 80 && (next = rangeOnly(speed, a + 1, dragK)) > r) {
+      a++; r = next;
     }
-    return best;
+    return a;
   }
 
   function demoProjectile(ctx) {
@@ -549,9 +560,9 @@
     var optimaPending = false, optimaTimer = null;
 
     /* The trajectory costs a few ms and must track the slider. The optimum
-       angle is a 24-flight sweep and must not: running it on every input
-       event blocked the main thread for 50-130ms a time, which read as the
-       page freezing. It is debounced, and the readout says so meanwhile. */
+       angle is a search over many flights and must not: running it on every
+       input event blocked the main thread for 50-130ms a time, which read as
+       the page freezing. It is debounced, and the readout says so meanwhile. */
     function recomputeCurves() {
       drag = simulate(speed, angle, dragK);
       vac = simulate(speed, angle, 0);
@@ -571,8 +582,8 @@
       if (optimaTimer) clearTimeout(optimaTimer);
       optimaTimer = setTimeout(function () {
         optimaTimer = null;
-        optDrag = bestAngle(speed, dragK);
-        optVac = bestAngle(speed, 0);
+        optDrag = bestAngle(speed, dragK, optDrag);
+        optVac = bestAngle(speed, 0, optVac);
         optimaPending = false;
         jumpBtn.disabled = false;
         draw();
