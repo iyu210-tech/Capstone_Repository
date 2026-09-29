@@ -61,6 +61,11 @@ function client() {
     supabase.auth.onAuthStateChange(function (event, session) {
       if (session && session.user) renderSignedIn(session.user);
       else renderSignedOut();
+      // progress.js syncs marks and saved setups through the same client, so
+      // it hears about every change here rather than keeping its own session.
+      document.dispatchEvent(new CustomEvent("auth:change", {
+        detail: { client: supabase, user: (session && session.user) || null, event: event }
+      }));
       // A reset link signs the reader in, but they came to choose a new
       // password - closing the dialog here would leave them signed in with
       // the old one forgotten and nowhere to type the new one.

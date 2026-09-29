@@ -703,3 +703,27 @@ canvas {
 }
 
 @media print { .mobile-nav { display: none !important; } }
+
+/* progress and sharing --------------------------------------------------- */
+/* Deliberately plain: built from the existing .btn / .chip / .ctl-row pieces
+   so it sits in whatever look the rest of the site has. */
+.progress-marks { display: flex; flex-wrap: wrap; gap: .5rem; margin: -.6rem 0 1.5rem; }
+.mark-btn[aria-pressed="true"][data-mark="stuck"] { background: var(--code-bg); border-color: var(--ink-soft); color: var(--ink); }
+
+.progress-strip { margin: 0 0 .4rem; font-size: .88rem; color: var(--ink-soft); }
+
+.share-row { margin-top: .75rem; }
+.share-status { color: var(--ink-soft); font-size: .82rem; }
+
+.saved-setups { display: grid; gap: .6rem; margin-top: .75rem; }
+.save-setup input {
+  flex: 1 1 14rem; min-width: 0; padding: .45rem .7rem;
+  border: 1px solid var(--border); border-radius: 8px;
+  background: var(--bg); color: var(--ink); font: inherit; font-size: .85rem;
+}
+.setup-list:empty { display: none; }
+.setup-item { display: inline-flex; align-items: center; gap: .15rem; }
+.setup-del { font-size: 1rem; text-decoration: none; color: var(--ink-soft); padding: 0 .3rem; }
+.setup-del:hover { color: var(--accent); }
+
+@media print { .progress-marks, .share-row, .saved-setups { display: none !important; } }

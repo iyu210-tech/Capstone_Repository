@@ -92,6 +92,25 @@ Each deployed origin has to be registered twice before sign-in works:
 2. **Supabase -> Authentication -> URL Configuration**: set Site URL, and add
    `<origin>/**` to Redirect URLs.
 
+### Progress and saved setups
+
+An account now has a job. On every topic page a reader can mark **I get this
+now** or **Still stuck**, and save named slider setups under the demo; the home
+page shows a one-line progress summary. All of it works signed out, in
+`localStorage`. Signing in merges it into Supabase, so it follows the reader to
+another device ([`docs/progress.js`](docs/progress.js)).
+
+The two tables and their Row Level Security policies are in
+[`supabase/migrations/`](supabase/migrations). Run that file once in
+**Supabase -> SQL Editor**. Until then the site still works; the sync just logs
+a warning in the console and everything stays local.
+
+Every demo setup is also a link: the sliders are mirrored into the address
+bar, and **Copy link to this setup** opens the demo with exactly those values
+([`docs/share.js`](docs/share.js)). It reads the controls generically, so a new
+demo built from the `slider()` / `button()` helpers gets shareable links with
+no extra code.
+
 ### After changing any topic
 
 The site does not keep its own copy of the code — `docs/topics.js` is generated
