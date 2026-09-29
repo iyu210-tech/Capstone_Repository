@@ -1,0 +1,4 @@
+# For working on the site, not for running the topics (that is
+# requirements.txt). build_site.py itself stays stdlib only, so no host that
+# builds the site ever installs this file.
+pytest>=7.4

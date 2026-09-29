@@ -404,7 +404,7 @@ def robots(site):
 # Link-preview crawlers (Facebook, LinkedIn, Slack, X, iMessage) mostly
 # refuse SVG, so the preview has to be a raster. PNG is the one raster that
 # needs nothing but zlib to write.
-def png_bytes(width, height, rgb):
+def png_bytes(width, height, rgb, level=9):
     """Encode a width x height RGB byte buffer as a PNG file."""
     stride = width * 3
     if len(rgb) != stride * height:
@@ -419,7 +419,7 @@ def png_bytes(width, height, rgb):
 
     ihdr = struct.pack(">IIBBBBB", width, height, 8, 2, 0, 0, 0)   # 8-bit RGB
     return (b"\x89PNG\r\n\x1a\n" + chunk(b"IHDR", ihdr)
-            + chunk(b"IDAT", zlib.compress(raw, 9)) + chunk(b"IEND", b""))
+            + chunk(b"IDAT", zlib.compress(raw, level)) + chunk(b"IEND", b""))
 
 
 def png_pixels(data):
