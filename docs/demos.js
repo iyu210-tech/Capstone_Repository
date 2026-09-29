@@ -400,30 +400,83 @@
   }
 
   /* --------------------------------------------------------- 1. Taylor */
+  // Every factorial up to 22! is exact in a double, so these coefficients
+  // are the same numbers Python gets from math.factorial.
   var FACT = [1];
   for (var f = 1; f < 30; f++) FACT[f] = FACT[f - 1] * f;
 
-  function taylorSin(x, nTerms) {
-    var total = 0;
+  /* Same registry as SERIES in taylor_series.py. term(k) gives
+     [coefficient, power] of the k-th NON-ZERO term, all centred on x = 0.
+     radius is how far from 0 the series converges. */
+  var SERIES = {
+    "sin(x)": {
+      exact: Math.sin,
+      term: function (k) { return [Math.pow(-1, k) / FACT[2 * k + 1], 2 * k + 1]; },
+      xlim: [-4 * Math.PI, 4 * Math.PI], ylim: [-3, 3], radius: Infinity
+    },
+    "cos(x)": {
+      exact: Math.cos,
+      term: function (k) { return [Math.pow(-1, k) / FACT[2 * k], 2 * k]; },
+      xlim: [-4 * Math.PI, 4 * Math.PI], ylim: [-3, 3], radius: Infinity
+    },
+    "e^x": {
+      exact: Math.exp,
+      term: function (k) { return [1 / FACT[k], k]; },
+      xlim: [-6, 6], ylim: [-5, 30], radius: Infinity
+    },
+    "ln(1+x)": {
+      // ln(1+x) only exists for x > -1; NaN leaves a gap in the curve
+      exact: function (x) { return x > -1 ? Math.log1p(x) : NaN; },
+      term: function (k) { return [Math.pow(-1, k) / (k + 1), k + 1]; },
+      xlim: [-2, 3], ylim: [-4, 3], radius: 1
+    }
+  };
+
+  function taylor(x, nTerms, name) {
+    var total = 0, term = SERIES[name].term;
     for (var k = 0; k < nTerms; k++) {
-      var p = 2 * k + 1;
-      total += Math.pow(-1, k) * Math.pow(x, p) / FACT[p];
+      var cp = term(k);
+      total += cp[0] * Math.pow(x, cp[1]);
     }
     return total;
   }
 
+  // What the readout says about convergence, per function.
+  var SERIES_NOTE = {
+    "sin(x)": "The series for sin(x) converges for <b>every</b> x, so each extra term pushes that edge further out — it just takes more terms the further you go.",
+    "cos(x)": "Like sin(x), the series for cos(x) converges for <b>every</b> x: more terms always widen the good region.",
+    "e^x": "The series for e<sup>x</sup> converges for <b>every</b> x too — but the further from 0 you go, the more terms it takes to get close.",
+    "ln(1+x)": "This series has <b>radius of convergence 1</b>: it converges only for −1 &lt; x ≤ 1 (shaded). Past x = 1 every extra term makes the polynomial <b>worse</b>, however many you add."
+  };
+
   function demoTaylor(ctx) {
     var MAX_TERMS = 10;
+    var name = "sin(x)";
     var plot = new Plot(ctx.canvas, {
       xmin: -4 * Math.PI, xmax: 4 * Math.PI, ymin: -3, ymax: 3,
       xlabel: "x", ylabel: "y", xticks: 8, yticks: 6
     });
 
-    var xs = [];
-    for (var i = 0; i <= 700; i++) xs.push(-4 * Math.PI + (8 * Math.PI) * i / 700);
-    var exact = xs.map(Math.sin);
+    var xs = [], exact = [];
+    function setFunction(which) {
+      name = which;
+      var s = SERIES[name];
+      plot.set({
+        xmin: s.xlim[0], xmax: s.xlim[1], ymin: s.ylim[0], ymax: s.ylim[1],
+        xlabel: "x", ylabel: "y", xticks: 8, yticks: 6
+      });
+      xs = [];
+      for (var i = 0; i <= 700; i++) xs.push(s.xlim[0] + (s.xlim[1] - s.xlim[0]) * i / 700);
+      exact = xs.map(s.exact);
+      fnButtons.forEach(function (b) { b.setAttribute("aria-pressed", String(b.textContent === name)); });
+    }
 
     var n = 1, playing = !REDUCED, lastStep = 0;
+
+    var fnRow = buttonRow(ctx.controls);
+    var fnButtons = Object.keys(SERIES).map(function (key) {
+      return button(fnRow, key, function () { setFunction(key); draw(); });
+    });
 
     var nSlider = slider(ctx.controls, {
       label: "Terms", min: 1, max: MAX_TERMS, value: 1,
@@ -436,34 +489,55 @@
       function () { return playing; },
       function (v) { playing = v; });
     button(row, "Reset", function () {
-      n = 1; nSlider.set(1); play.stop(); draw();
+      n = 1; nSlider.set(1); play.stop(); setFunction("sin(x)"); draw();
     });
 
+    function fmtX(v) { return (Math.abs(v) < 0.05 ? 0 : v).toFixed(1); }
+
     function draw() {
+      var s = SERIES[name];
+      var accent = cssVar("--accent", "#b4341f"), ink = cssVar("--ink", "#000");
       plot.frame();
-      plot.line(xs, exact, cssVar("--ink", "#000"), 2);
-      var approx = xs.map(function (x) { return taylorSin(x, n); });
-      plot.line(xs, approx, cssVar("--accent", "#b4341f"), 2.5);
+      if (s.radius < Infinity) {
+        // shade where the series converges, so the boundary is not a guess
+        var c = plot.ctx, p = plot.pad;
+        plot.clip(function () {
+          c.fillStyle = cssVar("--accent-soft", "#fbeeeb");
+          c.fillRect(plot.px(-s.radius), p.t,
+            plot.px(s.radius) - plot.px(-s.radius), plot.h - p.t - p.b);
+        });
+        plot.vline(-s.radius, cssVar("--ink-soft", "#666"));
+        plot.vline(s.radius, cssVar("--ink-soft", "#666"), "|x| = " + s.radius);
+      }
+      plot.line(xs, exact, ink, 2);
+      var approx = xs.map(function (x) { return taylor(x, n, name); });
+      plot.line(xs, approx, accent, 2.5);
       plot.legend([
-        { label: "sin(x)", color: cssVar("--ink", "#000") },
-        { label: n + " term" + (n === 1 ? "" : "s"), color: cssVar("--accent", "#b4341f") }
+        { label: name, color: ink },
+        { label: n + " term" + (n === 1 ? "" : "s"), color: accent }
       ]);
 
-      var good = 0;
-      for (var i = 0; i < xs.length; i++) {
-        if (xs[i] < 0) continue;
-        if (Math.abs(approx[i] - exact[i]) > 0.05) break;
-        good = xs[i];
-      }
+      // The good region: walk out from x = 0 both ways until the error
+      // first passes 0.05.
+      var i0 = 0, lo, hi, i;
+      for (i = 1; i < xs.length; i++) if (Math.abs(xs[i]) < Math.abs(xs[i0])) i0 = i;
+      function ok(j) { return isFinite(exact[j]) && Math.abs(approx[j] - exact[j]) <= 0.05; }
+      for (i = i0; i < xs.length && ok(i); i++) hi = xs[i];
+      for (i = i0; i >= 0 && ok(i); i--) lo = xs[i];
+      var highest = s.term(n - 1)[1];
+      var region = lo === undefined
+        ? "It is not within 0.05 of " + name + " even at x = 0."
+        : "It tracks " + name + " to within 0.05 from <b>x = " + fmtX(lo) +
+          "</b> to <b>x = " + fmtX(hi) + "</b>.";
       ctx.say(
-        "Polynomial up to <b>x<sup>" + (2 * n - 1) + "</sup></b>. " +
-        "It tracks sin(x) to within 0.05 out to about <b>x = ±" + good.toFixed(1) + "</b>" +
-        " — then it escapes to infinity."
+        "Polynomial up to <b>x<sup>" + highest + "</sup></b>. " + region + " " + SERIES_NOTE[name]
       );
       ctx.setAlt(
-        "Plot of sin(x) against its Maclaurin polynomial with " + n +
-        " term" + (n === 1 ? "" : "s") + ". The polynomial follows the curve out to " +
-        "about x = plus or minus " + good.toFixed(1) + ", then diverges."
+        "Plot of " + name + " against its Maclaurin polynomial with " + n +
+        " term" + (n === 1 ? "" : "s") + "." +
+        (lo === undefined ? "" : " The polynomial stays within 0.05 of the curve from x = " +
+          fmtX(lo) + " to x = " + fmtX(hi) + ", then diverges.") +
+        (s.radius < Infinity ? " The series only converges for x between -1 and 1." : "")
       );
     }
 
@@ -476,6 +550,7 @@
       draw();
     }
 
+    setFunction(name);
     draw();
     return { draw: draw, tick: tick, plot: plot };
   }
