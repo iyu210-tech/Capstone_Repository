@@ -749,64 +749,91 @@
   }
 
   /* ------------------------------------------------------- 3. Boltzmann */
-  var K_B = 1.380649e-23, N_A = 6.02214076e23;
+  var K_B = 1.380649e-23, N_A = 6.02214076e23, R_GAS = K_B * N_A;
 
+  // Speed distribution f(v), a fraction of molecules per (m s^-1).
   function mbDistribution(v, T, mass) {
     var a = mass / (2 * K_B * T);
     return 4 * Math.PI * v * v * Math.pow(a / Math.PI, 1.5) * Math.exp(-a * v * v);
   }
 
-  function fractionAbove(vEa, T, mass) {
-    var hi = Math.max(vEa * 4, 6000), n = 2000;
-    var h = (hi - vEa) / n, s = mbDistribution(vEa, T, mass) + mbDistribution(hi, T, mass);
-    for (var i = 1; i < n; i++) {
-      s += mbDistribution(vEa + i * h, T, mass) * (i % 2 ? 4 : 2);
-    }
-    return s * h / 3;
+  /* Energy distribution f(E), a fraction per (kJ mol^-1) - the IB curve.
+     f(E) dE = f(v) dv with E = mv^2/2 gives 2 sqrt(E/pi) (RT)^-3/2 e^(-E/RT);
+     the mass cancels, so every gas shares this curve at a given T. */
+  function mbEnergy(E, T) {
+    var RT = R_GAS * T / 1000;
+    return 2 * Math.sqrt(E / Math.PI) * Math.pow(RT, -1.5) * Math.exp(-E / RT);
+  }
+
+  /* JavaScript has no erfc. This is the Chebyshev fit from Numerical
+     Recipes (erfcc): fractional error below 1.2e-7 for every x, far finer
+     than the three figures the readout shows. */
+  function erfc(x) {
+    var z = Math.abs(x), t = 1 / (1 + 0.5 * z);
+    var r = t * Math.exp(-z * z - 1.26551223 + t * (1.00002368 + t * (0.37409196 +
+      t * (0.09678418 + t * (-0.18628806 + t * (0.27886807 + t * (-1.13520398 +
+      t * (1.48851587 + t * (-0.82215223 + t * 0.17087277)))))))));
+    return x >= 0 ? r : 2 - r;
+  }
+
+  // The shaded area past Ea, in closed form - the same formula as
+  // fraction_above_ea in maxwell_boltzmann.py, with x = Ea / RT.
+  function fractionAboveEa(eaKJ, T) {
+    var x = eaKJ * 1000 / (R_GAS * T);
+    return erfc(Math.sqrt(x)) + 2 * Math.sqrt(x / Math.PI) * Math.exp(-x);
   }
 
   function demoBoltzmann(ctx) {
     var MASS = 0.028 / N_A;
     var D = { T: 300, eaKJ: 50 };
     var T = D.T, eaKJ = D.eaKJ, playing = !REDUCED, dir = 1, logY = true;
-    var FLOOR = -14;
+    var energyView = true;   // IB draws energy on the x-axis; speed is the extra
+    var FLOOR_V = -14, FLOOR_E = -18;
+
+    function xmaxNow() {
+      if (!energyView) return 2500;
+      // On a linear axis the peak sits near RT/2 (~1.2 kJ/mol), so a fixed
+      // 90 kJ/mol axis would squash the whole curve into a spike at the left.
+      return logY ? 90 : Math.max(20, eaKJ * 1.25);
+    }
 
     function applyScale() {
+      var xl = energyView ? "kinetic energy / kJ mol⁻¹" : "molecular speed / m s⁻¹";
+      var per = energyView ? "per kJ mol⁻¹" : "per m s⁻¹";
       if (logY) {
         plot.set({
-          xmin: 0, xmax: 2500, ymin: FLOOR, ymax: -2,
-          xlabel: "molecular speed / m s⁻¹",
-          ylabel: "fraction of molecules (log scale)",
-          ylabelShort: "fraction (log)",
+          xmin: 0, xmax: xmaxNow(), ymin: energyView ? FLOOR_E : FLOOR_V,
+          ymax: energyView ? 0 : -2,
+          xlabel: xl,
+          ylabel: "fraction of molecules " + per + " (log scale)",
+          ylabelShort: per + " (log)",
           xticks: 5, yticks: 6, yIntegral: true,
           fmtY: function (v) { return "10" + sup(Math.round(v)); }
         });
       } else {
         plot.set({
-          xmin: 0, xmax: 2500, ymin: 0, ymax: 0.0022,
-          xlabel: "molecular speed / m s⁻¹",
-          ylabel: "fraction of molecules",
-          ylabelShort: "fraction",
+          xmin: 0, xmax: xmaxNow(), ymin: 0, ymax: energyView ? 0.25 : 0.0022,
+          xlabel: xl,
+          ylabel: "fraction of molecules " + per,
+          ylabelShort: per,
           xticks: 5, yticks: 4,
-          fmtY: function (v) { return v === 0 ? "0" : sciText(v, 1); }
+          fmtY: energyView ? null : function (v) { return v === 0 ? "0" : sciText(v, 1); }
         });
       }
     }
 
     var plot = new Plot(ctx.canvas, {
-      xmin: 0, xmax: 2500, ymin: 0, ymax: 0.0022,
-      xlabel: "molecular speed / m s⁻¹", ylabel: "fraction of molecules",
+      xmin: 0, xmax: 90, ymin: FLOOR_E, ymax: 0,
+      xlabel: "kinetic energy / kJ mol⁻¹", ylabel: "fraction of molecules per kJ mol⁻¹",
       xticks: 5, yticks: 4
     });
     applyScale();
 
     function ymap(y) {
       if (!logY) return y;
-      return y <= 0 ? FLOOR : Math.max(FLOOR, Math.log(y) / Math.LN10);
+      var floor = energyView ? FLOOR_E : FLOOR_V;
+      return y <= 0 ? floor : Math.max(floor, Math.log(y) / Math.LN10);
     }
-
-    var vs = [];
-    for (var i = 0; i <= 600; i++) vs.push(2500 * i / 600);
 
     var tSlider = slider(ctx.controls, {
       label: "Temperature", min: 250, max: 600, value: T,
@@ -816,13 +843,20 @@
     var eSlider = slider(ctx.controls, {
       label: "Activation energy", min: 10, max: 80, value: eaKJ,
       format: function (v) { return v + " kJ/mol"; },
-      onInput: function (v) { eaKJ = v; draw(); }
+      onInput: function (v) { eaKJ = v; if (energyView && !logY) applyScale(); draw(); }
     });
 
     var row = buttonRow(ctx.controls);
     var play = playButton(row, ctx,
       function () { return playing; },
       function (v) { playing = v; });
+    var viewBtn = button(row, "Speed axis", function (b) {
+      energyView = !energyView;
+      b.setAttribute("aria-pressed", String(!energyView));
+      applyScale();
+      draw();
+    });
+    viewBtn.setAttribute("aria-pressed", "false");
     var logBtn = button(row, "Log scale", function (b) {
       logY = !logY;
       b.setAttribute("aria-pressed", String(logY));
@@ -833,44 +867,55 @@
     button(row, "Reset", function () {
       T = D.T; eaKJ = D.eaKJ; dir = 1;
       tSlider.set(T); eSlider.set(eaKJ);
+      applyScale();
       play.stop(); draw();
     });
 
     function vEa() { return Math.sqrt(2 * (eaKJ * 1000 / N_A) / MASS); }
 
     function draw() {
-      var ve = vEa();
+      var xs = [], xmax = xmaxNow(), i;
+      for (i = 0; i <= 600; i++) xs.push(xmax * i / 600);
+      var f = energyView
+        ? function (x, Tk) { return mbEnergy(x, Tk); }
+        : function (x, Tk) { return mbDistribution(x, Tk, MASS); };
+      var edge = energyView ? eaKJ : vEa();
       plot.frame();
 
       [300, 500].forEach(function (Tref) {
-        var ysr = vs.map(function (v) { return ymap(mbDistribution(v, Tref, MASS)); });
-        plot.line(vs, ysr, cssVar("--plot-ref", "#999"), 1.5);
+        var ysr = xs.map(function (x) { return ymap(f(x, Tref)); });
+        plot.line(xs, ysr, cssVar("--plot-ref", "#999"), 1.5);
       });
 
-      var ys = vs.map(function (v) { return ymap(mbDistribution(v, T, MASS)); });
+      var ys = xs.map(function (x) { return ymap(f(x, T)); });
       // --plot-fill, not --accent-soft: the old fill measured 1.1:1 against
       // the canvas, so the one thing this topic exists to show was invisible.
-      plot.fillUnder(vs, ys, cssVar("--plot-fill", "rgba(180,52,31,.3)"), ve);
-      plot.line(vs, ys, cssVar("--accent", "#b4341f"), 2.5);
-      plot.vline(ve, cssVar("--ink", "#000"), "Ea = " + eaKJ + " kJ/mol");
+      plot.fillUnder(xs, ys, cssVar("--plot-fill", "rgba(180,52,31,.3)"), edge);
+      plot.line(xs, ys, cssVar("--accent", "#b4341f"), 2.5);
+      plot.vline(edge, cssVar("--ink", "#000"),
+        energyView ? "Ea = " + eaKJ + " kJ/mol" : "KE = Ea at " + Math.round(edge) + " m/s");
       plot.legend([
         { label: Math.round(T) + " K", color: cssVar("--accent", "#b4341f") },
         { label: "300 K / 500 K", color: cssVar("--plot-ref", "#999"), width: 1.5 }
       ]);
 
-      var frac = fractionAbove(ve, T, MASS);
-      var base = fractionAbove(ve, 300, MASS);
+      var Tn = Math.round(T);
+      var frac = fractionAboveEa(eaKJ, T);
+      var base = fractionAboveEa(eaKJ, 300);
+      var tenK = fractionAboveEa(eaKJ, Tn + 10) / fractionAboveEa(eaKJ, Tn);
       ctx.say(
-        "At <b>" + Math.round(T) + " K</b>, <b>" + sciHTML(frac) +
-        "</b> of molecules clear the barrier — that is <b>" +
-        (frac / base).toFixed(2) + "×</b> the fraction at 300 K. " +
+        "At <b>" + Tn + " K</b>, <b>" + sciHTML(frac) +
+        "</b> of molecules have at least Ea — <b>" + (frac / base).toFixed(2) +
+        "×</b> the fraction at 300 K. Another 10 K would multiply it by <b>" +
+        tenK.toFixed(2) + "</b>. " +
         (logY
           ? "On this log axis every gridline is 10× — watch the shaded tail climb."
-          : "Notice how little the peak moves. The tail past Ea is far too small to see here, which is exactly why it needs a log axis.")
+          : "Notice how little the peak moves. Unless Ea is small, the tail past it is far too thin to see here, which is exactly why it needs a log axis.") +
+        (energyView ? "" : " The area past the line is the same fraction as on the energy axis: these are the molecules fast enough to carry Ea.")
       );
       ctx.setAlt(
-        "Maxwell-Boltzmann speed distribution at " + Math.round(T) +
-        " kelvin, with the area past the activation energy shaded. " +
+        "Maxwell-Boltzmann " + (energyView ? "kinetic energy" : "speed") + " distribution at " +
+        Tn + " kelvin, with the area past the activation energy shaded. " +
         frac.toExponential(2) + " of molecules exceed the barrier, " +
         (frac / base).toFixed(2) + " times the fraction at 300 kelvin."
       );
