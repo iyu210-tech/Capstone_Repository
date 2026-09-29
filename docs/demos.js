@@ -1,6 +1,24 @@
 /* Browser ports of the Python visualisations.
-   The maths here deliberately mirrors the .py files line for line, so the
-   animation and the code you download agree with each other. */
+   The maths uses the same formulas, constants and step sizes as the .py
+   files, so the animation and the code you download give the same numbers.
+   tests/test_science_parity.py runs these functions under node and checks
+   them against the Python. It is not line for line; the differences are:
+
+   - Projectile: the same semi-implicit Euler step and DT, and the same
+     interpolated landing point. The drawn path keeps every STRIDE-th point,
+     and loops carry a guard so a bad input cannot hang the page. bestAngle
+     climbs uphill from a starting guess instead of scanning all 71 angles
+     like best_angle; range against angle has one peak, so it lands on the
+     same angle (checked for every speed and drag the sliders allow).
+   - Taylor: coefficients come from a float factorial table rather than
+     math.factorial. Every factorial up to 22! is exact in a double, so for
+     the 10 terms used the coefficients are identical.
+   - Maxwell-Boltzmann: JavaScript has no erfc, so the closed-form fraction
+     past Ea uses a polynomial fit (Numerical Recipes erfcc, relative error
+     below 1.2e-7) where Python uses math.erfc.
+   - Orbitals: the same fill order, exceptions and ion rule, line for line.
+   Last-digit differences remain where Math.cos / Math.pow round differently
+   from numpy; they are around 1e-16 relative and never change an answer. */
 (function () {
   "use strict";
 
