@@ -3,6 +3,7 @@
   "framework": null,
   "buildCommand": "python3 build_site.py",
   "outputDirectory": "docs",
+  "trailingSlash": true,
   "headers": [
     {
       "source": "/(.*)",
@@ -14,11 +15,33 @@
         {
           "key": "Referrer-Policy",
           "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "Content-Security-Policy",
+          "value": "default-src 'self'; script-src 'self' https://esm.sh 'sha256-j649wvuancAOpVRSn1e6oSvhNf5B2cZ3KQSLpKWXADM=' 'sha256-0IA9iLzi4w9Z8fQD0z8BbtHl9aipiTOtHriEpzOIn24='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self' https://esm.sh https://vilvxunldjqawkknphip.supabase.co wss://vilvxunldjqawkknphip.supabase.co; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'"
         }
       ]
     },
     {
       "source": "/(.*).(html|js|css)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=0, must-revalidate"
+        }
+      ]
+    },
+    {
+      "source": "/",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=0, must-revalidate"
+        }
+      ]
+    },
+    {
+      "source": "/t/(.*)",
       "headers": [
         {
           "key": "Cache-Control",
