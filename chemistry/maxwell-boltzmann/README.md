@@ -16,7 +16,7 @@ to T while the peak barely moves.
 
 ## Run it
 
-Notebook (recommended - explanation and code side by side):
+Notebook (recommended: explanation and code side by side):
 ```
 pip install numpy scipy matplotlib jupyter
 jupyter notebook maxwell_boltzmann.ipynb

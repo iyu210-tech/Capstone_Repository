@@ -1,0 +1,105 @@
+{
+  "node": "p-e-3",
+  "title": "Radioactive decay and half-life",
+  "minutes": 25,
+  "objectives": [
+    "Explain why decay is random for one nucleus but predictable for a large sample.",
+    "Define half-life, activity and the decay constant, and use λ = ln 2 / T½.",
+    "Use N = N₀(½)<sup>t/T½</sup> and N = N₀e<sup>−λt</sup>.",
+    "Read half-life from a decay curve and decay constant from a graph of ln N."
+  ],
+  "explanation": [
+    {
+      "heading": "Random, but predictable in bulk",
+      "body": [
+        "Every unstable nucleus of a given isotope has the same fixed probability of decaying per second, called the <b>decay constant</b> λ. Nothing (not temperature, pressure or chemistry) changes it, and there is no way to say when a particular nucleus will go.",
+        "With millions of nuclei, though, the randomness averages out. The number decaying per second, the <b>activity</b>, is proportional to the number left: A = λN."
+      ]
+    },
+    {
+      "heading": "Half-life",
+      "body": [
+        "The half-life T½ is the time for the number of undecayed nuclei (or the activity) to halve. Crucially, it is the same however many nuclei you start with.",
+        "<p class='eq'>N = N₀ (½)<sup>n</sup>   after n half-lives</p>",
+        "So after 3 half-lives, ⅛ remains. This is a geometric sequence with ratio ½."
+      ]
+    },
+    {
+      "heading": "The exponential law",
+      "body": [
+        "Because the rate of decay is proportional to N, dN/dt = −λN. The solution of that differential equation is",
+        "<p class='eq'>N = N₀ e<sup>−λt</sup>        T½ = ln 2 / λ</p>",
+        "Taking natural logs gives ln N = ln N₀ − λt, a straight line with gradient −λ. That is how λ is measured from data."
+      ]
+    }
+  ],
+  "demo": {
+    "id": "decay",
+    "intro": "Each dot is a nucleus that decays at random. The plot compares what happens with the smooth exponential prediction.",
+    "notice": [
+      "With a small sample the data is noticeably jagged; restart a few times and compare.",
+      "Each half-life, roughly half the remaining dots disappear, however many there were.",
+      "Switch to ln N: the prediction becomes a straight line of gradient −λ."
+    ]
+  },
+  "examples": [
+    {
+      "title": "Counting half-lives",
+      "problem": "A sample contains 8.0 × 10⁶ undecayed nuclei of an isotope with half-life 5.0 days. How many remain after 15 days?",
+      "steps": [
+        {
+          "do": "n = 15 / 5.0 = 3 half-lives",
+          "why": "Whole numbers of half-lives can be done without logs."
+        },
+        {
+          "do": "N = 8.0 × 10⁶ × (½)³ = 1.0 × 10⁶",
+          "why": "Halve three times."
+        }
+      ],
+      "answer": "1.0 × 10⁶ nuclei"
+    },
+    {
+      "title": "Using the decay constant",
+      "problem": "Carbon-14 has a half-life of 5730 years. What fraction of the original carbon-14 remains after 10 000 years?",
+      "steps": [
+        {
+          "do": "λ = ln 2 / 5730 = 1.21 × 10⁻⁴ yr⁻¹",
+          "why": "Keep λ in the same time unit as t."
+        },
+        {
+          "do": "N/N₀ = e<sup>−λt</sup> = e<sup>−1.21</sup>",
+          "why": "λt = 1.21 × 10⁻⁴ × 10 000."
+        },
+        {
+          "do": "= 0.298",
+          "why": "A bit under a third, consistent with 10 000 y being a little under two half-lives."
+        }
+      ],
+      "answer": "About 0.30 (30%)"
+    },
+    {
+      "title": "Half-life from activity",
+      "problem": "The activity of a sample falls from 800 Bq to 50 Bq in 12 hours. Find the half-life.",
+      "steps": [
+        {
+          "do": "800 / 50 = 16 = 2⁴",
+          "why": "Check whether the ratio is a power of 2."
+        },
+        {
+          "do": "So 4 half-lives take 12 h",
+          "why": "800 → 400 → 200 → 100 → 50."
+        },
+        {
+          "do": "T½ = 12 / 4 = 3.0 h",
+          "why": ""
+        }
+      ],
+      "answer": "3.0 hours"
+    }
+  ],
+  "takeaways": [
+    "Decay is random and spontaneous, but N falls exponentially for a large sample.",
+    "Half-life is constant: it does not depend on how much you start with.",
+    "λ = ln 2 / T½, and ln N against t is a straight line of gradient −λ."
+  ]
+}

@@ -1,7 +1,7 @@
 """Maxwell-Boltzmann distribution and activation energy
-(IB HL Chemistry - Reactivity 2.2 rates of reaction).
+(IB HL Chemistry, Reactivity 2.2 rates of reaction).
 
-Idea: temperature does not shift the whole curve past Ea - it stretches the
+Idea: temperature does not shift the whole curve past Ea. It stretches the
 tail. A small rise in T multiplies the fraction of molecules above Ea, which is
 why rates roughly double per 10 K.
 

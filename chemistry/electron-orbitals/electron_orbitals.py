@@ -1,11 +1,11 @@
 """Orbital types, shapes, fill order, and metal exceptions
-(IB HL Chemistry - Structure 1.3 atomic structure / orbitals).
+(IB HL Chemistry, Structure 1.3 atomic structure / orbitals).
 
 Four ideas, in order:
   1. What s and the three p orbitals look like
   2. Two electrons per orbital (Pauli)
   3. Periodic-table blocks and the diagonal Aufbau fill order
-  4. Transition metals — and why Cr / Cu break the naive pattern
+  4. Transition metals, and why Cr / Cu break the naive pattern
 
 The website page is a longer interactive walkthrough of the same material.
 
@@ -294,22 +294,22 @@ def main():
     order_txt = " → ".join(f"{n}{L}" for n, L, _ in AUFBAU[:8])
     ax3.text(5, 0.45, order_txt + " → …", ha="center", fontsize=9, color=SOFT)
     ax3.text(5, 0.05,
-             "Highlighted: 4s fills before 3d — that is why the d-block starts after Ca.",
+             "Highlighted: 4s fills before 3d - that is why the d-block starts after Ca.",
              ha="center", fontsize=9, color=ACCENT)
 
     # 4. metals -------------------------------------------------------------
     ax4 = fig.add_subplot(gs[3])
     # reuse as a container of two side panels via inset-like axes
     ax4.axis("off")
-    ax4.set_title("4. Transition metals — Fe follows Aufbau; Cr does not",
+    ax4.set_title("4. Transition metals - Fe follows Aufbau; Cr does not",
                   loc="left", fontsize=12)
 
     ax_fe = fig.add_axes([0.08, 0.04, 0.40, 0.18])
     ax_cr = fig.add_axes([0.55, 0.04, 0.40, 0.18])
-    draw_config_boxes(ax_fe, fill_aufbau(26), "Fe (Z=26) — Aufbau works")
+    draw_config_boxes(ax_fe, fill_aufbau(26), "Fe (Z=26) - Aufbau works")
     draw_config_boxes(
         ax_cr, fill_aufbau(24),
-        "Cr (Z=24) — half-full 3d⁵ preferred",
+        "Cr (Z=24) - half-full 3d⁵ preferred",
         highlight={"4s", "3d"},
     )
 
@@ -319,7 +319,7 @@ def main():
         (26, "Fe", "typical d-block metal"),
         (24, "Cr", "exception: 4s1 3d5, not 4s2 3d4"),
         (29, "Cu", "exception: 4s1 3d10, not 4s2 3d9"),
-        (30, "Zn", "full 3d10 4s2 — no exception"),
+        (30, "Zn", "full 3d10 4s2 - no exception"),
     ]:
         print(f"{sym}: {config_string(fill_aufbau(z)):<22}  {note}")
 

@@ -1,6 +1,6 @@
 /* Supabase credentials for the site.
  *
- * Both of these are meant to be public - the anon key is a browser key and is
+ * Both of these are meant to be public. The anon key is a browser key and is
  * safe to commit. The service_role key is NOT: it bypasses row level security,
  * so it must never appear in this folder.
  *

@@ -1,5 +1,5 @@
-/* Browser ports of the Python visualisations.
-   The maths here deliberately mirrors the .py files line for line, so the
+/* Browser ports of the Python visualizations.
+   The math here deliberately mirrors the .py files line for line, so the
    animation and the code you download agree with each other. */
 (function () {
   "use strict";
@@ -27,7 +27,7 @@
   }
 
   /* Ticks on round numbers. Dividing the range into N equal parts gives
-     axes like 0, 29.4, 58.7, 88.1 - correct but unreadable. Snapping the
+     axes like 0, 29.4, 58.7, 88.1, which are correct but unreadable. Snapping the
      step to 1/2/2.5/5 x 10^n is what makes a chart look finished. */
   function niceStep(span, target) {
     var raw = span / Math.max(1, target);
@@ -44,8 +44,8 @@
     return best;
   }
 
-  // A log axis is labelled by exponent, so its step must be a whole number of
-  // decades - a 2.5-decade step rounds to 10^-2, 10^-5, 10^-7, 10^-10, which
+  // A log axis is labeled by exponent, so its step must be a whole number of
+  // decades: a 2.5-decade step rounds to 10^-2, 10^-5, 10^-7, 10^-10, which
   // looks evenly spaced but is not.
   var DECADES = [1, 2, 3, 4, 5, 6, 10, 12, 20, 25, 50, 100];
 
@@ -458,7 +458,7 @@
       ctx.say(
         "Polynomial up to <b>x<sup>" + (2 * n - 1) + "</sup></b>. " +
         "It tracks sin(x) to within 0.05 out to about <b>x = ±" + good.toFixed(1) + "</b>" +
-        " — then it escapes to infinity."
+        "Then it escapes to infinity."
       );
       ctx.setAlt(
         "Plot of sin(x) against its Maclaurin polynomial with " + n +
@@ -630,17 +630,17 @@
       var best = optimaPending
         ? "<span class=\"chip-busy\">finding best angle…</span>"
         : optDrag === optVac
-          ? "Best angle here is <b>" + optDrag + "°</b> — the same as in a vacuum."
+          ? "Best angle here is <b>" + optDrag + "°</b>, the same as in a vacuum."
           : "Best angle here is <b>" + optDrag + "°</b>, not " + optVac + "°.";
       ctx.say(
         "Range <b>" + drag.range.toFixed(1) + " m</b> with drag vs <b>" +
-        vac.range.toFixed(1) + " m</b> in a vacuum — drag costs <b>" +
+        vac.range.toFixed(1) + " m</b> in a vacuum. Drag costs <b>" +
         lost.toFixed(1) + " m</b> (" + (100 * lost / vac.range).toFixed(0) + "%). " + best
       );
       ctx.setAlt(
-        "Trajectory at " + speed + " metres per second and " + angle +
+        "Trajectory at " + speed + " meters per second and " + angle +
         " degrees. With drag it travels " + drag.range.toFixed(1) +
-        " metres, against " + vac.range.toFixed(1) + " metres in a vacuum." +
+        " meters, against " + vac.range.toFixed(1) + " meters in a vacuum." +
         (optimaPending ? "" : " The best launch angle here is " + optDrag + " degrees.")
       );
     }
@@ -776,10 +776,10 @@
       var base = fractionAbove(ve, 300, MASS);
       ctx.say(
         "At <b>" + Math.round(T) + " K</b>, <b>" + sciHTML(frac) +
-        "</b> of molecules clear the barrier — that is <b>" +
+        "</b> of molecules clear the barrier. That is <b>" +
         (frac / base).toFixed(2) + "×</b> the fraction at 300 K. " +
         (logY
-          ? "On this log axis every gridline is 10× — watch the shaded tail climb."
+          ? "On this log axis every gridline is 10×. Watch the shaded tail climb."
           : "Notice how little the peak moves. The tail past Ea is far too small to see here, which is exactly why it needs a log axis.")
       );
       ctx.setAlt(
@@ -816,7 +816,7 @@
 
   var FILL_ORDER = AUFBAU.map(function (x) { return x[0] + x[1]; });
 
-  var BLOCK_COLORS = { s: "#b4341f", p: "#2f6f8f", d: "#c47a1a", f: "#5a6b3b" };
+  var BLOCK_COLORS = { s: "#2c7a25", p: "#145a28", d: "#6cc551", f: "#3d8f35" };
 
   var PT_ELEMENTS = [
     { z: 1, sym: "H", row: 1, col: 1, block: "s" },
@@ -842,10 +842,10 @@
 
   var METAL_CASES = [
     { z: 21, sym: "Sc", blurb: "First d-block metal. Aufbau works: 4s fills before 3d." },
-    { z: 24, sym: "Cr", blurb: "Exception. Half-full 3d⁵ is preferred over 4s² 3d⁴ — one 4s electron moves into 3d." },
+    { z: 24, sym: "Cr", blurb: "Exception. Half-full 3d⁵ is preferred over 4s² 3d⁴, so one 4s electron moves into 3d." },
     { z: 26, sym: "Fe", blurb: "Typical transition metal. Aufbau works: [Ar] 4s² 3d⁶." },
-    { z: 29, sym: "Cu", blurb: "Exception. Full 3d¹⁰ is preferred over 4s² 3d⁹ — one 4s electron moves into 3d." },
-    { z: 30, sym: "Zn", blurb: "End of the 3d row. Full 3d¹⁰ and 4s² — no exception needed." }
+    { z: 29, sym: "Cu", blurb: "Exception. Full 3d¹⁰ is preferred over 4s² 3d⁹, so one 4s electron moves into 3d." },
+    { z: 30, sym: "Zn", blurb: "End of the 3d row. Full 3d¹⁰ and 4s², so no exception is needed." }
   ];
 
   function fillAufbau(z, applyException) {
@@ -1204,7 +1204,7 @@
     var paired = 0;
     var fillStep = 0;
     var selectedZ = 26;
-    var selectedMetal = 1; // Cr — lead with the exception
+    var selectedMetal = 1; // Cr: lead with the exception
 
     function section(title, lead) {
       var sec = document.createElement("section");
@@ -1233,10 +1233,10 @@
 
     /* ---------- 1. shapes ---------- */
     var s1 = section(
-      "1. The shapes — s and the three p orbitals",
+      "1. The shapes: s and the three p orbitals",
       "An <b>s</b> orbital is a sphere around the nucleus. Each <b>p</b> orbital is a dumbbell " +
       "of two lobes along one axis (x, y or z). Click one to focus it. " +
-      "Every orbital — s or p — holds at most <b>two electrons of opposite spin</b> (↑↓)."
+      "Every orbital (s or p) holds at most <b>two electrons of opposite spin</b> (↑↓)."
     );
     var shapeRow = document.createElement("div");
     shapeRow.className = "orb-shape-row";
@@ -1267,7 +1267,7 @@
 
     function shapeBlurb(kind) {
       if (kind === "s") {
-        return "<b>s</b>: spherical — no preferred axis. One orbital per shell (1s, 2s, 3s…). " +
+        return "<b>s</b>: spherical, with no preferred axis. One orbital per shell (1s, 2s, 3s…). " +
           "Holds up to <b>two electrons of opposite spin</b> (↑↓).";
       }
       if (kind === "px") {
@@ -1340,7 +1340,7 @@
 
       if (paired === 0) pairHint.innerHTML = "Empty orbital. Click to add the first electron (↑).";
       else if (paired === 1) pairHint.innerHTML = "One electron. A second is allowed only with <b>opposite spin</b> (↓). Click again.";
-      else pairHint.innerHTML = "Full. Two electrons, paired spins — this orbital is done. Click to clear.";
+      else pairHint.innerHTML = "Full. Two electrons, paired spins. This orbital is done. Click to clear.";
     }
     pairBtn.addEventListener("click", function () {
       paired = (paired + 1) % 3;
@@ -1350,8 +1350,8 @@
     /* ---------- 3. blocks + configs + diagonal ---------- */
     var s3 = section(
       "3. Blocks, configurations, and the diagonal fill order",
-      "Click an element to see its <b>electron configuration</b>. Colour = which block is " +
-      "being filled (s / p / d). Below that, step through the <b>diagonal Aufbau rule</b> — " +
+      "Click an element to see its <b>electron configuration</b>. Color = which block is " +
+      "being filled (s / p / d). Below that, step through the <b>diagonal Aufbau rule</b>. " +
       "electrons do not fill in simple left-to-right table order."
     );
 
@@ -1417,7 +1417,7 @@
         "<code class='orb-config-str'>" + configString(actual) + "</code>" +
         "<p class='orb-config-end'>Last filled: <b>" + end + "</b>" +
           (isEx
-            ? " · <span class='orb-warn'>exception</span> — Aufbau alone would give <code>" +
+            ? " · <span class='orb-warn'>exception</span>. Aufbau alone would give <code>" +
               configString(naive) + "</code>"
             : " · matches Aufbau") +
         "</p>";
@@ -1549,14 +1549,14 @@
         "<div class='orb-why-card'>" +
           "<strong>1. 4s and 3d are almost the same energy</strong>" +
           "<p>Once the atom has more than 20 electrons, 3d drops close to 4s. " +
-          "Shifting one electron between them costs very little — so a small " +
+          "Shifting one electron between them costs very little, so a small " +
           "stabilising effect can tip the balance.</p>" +
         "</div>" +
         "<div class='orb-why-card'>" +
           "<strong>2. Exchange energy (Hund)</strong>" +
           "<p>Electrons in different orbitals with the <em>same</em> spin avoid each other " +
           "better (exchange stabilisation). A half-full d⁵ has <b>five</b> unpaired, " +
-          "parallel-spin electrons — maximum exchange for the d set. A full d¹⁰ is a " +
+          "parallel-spin electrons, for maximum exchange for the d set. A full d¹⁰ is a " +
           "closed sublevel with a symmetrical, low-repulsion cloud.</p>" +
         "</div>" +
         "<div class='orb-why-card'>" +
@@ -1566,7 +1566,7 @@
           "payback wins; for neighbours like V, Mn, Ni, Zn it does not.</p>" +
         "</div>" +
       "</div>" +
-      "<p class='orb-why-note'>IB shorthand: <b>half-full and full sublevels are especially stable</b> — " +
+      "<p class='orb-why-note'>IB shorthand: <b>half-full and full sublevels are especially stable</b>. " +
       "but only Cr (d⁵) and Cu (d¹⁰) in period 4 gain enough to rewrite the configuration.</p>";
     s4.appendChild(whyPrimer);
 
@@ -1674,14 +1674,14 @@
           "</div>";
         if (m.z === 24) {
           metalNote.innerHTML =
-            "<p><b>Chromium (Z = 24) — chasing half-full 3d⁵</b></p>" +
+            "<p><b>Chromium (Z = 24): chasing half-full 3d⁵</b></p>" +
             "<ul>" +
             "<li><b>Aufbau guess:</b> <code>4s² 3d⁴</code>. Four 3d orbitals have one e⁻ each; " +
             "one 3d orbital is empty; 4s is paired. That is <b>4 unpaired</b> in 3d, and the " +
             "d set is neither half-full nor full.</li>" +
             "<li><b>What actually happens:</b> one 4s electron drops into the empty 3d orbital → " +
             "<code>4s¹ 3d⁵</code>. Now every 3d orbital has exactly one electron (↑↑↑↑↑). " +
-            "That is <b>5 unpaired</b> in 3d — half-full.</li>" +
+            "That is <b>5 unpaired</b> in 3d (half-full).</li>" +
             "<li><b>Why that wins:</b> five parallel-spin d electrons maximise exchange energy. " +
             "The 4s–3d gap is tiny, so the exchange payoff outweighs leaving 4s half-occupied. " +
             "Count the unpaired electrons in the panels above: Aufbau gives fewer.</li>" +
@@ -1690,10 +1690,10 @@
             "</ul>";
         } else {
           metalNote.innerHTML =
-            "<p><b>Copper (Z = 29) — chasing full 3d¹⁰</b></p>" +
+            "<p><b>Copper (Z = 29): chasing full 3d¹⁰</b></p>" +
             "<ul>" +
             "<li><b>Aufbau guess:</b> <code>4s² 3d⁹</code>. Nine electrons in five 3d orbitals " +
-            "means four orbitals are paired and one has a single e⁻ — a <em>hole</em> short of " +
+            "means four orbitals are paired and one has a single e⁻, a <em>hole</em> short of " +
             "a full d set.</li>" +
             "<li><b>What actually happens:</b> one 4s electron fills that hole → " +
             "<code>4s¹ 3d¹⁰</code>. The 3d sublevel is completely full; 4s keeps one electron.</li>" +
@@ -1707,26 +1707,26 @@
       } else {
         transfer.innerHTML =
           "<div class='orb-transfer-eq orb-transfer-ok'>" +
-            "<span>No electron shift — Aufbau matches the real configuration.</span>" +
+            "<span>No electron shift. Aufbau matches the real configuration.</span>" +
           "</div>";
         var extra = "";
         if (m.z === 21) {
           extra =
             "<p><b>Why Sc does not exception:</b> Aufbau gives <code>4s² 3d¹</code>. Moving the " +
-            "4s pair into 3d would not create d⁵ or d¹⁰ — there is no half-full/full prize to " +
+            "4s pair into 3d would not create d⁵ or d¹⁰. There is no half-full/full prize to " +
             "claim, so the atom keeps the Aufbau arrangement.</p>";
         } else if (m.z === 26) {
           extra =
             "<p><b>Why Fe does not exception:</b> <code>4s² 3d⁶</code> already has a paired d " +
-            "orbital. Shifting one 4s electron into 3d would give <code>4s¹ 3d⁷</code> — still " +
-            "not d⁵ or d¹⁰ — so there is no special stability jackpot. Aufbau wins.</p>";
+            "orbital. Shifting one 4s electron into 3d would give <code>4s¹ 3d⁷</code>, still " +
+            "not d⁵ or d¹⁰, so there is no special stability jackpot. Aufbau wins.</p>";
         } else if (m.z === 30) {
           extra =
-            "<p><b>Why Zn needs no exception:</b> it already has <code>4s² 3d¹⁰</code> — full d " +
-            "<em>and</em> full 4s. Both goals are satisfied without moving electrons.</p>";
+            "<p><b>Why Zn needs no exception:</b> it already has <code>4s² 3d¹⁰</code>, with a full d " +
+            "set <em>and</em> a full 4s. Both goals are satisfied without moving electrons.</p>";
         }
         metalNote.innerHTML =
-          "<p><b>" + m.sym + " (Z = " + m.z + ")</b> — " + m.blurb + "</p>" +
+          "<p><b>" + m.sym + " (Z = " + m.z + ")</b>. " + m.blurb + "</p>" +
           extra +
           "<p>Open <b>Cr★</b> or <b>Cu★</b> to see the cases where the half-full / full payoff " +
           "is large enough to rewrite the configuration.</p>";
@@ -1773,6 +1773,16 @@
     orbitals: demoOrbitals
   };
 
+  // sims.js adds the lesson simulations through these, reusing the same plot
+  // and control helpers so every demo on the site looks and behaves alike.
+  window.DemoKit = {
+    Plot: Plot, slider: slider, buttonRow: buttonRow, button: button,
+    playButton: playButton, cssVar: cssVar, sup: sup, sciHTML: sciHTML,
+    REDUCED: REDUCED
+  };
+  window.registerDemo = function (name, build) { BUILDERS[name] = build; };
+  window.hasDemo = function (name) { return !!(name && BUILDERS[name]); };
+
   window.mountDemo = function (name, canvas, controls, readout) {
     var build = BUILDERS[name];
     if (!build) return null;
@@ -1795,7 +1805,7 @@
       var dt = Math.min(ts - last, 60);
       last = ts;
       // Off-screen or backgrounded demos keep their RAF slot but skip the
-      // work - no reason to integrate trajectories nobody is looking at.
+      // work. No reason to integrate trajectories nobody is looking at.
       if (visible && !document.hidden) demo.tick(dt, ts);
       raf = requestAnimationFrame(loop);
     }
@@ -1828,9 +1838,14 @@
     }
 
     return {
+      // Colors are read from CSS at draw time, so a theme switch only needs
+      // a repaint, not a remount.
+      redraw: function () { demo.draw(); },
       destroy: function () {
         stopped = true;
         if (raf) cancelAnimationFrame(raf);
+        if (io) io.disconnect();
+        if (ro) ro.disconnect();
         window.removeEventListener("resize", onResize);
         if (demo.destroy) demo.destroy();
       }

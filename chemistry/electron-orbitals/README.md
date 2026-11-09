@@ -1,8 +1,8 @@
-# Electron orbitals — shapes, fill order, metals
+# Electron orbitals: shapes, fill order, metals
 
-**Subject:** Chemistry HL (Structure 1.3 — atomic structure / orbitals)
+**Subject:** Chemistry HL (Structure 1.3 - atomic structure / orbitals)
 
-**The hard bit:** linking orbital *pictures* to a written configuration —
+**The hard bit:** linking orbital *pictures* to a written configuration -
 especially once the d-block starts, and Cr / Cu refuse the naive Aufbau answer.
 
 **What this shows (longer walkthrough):**
@@ -29,4 +29,4 @@ python electron_orbitals.py
 
 ## Try changing
 - In section 4 of the script, swap Cr for Cu (`fill_aufbau(29)`).
-- Add Mn (Z = 25) — Aufbau works: `[Ar] 4s² 3d⁵`.
+- Add Mn (Z = 25) - Aufbau works: `[Ar] 4s² 3d⁵`.

@@ -1,0 +1,118 @@
+{
+  "node": "m-5-19",
+  "title": "Maclaurin series",
+  "minutes": 30,
+  "topic": "taylor-series",
+  "objectives": [
+    "Derive a Maclaurin series from the derivatives of a function at x = 0.",
+    "Recall and use the standard series for eˣ, sin x, cos x and ln(1 + x).",
+    "Explain what the interval of convergence means, and see it on a graph.",
+    "Use series to approximate values and evaluate limits."
+  ],
+  "explanation": [
+    {
+      "heading": "Matching derivatives at zero",
+      "body": [
+        "Suppose a function can be written as a polynomial that never ends:",
+        "<p class='eq'>f(x) = a₀ + a₁x + a₂x² + a₃x³ + …</p>",
+        "Putting x = 0 gives a₀ = f(0). Differentiate once and put x = 0 again: a₁ = f′(0). Differentiate twice: 2a₂ = f″(0). In general the n-th derivative picks out n! × aₙ, so",
+        "<p class='eq'>aₙ = f⁽ⁿ⁾(0) / n!</p>",
+        "The factorial is the part students most often forget. It comes from repeatedly differentiating xⁿ: n × (n − 1) × … × 1."
+      ]
+    },
+    {
+      "heading": "The standard series",
+      "body": [
+        "<p class='eq'>eˣ = 1 + x + x²/2! + x³/3! + …  (all x)</p>",
+        "<p class='eq'>sin x = x − x³/3! + x⁵/5! − …  (all x)</p>",
+        "<p class='eq'>cos x = 1 − x²/2! + x⁴/4! − …  (all x)</p>",
+        "<p class='eq'>ln(1 + x) = x − x²/2 + x³/3 − …  (−1 &lt; x ≤ 1)</p>",
+        "sin x is odd, so only odd powers appear; cos x is even, so only even powers. Other series come from these by substitution (replace x by 2x, or by x²) or by multiplying two series together."
+      ]
+    },
+    {
+      "heading": "Why more terms help, and where they stop helping",
+      "body": [
+        "Near x = 0, each extra term corrects the error left by the one before. Far from 0, the highest power in your polynomial dominates and the approximation shoots off.",
+        "For eˣ, sin x and cos x the series converges for every x. You just need more terms the further out you go. For ln(1 + x), no number of terms works once |x| &gt; 1: that is what a finite <b>interval of convergence</b> means."
+      ]
+    }
+  ],
+  "demo": {
+    "id": "taylor",
+    "intro": "The gray curve is sin x. Step up the number of terms and watch the polynomial approximation grip more of it.",
+    "notice": [
+      "Each new term roughly extends the region of good agreement by π in each direction.",
+      "Outside that region the polynomial diverges violently, up or down depending on the sign of the last term.",
+      "With one term the approximation is just y = x: the small-angle approximation sin x ≈ x."
+    ]
+  },
+  "examples": [
+    {
+      "title": "Deriving the series for cos x",
+      "problem": "Find the first three non-zero terms of the Maclaurin series for cos x.",
+      "steps": [
+        {
+          "do": "f(0) = cos 0 = 1",
+          "why": "Constant term."
+        },
+        {
+          "do": "f′(x) = −sin x, so f′(0) = 0",
+          "why": "No x term."
+        },
+        {
+          "do": "f″(x) = −cos x, so f″(0) = −1, giving −x²/2!",
+          "why": "Divide by 2! = 2."
+        },
+        {
+          "do": "f‴(0) = sin 0 = 0, and f⁗(0) = cos 0 = 1, giving x⁴/4!",
+          "why": "Derivatives cycle with period 4."
+        }
+      ],
+      "answer": "cos x ≈ 1 − x²/2 + x⁴/24"
+    },
+    {
+      "title": "Substitution",
+      "problem": "Find the Maclaurin series for e<sup>2x</sup> up to the term in x³.",
+      "steps": [
+        {
+          "do": "Start from eᵘ = 1 + u + u²/2 + u³/6 + …",
+          "why": "Use the known series rather than differentiating again."
+        },
+        {
+          "do": "Put u = 2x: 1 + 2x + (2x)²/2 + (2x)³/6",
+          "why": "Bracket the whole substituted expression."
+        },
+        {
+          "do": "= 1 + 2x + 2x² + (4/3)x³",
+          "why": "(2x)² = 4x² and (2x)³ = 8x³."
+        }
+      ],
+      "answer": "e<sup>2x</sup> ≈ 1 + 2x + 2x² + (4/3)x³"
+    },
+    {
+      "title": "A limit by series",
+      "problem": "Evaluate lim<sub>x→0</sub> (sin x − x) / x³.",
+      "steps": [
+        {
+          "do": "sin x − x = −x³/6 + x⁵/120 − …",
+          "why": "The x terms cancel, leaving the x³ term in front."
+        },
+        {
+          "do": "Divide by x³: −1/6 + x²/120 − …",
+          "why": "Every later term still has a positive power of x."
+        },
+        {
+          "do": "Let x → 0: the limit is −1/6",
+          "why": "All terms with x vanish."
+        }
+      ],
+      "answer": "−1/6"
+    }
+  ],
+  "takeaways": [
+    "aₙ = f⁽ⁿ⁾(0) / n!. Never forget the factorial.",
+    "Build new series by substitution or multiplication instead of differentiating from scratch.",
+    "An approximation is only trustworthy near 0, and only inside the interval of convergence."
+  ]
+}

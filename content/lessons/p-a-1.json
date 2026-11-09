@@ -1,0 +1,96 @@
+{
+  "node": "p-a-1",
+  "title": "Projectile motion",
+  "minutes": 25,
+  "topic": "projectile-drag",
+  "objectives": [
+    "Resolve a launch velocity into horizontal and vertical components.",
+    "Treat horizontal and vertical motion independently, linked only by time.",
+    "Calculate time of flight, maximum height and range.",
+    "Describe qualitatively how air resistance changes a trajectory."
+  ],
+  "explanation": [
+    {
+      "heading": "Two independent motions",
+      "body": [
+        "Ignoring air resistance, the only force on a projectile is its weight, which acts straight down. So:",
+        "<ul><li><b>Horizontally</b> there is no force: the velocity uₓ = u cos θ stays constant.</li><li><b>Vertically</b> the acceleration is g = 9.81 m s⁻² downwards: use the suvat equations with u_y = u sin θ.</li></ul>",
+        "The two motions are completely independent. The only thing they share is <b>time</b>, so most problems are solved by finding the time from one direction and using it in the other."
+      ]
+    },
+    {
+      "heading": "Key results on level ground",
+      "body": [
+        "<p class='eq'>time to the top = u_y / g        maximum height H = u_y² / 2g</p>",
+        "<p class='eq'>time of flight T = 2u_y / g        range R = uₓ T = u² sin 2θ / g</p>",
+        "The range is largest when sin 2θ = 1, at θ = 45°. Complementary angles such as 30° and 60° give the same range. At the top, the vertical velocity is zero but the horizontal velocity is not, and the acceleration is still g."
+      ]
+    },
+    {
+      "heading": "Adding air resistance",
+      "body": [
+        "Drag acts opposite to the velocity and grows with speed (roughly as v²). It has a horizontal component, so uₓ is no longer constant.",
+        "Compared with the vacuum parabola: the maximum height is lower, the range is shorter, and the path is <b>not symmetric</b>: the descent is steeper than the ascent. The best launch angle drops below 45°.",
+        "There is no neat formula for this case. The IB only asks for the qualitative effect; the numbers come from a step-by-step simulation (see the extension topic on numerical models)."
+      ]
+    }
+  ],
+  "demo": {
+    "id": "projectile",
+    "intro": "The dashed curve is the vacuum parabola; the solid one includes drag. Change the launch speed, angle and drag coefficient.",
+    "notice": [
+      "Set drag to zero and the two curves coincide.",
+      "With drag on, the descent is visibly steeper than the climb.",
+      "The best angle (shown on the range plot) moves further below 45° the faster you launch."
+    ]
+  },
+  "examples": [
+    {
+      "title": "Launch on level ground",
+      "problem": "A ball is kicked at 20 m s⁻¹ at 30° above the horizontal on level ground. Find the time of flight, the range and the maximum height. Take g = 9.81 m s⁻².",
+      "steps": [
+        {
+          "do": "uₓ = 20 cos 30° = 17.3 m s⁻¹, u_y = 20 sin 30° = 10.0 m s⁻¹",
+          "why": "Resolve first, every time."
+        },
+        {
+          "do": "T = 2u_y / g = 2 × 10.0 / 9.81 = 2.04 s",
+          "why": "Vertical motion fixes the time."
+        },
+        {
+          "do": "R = uₓ T = 17.3 × 2.04 = 35.3 m",
+          "why": "Horizontal motion at constant velocity."
+        },
+        {
+          "do": "H = u_y² / 2g = 100 / 19.62 = 5.10 m",
+          "why": "v² = u² + 2as with v = 0 at the top."
+        }
+      ],
+      "answer": "T = 2.04 s, R = 35.3 m, H = 5.10 m"
+    },
+    {
+      "title": "Horizontal launch from a cliff",
+      "problem": "A stone is thrown horizontally at 12 m s⁻¹ from the top of a 45 m cliff. How far from the base of the cliff does it land?",
+      "steps": [
+        {
+          "do": "Vertically: u_y = 0, s = 45 m, a = 9.81 m s⁻²",
+          "why": "'Horizontally' means the vertical component starts at zero."
+        },
+        {
+          "do": "s = ½gt² gives t = √(2 × 45 / 9.81) = 3.03 s",
+          "why": "Fall time is the same as if the stone were simply dropped."
+        },
+        {
+          "do": "x = 12 × 3.03 = 36.3 m",
+          "why": "Horizontal velocity is constant."
+        }
+      ],
+      "answer": "36.3 m from the base"
+    }
+  ],
+  "takeaways": [
+    "Resolve, then treat each direction separately; time is the link.",
+    "At the top v_y = 0, but vₓ ≠ 0 and a = g.",
+    "Air resistance lowers the height, shortens the range, breaks the symmetry and lowers the best angle."
+  ]
+}

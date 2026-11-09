@@ -1,0 +1,107 @@
+{
+  "node": "p-c-1",
+  "title": "Simple harmonic motion",
+  "minutes": 30,
+  "objectives": [
+    "State the defining condition for SHM, a = −ω²x, and explain each part of it.",
+    "Relate ω, period and frequency, and use T = 2π√(m/k) and T = 2π√(L/g).",
+    "Describe the phase relationships between displacement, velocity and acceleration.",
+    "Describe how kinetic and potential energy are exchanged during an oscillation."
+  ],
+  "explanation": [
+    {
+      "heading": "The defining condition",
+      "body": [
+        "An object moves with simple harmonic motion when its acceleration is <b>proportional to its displacement</b> from equilibrium and <b>directed towards</b> equilibrium:",
+        "<p class='eq'>a = −ω²x</p>",
+        "The minus sign is the whole point: it says the acceleration always points back towards the middle. ω is the angular frequency, in rad s⁻¹, and the period is T = 2π/ω.",
+        "A mass on a spring obeys this with ω² = k/m, so T = 2π√(m/k). A pendulum obeys it (for small angles only) with ω² = g/L, so T = 2π√(L/g)."
+      ]
+    },
+    {
+      "heading": "Displacement, velocity and acceleration",
+      "body": [
+        "Released from rest at amplitude x₀, the motion is x = x₀ cos ωt. Differentiating gives v = −ωx₀ sin ωt and a = −ω²x₀ cos ωt.",
+        "<ul><li>Speed is greatest at equilibrium: v<sub>max</sub> = ωx₀.</li><li>Acceleration is greatest at the extremes: a<sub>max</sub> = ω²x₀.</li><li>Velocity is a quarter-cycle (π/2) out of phase with displacement; acceleration is exactly antiphase (π).</li></ul>",
+        "At any displacement, v = ±ω√(x₀² − x²). The period does <b>not</b> depend on the amplitude: a bigger swing just moves faster."
+      ]
+    },
+    {
+      "heading": "Energy",
+      "body": [
+        "With no friction the total energy stays constant at E = ½mω²x₀².",
+        "<p class='eq'>E<sub>k</sub> = ½mω²(x₀² − x²)        E<sub>p</sub> = ½mω²x²</p>",
+        "Energy sloshes between the two forms twice per cycle: all kinetic at equilibrium, all potential at the extremes."
+      ]
+    }
+  ],
+  "demo": {
+    "id": "shm",
+    "intro": "A mass on a spring, with its displacement, velocity and acceleration plotted against time. Change the mass, spring constant and amplitude.",
+    "notice": [
+      "Doubling the amplitude does not change the period, only the size of every curve.",
+      "Quadrupling the mass doubles the period, because T ∝ √m.",
+      "The acceleration curve is the displacement curve flipped upside down: a = −ω²x."
+    ]
+  },
+  "examples": [
+    {
+      "title": "Mass on a spring",
+      "problem": "A 0.50 kg mass on a spring of constant 200 N m⁻¹ oscillates with amplitude 0.040 m. Find ω, the period, the maximum speed and the maximum acceleration.",
+      "steps": [
+        {
+          "do": "ω = √(k/m) = √(200 / 0.50) = 20 rad s⁻¹",
+          "why": "Compare ma = −kx with a = −ω²x."
+        },
+        {
+          "do": "T = 2π/ω = 0.314 s",
+          "why": "One full cycle is 2π radians."
+        },
+        {
+          "do": "v<sub>max</sub> = ωx₀ = 20 × 0.040 = 0.80 m s⁻¹",
+          "why": "At equilibrium."
+        },
+        {
+          "do": "a<sub>max</sub> = ω²x₀ = 400 × 0.040 = 16 m s⁻²",
+          "why": "At the extremes."
+        }
+      ],
+      "answer": "ω = 20 rad s⁻¹, T = 0.314 s, v_max = 0.80 m s⁻¹, a_max = 16 m s⁻²"
+    },
+    {
+      "title": "Speed part-way through",
+      "problem": "For the same oscillator, find the speed when the displacement is 0.020 m.",
+      "steps": [
+        {
+          "do": "v = ω√(x₀² − x²) = 20 √(0.0016 − 0.0004)",
+          "why": "Square the values carefully. Mixing cm and m here is a common slip."
+        },
+        {
+          "do": "= 20 × 0.0346 = 0.69 m s⁻¹",
+          "why": "Less than v_max, as expected away from equilibrium."
+        }
+      ],
+      "answer": "0.69 m s⁻¹"
+    },
+    {
+      "title": "Pendulum",
+      "problem": "Find the period of a simple pendulum of length 0.80 m.",
+      "steps": [
+        {
+          "do": "T = 2π√(L/g) = 2π√(0.80 / 9.81)",
+          "why": "Valid for small angles, where sin θ ≈ θ."
+        },
+        {
+          "do": "= 1.79 s",
+          "why": "Mass does not appear: every pendulum of this length has the same period."
+        }
+      ],
+      "answer": "1.79 s"
+    }
+  ],
+  "takeaways": [
+    "SHM ⇔ a = −ω²x: acceleration proportional to displacement and opposite to it.",
+    "Period is independent of amplitude.",
+    "Speed peaks at equilibrium; acceleration peaks at the extremes."
+  ]
+}

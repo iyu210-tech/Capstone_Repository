@@ -1,0 +1,157 @@
+[
+  {
+    "id": "c-mb-01", "node": "c-boltzmann", "format": "mcq", "difficulty": 1, "minutes": 1, "skill": "concept",
+    "prompt": "What does the area under a Maxwell–Boltzmann distribution curve represent?",
+    "choices": [
+      { "text": "The total number of particles", "correct": true },
+      { "text": "The total kinetic energy of the particles", "why": "The y-axis is number of particles, so the area counts particles, not energy." },
+      { "text": "The average energy of the particles", "why": "The average is a position on the energy axis, not an area." },
+      { "text": "The rate of reaction", "why": "Only the area beyond Ea relates to rate." }
+    ],
+    "hints": ["What are the axes of the graph?"],
+    "solution": ["The y-axis is number (or fraction) of particles with a given energy.", "Adding up over all energies gives the total number of particles."],
+    "misconceptions": ["Reading the area as energy."]
+  },
+  {
+    "id": "c-mb-02", "node": "c-boltzmann", "format": "mcq", "difficulty": 1, "minutes": 1, "skill": "interpretation",
+    "prompt": "The temperature of a gas is increased. How does its Maxwell–Boltzmann curve change?",
+    "choices": [
+      { "text": "The peak becomes lower and moves to higher energy; the area is unchanged", "correct": true },
+      { "text": "The peak becomes higher and moves to higher energy", "why": "The number of particles is unchanged, so the area must stay the same. A curve that spreads out has to get lower." },
+      { "text": "The whole curve shifts right without changing shape", "why": "The curve still starts at the origin; it flattens and spreads rather than sliding." },
+      { "text": "The activation energy decreases", "why": "Ea is a property of the reaction pathway. Temperature changes the particles' energies, not Ea." }
+    ],
+    "hints": ["Has the number of particles changed?", "Where must the curve still start?"],
+    "solution": ["Higher temperature means a higher average kinetic energy, so the peak moves right.", "The curve spreads out, and because the area (the number of particles) is fixed, the peak gets lower."],
+    "misconceptions": ["Drawing the hotter curve with a higher peak.", "Thinking temperature changes Ea."]
+  },
+  {
+    "id": "c-mb-03", "node": "c-boltzmann", "format": "mcq", "difficulty": 2, "minutes": 1, "skill": "concept",
+    "prompt": "How does a catalyst increase the rate of a reaction, in terms of the Maxwell–Boltzmann distribution?",
+    "choices": [
+      { "text": "It lowers Ea, so more of the existing particles have enough energy to react", "correct": true },
+      { "text": "It changes the shape of the curve so more particles have high energy", "why": "A catalyst does not give particles any extra energy, so the curve is unchanged." },
+      { "text": "It increases the kinetic energy of the particles", "why": "That is what heating does. A catalyst provides an alternative pathway instead." },
+      { "text": "It increases the total number of particles", "why": "The area under the curve is unchanged by a catalyst." }
+    ],
+    "hints": ["Does the catalyst change the particles or the pathway?"],
+    "solution": ["A catalyst provides an alternative pathway with a lower activation energy.", "The curve is unchanged, but the Ea line moves left, so a larger area lies beyond it."],
+    "misconceptions": ["A catalyst gives particles more energy."]
+  },
+  {
+    "id": "c-mb-04", "node": "c-boltzmann", "format": "mcq", "difficulty": 2, "minutes": 2, "skill": "interpretation",
+    "prompt": "A 10 K rise in temperature often roughly doubles a reaction rate, but increases the collision frequency by only about 2%. Why?",
+    "choices": [
+      { "text": "The fraction of particles with energy ≥ Ea increases by a much larger factor", "correct": true },
+      { "text": "Particles collide twice as hard, so each collision counts double", "why": "Each successful collision produces one reaction event; what matters is how many collisions exceed Ea." },
+      { "text": "The activation energy halves", "why": "Ea does not depend on temperature." },
+      { "text": "The particles become more correctly oriented", "why": "Orientation is a matter of geometry and is not significantly affected by temperature." }
+    ],
+    "hints": ["Look at the tail of the curve beyond Ea in the demo."],
+    "solution": ["Ea normally lies far out in the tail of the distribution.", "A small temperature rise greatly increases the area of the tail beyond Ea.", "So the frequency of successful collisions increases much more than the total collision frequency."],
+    "misconceptions": ["Attributing the effect mainly to more frequent collisions."]
+  },
+  {
+    "id": "c-mb-05", "node": "c-boltzmann", "format": "numeric", "difficulty": 3, "minutes": 4, "skill": "multi-step",
+    "prompt": "The fraction of particles with energy ≥ Ea is approximately e<sup>−Ea/RT</sup>. For Ea = 60 kJ mol⁻¹, by what factor does this fraction increase when the temperature rises from 298 K to 308 K? (R = 8.31 J K⁻¹ mol⁻¹)",
+    "answer": { "value": 2.2, "tol": 0.03 },
+    "hints": ["Ratio = e^(−Ea/R·308) ÷ e^(−Ea/R·298) = e^((Ea/R)(1/298 − 1/308)).", "Ea must be in J mol⁻¹: 60 000.", "1/298 − 1/308 = 1.09 × 10⁻⁴ K⁻¹."],
+    "solution": ["Ea/R = 60 000 / 8.31 = 7220 K.", "(1/298 − 1/308) = 1.0895 × 10⁻⁴.", "Exponent = 7220 × 1.0895 × 10⁻⁴ = 0.787.", "e^0.787 = 2.20."],
+    "misconceptions": ["Leaving Ea in kJ mol⁻¹, which gives an answer of almost exactly 1."]
+  },
+  {
+    "id": "c-mb-06", "node": "c-boltzmann", "format": "mcq", "difficulty": 2, "minutes": 1, "skill": "concept",
+    "prompt": "Which feature of a Maxwell–Boltzmann curve is drawn correctly?",
+    "choices": [
+      { "text": "It starts at the origin and never touches the energy axis at high energy", "correct": true },
+      { "text": "It is symmetric about its peak", "why": "It is skewed, with a long tail to high energy. (That is a key difference from a normal distribution.)" },
+      { "text": "It meets the energy axis at a maximum energy", "why": "There is no maximum energy; a tiny fraction of particles always has very high energy." },
+      { "text": "It starts on the y-axis above the origin", "why": "No particles have exactly zero energy, so the curve starts at the origin." }
+    ],
+    "hints": ["Can any particle have zero energy?", "Is there a maximum possible energy?"],
+    "solution": ["No particle has zero kinetic energy, so the curve starts at the origin.", "There is no upper limit, so the curve approaches but never touches the axis.", "It is asymmetric."],
+    "misconceptions": ["Drawing the curve symmetrically, like a normal distribution."]
+  },
+
+  {
+    "id": "c-orb-01", "node": "c-orbitals", "format": "mcq", "difficulty": 1, "minutes": 1, "skill": "concept",
+    "prompt": "What is the maximum number of electrons in the 3d sub-level?",
+    "choices": [
+      { "text": "10", "correct": true },
+      { "text": "5", "why": "There are 5 d orbitals, but each holds 2 electrons." },
+      { "text": "18", "why": "18 is the capacity of the whole third shell (3s + 3p + 3d)." },
+      { "text": "6", "why": "6 is the capacity of a p sub-level." }
+    ],
+    "hints": ["How many d orbitals are there, and how many electrons can each hold?"],
+    "solution": ["A d sub-level has 5 orbitals.", "Each orbital holds 2 electrons, so 10 in total."],
+    "misconceptions": ["Counting orbitals instead of electrons."]
+  },
+  {
+    "id": "c-orb-02", "node": "c-orbitals", "format": "mcq", "difficulty": 1, "minutes": 1, "skill": "calculation",
+    "prompt": "Which is the full electron configuration of sulfur (Z = 16)?",
+    "choices": [
+      { "text": "1s² 2s² 2p⁶ 3s² 3p⁴", "correct": true },
+      { "text": "1s² 2s² 2p⁶ 3s² 3p⁶", "why": "That adds up to 18 electrons (argon)." },
+      { "text": "1s² 2s² 2p⁸ 3s² 3p²", "why": "A p sub-level holds at most 6 electrons." },
+      { "text": "2s² 2p⁶ 3s² 3p⁶", "why": "Every configuration starts with 1s²." }
+    ],
+    "hints": ["Add up the superscripts: they must total 16.", "p sub-levels hold 6."],
+    "solution": ["1s² (2), 2s² (4), 2p⁶ (10), 3s² (12), 3p⁴ (16)."],
+    "misconceptions": []
+  },
+  {
+    "id": "c-orb-03", "node": "c-orbitals", "format": "mcq", "difficulty": 2, "minutes": 1, "skill": "concept",
+    "prompt": "What is the ground-state electron configuration of chromium (Z = 24)?",
+    "choices": [
+      { "text": "[Ar] 3d⁵ 4s¹", "correct": true },
+      { "text": "[Ar] 3d⁴ 4s²", "why": "That is the simple Aufbau prediction, but chromium is an exception: a half-filled 3d⁵ is more stable." },
+      { "text": "[Ar] 3d⁶", "why": "The 4s orbital is still occupied in the neutral atom." },
+      { "text": "[Ar] 4s² 4p⁴", "why": "3d fills before 4p." }
+    ],
+    "hints": ["Chromium is one of the two exceptions in the first transition series.", "Which arrangement gives a half-filled d sub-level?"],
+    "solution": ["The Aufbau order predicts [Ar]3d⁴4s².", "Moving one electron from 4s to 3d gives a half-filled 3d⁵, which is more stable.", "So Cr is [Ar]3d⁵4s¹."],
+    "misconceptions": ["Applying Aufbau without exceptions."]
+  },
+  {
+    "id": "c-orb-04", "node": "c-orbitals", "format": "mcq", "difficulty": 2, "minutes": 2, "skill": "concept",
+    "prompt": "What is the electron configuration of Fe²⁺? (Fe: Z = 26)",
+    "choices": [
+      { "text": "[Ar] 3d⁶", "correct": true },
+      { "text": "[Ar] 3d⁴ 4s²", "why": "Transition metals lose their 4s electrons first, not their 3d electrons." },
+      { "text": "[Ar] 3d⁵ 4s¹", "why": "Both 4s electrons go before any 3d electron." },
+      { "text": "[Ar] 3d⁸", "why": "Fe²⁺ has 24 electrons, not 26, because electrons are removed, not moved." }
+    ],
+    "hints": ["Start from Fe: [Ar]3d⁶4s².", "Which electrons are removed first from a transition metal?"],
+    "solution": ["Fe is [Ar]3d⁶4s².", "The 4s electrons are lost first.", "Fe²⁺ is [Ar]3d⁶."],
+    "misconceptions": ["'Last in, first out': removing 3d electrons because they were filled last."]
+  },
+  {
+    "id": "c-orb-05", "node": "c-orbitals", "format": "numeric", "difficulty": 2, "minutes": 2, "skill": "calculation",
+    "prompt": "How many unpaired electrons does a ground-state manganese atom (Z = 25) have?",
+    "answer": { "value": 5, "tol": 0 },
+    "hints": ["Mn is [Ar]3d⁵4s².", "Apply Hund's rule to the five 3d orbitals."],
+    "solution": ["Mn: [Ar] 3d⁵ 4s².", "4s² is paired.", "Five 3d electrons occupy the five d orbitals singly: 5 unpaired."],
+    "misconceptions": ["Pairing electrons in d orbitals before all five are singly filled."]
+  },
+  {
+    "id": "c-orb-06", "node": "c-orbitals", "format": "numeric", "difficulty": 2, "minutes": 1, "skill": "calculation",
+    "prompt": "How many unpaired electrons does a ground-state oxygen atom have?",
+    "answer": { "value": 2, "tol": 0 },
+    "hints": ["O is 1s² 2s² 2p⁴.", "Put one electron in each p orbital first, then pair up."],
+    "solution": ["2p⁴: three electrons go singly into the three p orbitals.", "The fourth pairs up with one of them.", "Two remain unpaired."],
+    "misconceptions": ["Answering 0 by pairing the four electrons into two orbitals."]
+  },
+  {
+    "id": "c-orb-07", "node": "c-orbitals", "format": "mcq", "difficulty": 3, "minutes": 2, "skill": "multi-step",
+    "prompt": "What is the electron configuration of Cu⁺? (Cu: Z = 29)",
+    "choices": [
+      { "text": "[Ar] 3d¹⁰", "correct": true },
+      { "text": "[Ar] 3d⁹ 4s¹", "why": "Cu is [Ar]3d¹⁰4s¹, and the 4s electron is removed first." },
+      { "text": "[Ar] 3d⁸ 4s²", "why": "This starts from the incorrect configuration [Ar]3d⁹4s² for copper." },
+      { "text": "[Ar] 3d¹⁰ 4s²", "why": "That would be 30 electrons, more than neutral copper has." }
+    ],
+    "hints": ["First write copper itself; it is an exception.", "Then remove a 4s electron."],
+    "solution": ["Cu is [Ar]3d¹⁰4s¹ (full d sub-level).", "Remove the 4s electron: Cu⁺ is [Ar]3d¹⁰."],
+    "misconceptions": ["Starting from the Aufbau prediction [Ar]3d⁹4s²."]
+  }
+]

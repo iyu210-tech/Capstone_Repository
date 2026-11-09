@@ -1,0 +1,227 @@
+[
+  {
+    "id": "p-proj-01", "node": "p-projectile", "format": "mcq", "difficulty": 1, "minutes": 1, "skill": "concept",
+    "prompt": "Ignoring air resistance, what is the velocity of a projectile at the highest point of its path?",
+    "choices": [
+      { "text": "Horizontal, equal to u cos θ", "correct": true },
+      { "text": "Zero", "why": "Only the vertical component is zero at the top. The horizontal component never changes." },
+      { "text": "Vertical, equal to u sin θ", "why": "The vertical component is zero at the top, and that is what makes it the top." },
+      { "text": "Equal to the launch speed u", "why": "The vertical component has been lost, so the speed is smaller than u." }
+    ],
+    "hints": ["Think about the two components separately.", "Is there any horizontal force?"],
+    "solution": ["At the top, v_y = 0.", "vₓ = u cos θ throughout, because there is no horizontal force.", "So the velocity is horizontal and equal to u cos θ."],
+    "misconceptions": ["Thinking a projectile momentarily stops at the top."]
+  },
+  {
+    "id": "p-proj-02", "node": "p-projectile", "format": "mcq", "difficulty": 1, "minutes": 1, "skill": "concept",
+    "prompt": "Ignoring air resistance, what is the acceleration of a projectile at the highest point of its path?",
+    "choices": [
+      { "text": "9.81 m s⁻² downwards", "correct": true },
+      { "text": "Zero", "why": "Zero vertical velocity does not mean zero acceleration. Weight still acts, so a = g." },
+      { "text": "9.81 m s⁻² in the direction of motion", "why": "Gravity always acts vertically downwards, whatever the direction of motion." },
+      { "text": "It depends on the launch angle", "why": "The only force is weight, so the acceleration is g everywhere on the path." }
+    ],
+    "hints": ["What forces act on the projectile at the top?"],
+    "solution": ["The only force is weight, mg, downwards.", "So a = g = 9.81 m s⁻² downwards at every point, including the top."],
+    "misconceptions": ["Zero velocity implies zero acceleration."]
+  },
+  {
+    "id": "p-proj-03", "node": "p-projectile", "format": "numeric", "difficulty": 2, "minutes": 3, "skill": "calculation",
+    "prompt": "A ball is kicked at 15 m s⁻¹ at 40° above the horizontal on level ground. Find its time of flight. Take g = 9.81 m s⁻².",
+    "answer": { "value": 1.97, "tol": 0.02, "units": "s" },
+    "hints": ["Find the vertical component of velocity first.", "T = 2u_y / g."],
+    "solution": ["u_y = 15 sin 40° = 9.64 m s⁻¹.", "T = 2 × 9.64 / 9.81 = 1.97 s."],
+    "misconceptions": ["Using cos 40° for the vertical component.", "Giving the time to the top (0.98 s) rather than the whole flight."]
+  },
+  {
+    "id": "p-proj-04", "node": "p-projectile", "format": "numeric", "difficulty": 2, "minutes": 3, "skill": "multi-step",
+    "prompt": "A stone is thrown horizontally at 8.0 m s⁻¹ from the top of a 20 m cliff. How far from the base of the cliff does it land?",
+    "answer": { "value": 16.2, "tol": 0.02, "units": "m" },
+    "hints": ["The vertical motion starts from rest.", "Use s = ½gt² to find the fall time."],
+    "solution": ["20 = ½ × 9.81 × t², so t = 2.02 s.", "x = 8.0 × 2.02 = 16.2 m."],
+    "misconceptions": ["Including the 8.0 m s⁻¹ in the vertical motion."]
+  },
+  {
+    "id": "p-proj-05", "node": "p-projectile", "format": "numeric", "difficulty": 2, "minutes": 3, "skill": "calculation",
+    "prompt": "A projectile is launched at 25 m s⁻¹ at 60° above the horizontal. Find its maximum height above the launch point.",
+    "answer": { "value": 23.9, "tol": 0.02, "units": "m" },
+    "hints": ["u_y = 25 sin 60°.", "At the top v_y = 0; use v² = u² + 2as."],
+    "solution": ["u_y = 21.65 m s⁻¹.", "H = u_y² / 2g = 468.75 / 19.62 = 23.9 m."],
+    "misconceptions": ["Using the full launch speed instead of its vertical component."]
+  },
+  {
+    "id": "p-proj-06", "node": "p-projectile", "format": "mcq", "difficulty": 2, "minutes": 1, "skill": "interpretation",
+    "prompt": "Ignoring air resistance, which pair of launch angles gives the same range for the same launch speed on level ground?",
+    "choices": [
+      { "text": "25° and 65°", "correct": true },
+      { "text": "25° and 50°", "why": "R ∝ sin 2θ. sin 50° ≠ sin 100°." },
+      { "text": "30° and 150°", "why": "150° points backwards, so the range would be the same size but in the opposite direction." },
+      { "text": "Only 45° gives that range", "why": "45° gives the maximum range, but every smaller range is reached by two angles." }
+    ],
+    "hints": ["R = u² sin 2θ / g.", "sin A = sin(180° − A)."],
+    "solution": ["The angles need sin 2θ₁ = sin 2θ₂, so 2θ₁ + 2θ₂ = 180°.", "θ₁ + θ₂ = 90°: complementary angles, such as 25° and 65°."],
+    "misconceptions": []
+  },
+  {
+    "id": "p-proj-07", "node": "p-projectile", "format": "mcq", "difficulty": 3, "minutes": 2, "skill": "interpretation",
+    "prompt": "Compared with the same launch in a vacuum, a projectile subject to air resistance has:",
+    "choices": [
+      { "text": "a shorter range and a descent steeper than its ascent", "correct": true },
+      { "text": "the same range but a lower maximum height", "why": "Drag acts against the velocity, which has a horizontal component, so horizontal motion is slowed too." },
+      { "text": "a symmetric path that is simply smaller", "why": "Drag removes energy throughout, so the projectile comes down more slowly horizontally than it went up: the path is lopsided." },
+      { "text": "a longer flight time and a longer range", "why": "Drag reduces the range. (The flight time is usually slightly shorter, too.)" }
+    ],
+    "hints": ["Which direction does drag act?", "Does the horizontal velocity stay constant?"],
+    "solution": ["Drag opposes the velocity, so it has both a horizontal and a vertical component.", "The horizontal velocity decreases, so the range is shorter.", "By the time it descends, the projectile is moving more slowly horizontally, so its path is steeper on the way down."],
+    "misconceptions": ["Drag only affects vertical motion."]
+  },
+
+  {
+    "id": "p-shm-01", "node": "p-shm", "format": "mcq", "difficulty": 1, "minutes": 1, "skill": "concept",
+    "prompt": "Which condition defines simple harmonic motion? (x is displacement from equilibrium, a is acceleration.)",
+    "choices": [
+      { "text": "a is proportional to −x", "correct": true },
+      { "text": "a is proportional to x", "why": "Without the minus sign the acceleration points away from equilibrium and the object would fly off instead of oscillating." },
+      { "text": "velocity is proportional to −x", "why": "The defining condition is about acceleration, not velocity." },
+      { "text": "a is constant", "why": "In SHM the acceleration changes continuously; it is zero at equilibrium and greatest at the extremes." }
+    ],
+    "hints": ["The force must always pull back towards the middle."],
+    "solution": ["SHM requires a = −ω²x: acceleration proportional to displacement and directed towards equilibrium."],
+    "misconceptions": ["Forgetting the minus sign: the restoring direction is the essential feature."]
+  },
+  {
+    "id": "p-shm-02", "node": "p-shm", "format": "mcq", "difficulty": 1, "minutes": 1, "skill": "concept",
+    "prompt": "Where is the speed of an object in SHM greatest?",
+    "choices": [
+      { "text": "At the equilibrium position", "correct": true },
+      { "text": "At the extremes of the motion", "why": "The acceleration is greatest at the extremes; the speed is zero there." },
+      { "text": "Halfway between equilibrium and an extreme", "why": "The speed keeps increasing all the way to equilibrium." },
+      { "text": "It is the same everywhere", "why": "Kinetic energy and potential energy keep swapping, so the speed changes." }
+    ],
+    "hints": ["Where is all the energy kinetic?"],
+    "solution": ["E_k = ½mω²(x₀² − x²) is greatest when x = 0.", "So the speed is greatest at equilibrium: v_max = ωx₀."],
+    "misconceptions": ["Confusing where speed is greatest with where acceleration is greatest."]
+  },
+  {
+    "id": "p-shm-03", "node": "p-shm", "format": "numeric", "difficulty": 2, "minutes": 2, "skill": "calculation",
+    "prompt": "A 0.25 kg mass oscillates on a spring of spring constant 100 N m⁻¹. Find the period.",
+    "answer": { "value": 0.314, "tol": 0.02, "units": "s" },
+    "hints": ["T = 2π√(m/k)."],
+    "solution": ["T = 2π√(0.25 / 100) = 2π × 0.05 = 0.314 s."],
+    "misconceptions": ["Writing √(k/m) inside the formula for T (that is ω, not T/2π)."]
+  },
+  {
+    "id": "p-shm-04", "node": "p-shm", "format": "numeric", "difficulty": 2, "minutes": 2, "skill": "calculation",
+    "prompt": "A simple pendulum has a period of 2.0 s. Find its length.",
+    "answer": { "value": 0.994, "tol": 0.02, "units": "m" },
+    "hints": ["Rearrange T = 2π√(L/g) for L.", "L = gT² / 4π²."],
+    "solution": ["L = 9.81 × 2.0² / (4π²) = 39.24 / 39.48 = 0.994 m."],
+    "misconceptions": ["Forgetting to square T when rearranging."]
+  },
+  {
+    "id": "p-shm-05", "node": "p-shm", "format": "mcq", "difficulty": 2, "minutes": 1, "skill": "concept",
+    "prompt": "The amplitude of a mass–spring oscillator is doubled. What happens to the period?",
+    "choices": [
+      { "text": "It stays the same", "correct": true },
+      { "text": "It doubles", "why": "The mass travels twice as far, but its maximum speed doubles as well (v_max = ωx₀), so the time is unchanged." },
+      { "text": "It increases by a factor of √2", "why": "Amplitude does not appear in T = 2π√(m/k) at all." },
+      { "text": "It halves", "why": "Amplitude does not appear in T = 2π√(m/k)." }
+    ],
+    "hints": ["Look at the formula for the period. Which quantities appear?"],
+    "solution": ["T = 2π√(m/k) contains no amplitude.", "SHM is isochronous: the period is independent of amplitude."],
+    "misconceptions": ["A bigger swing must take longer."]
+  },
+  {
+    "id": "p-shm-06", "node": "p-shm", "format": "numeric", "difficulty": 3, "minutes": 3, "skill": "multi-step",
+    "prompt": "An oscillator has ω = 20 rad s⁻¹ and amplitude 0.050 m. Find its speed when the displacement is 0.030 m.",
+    "answer": { "value": 0.8, "tol": 0.02, "units": "m s⁻¹" },
+    "hints": ["v = ω√(x₀² − x²).", "x₀² − x² = 0.0025 − 0.0009."],
+    "solution": ["v = 20 √(0.0025 − 0.0009) = 20 √0.0016 = 20 × 0.040 = 0.80 m s⁻¹."],
+    "misconceptions": ["Using √(x₀ − x) instead of √(x₀² − x²)."]
+  },
+  {
+    "id": "p-shm-07", "node": "p-shm", "format": "mcq", "difficulty": 3, "minutes": 2, "skill": "interpretation",
+    "prompt": "In SHM, how is the acceleration related in phase to the displacement?",
+    "choices": [
+      { "text": "Exactly out of phase (π radians apart)", "correct": true },
+      { "text": "In phase", "why": "a = −ω²x: the minus sign flips the curve, so a is maximum when x is minimum." },
+      { "text": "A quarter-cycle (π/2) ahead", "why": "That is the relationship between velocity and displacement." },
+      { "text": "There is no fixed relationship", "why": "a = −ω²x fixes it exactly at every instant." }
+    ],
+    "hints": ["Look at the sign in a = −ω²x."],
+    "solution": ["a = −ω²x, so a is always the negative of a multiple of x.", "When x is at its maximum, a is at its minimum: they are π out of phase."],
+    "misconceptions": ["Confusing the phase of acceleration with that of velocity."]
+  },
+
+  {
+    "id": "p-dec-01", "node": "p-decay", "format": "mcq", "difficulty": 1, "minutes": 1, "skill": "concept",
+    "prompt": "Which statement about the half-life of a radioactive isotope is correct?",
+    "choices": [
+      { "text": "It is the same however many nuclei the sample starts with", "correct": true },
+      { "text": "It gets shorter as the sample decays", "why": "Each nucleus has the same fixed probability of decaying, so every halving takes the same time." },
+      { "text": "It is half the time it takes for the whole sample to decay", "why": "A sample never fully decays; N only approaches zero." },
+      { "text": "It increases when the sample is heated", "why": "Decay is a nuclear process, unaffected by temperature or chemistry." }
+    ],
+    "hints": ["Does each nucleus 'know' how many others are around it?"],
+    "solution": ["The decay constant λ is a property of the isotope.", "T½ = ln 2 / λ, so the half-life is fixed, whatever the sample size."],
+    "misconceptions": ["Half-life is half the total lifetime of the sample."]
+  },
+  {
+    "id": "p-dec-02", "node": "p-decay", "format": "numeric", "difficulty": 1, "minutes": 1, "skill": "calculation",
+    "prompt": "What fraction of the original undecayed nuclei remains after 3 half-lives? Give a decimal.",
+    "answer": { "value": 0.125, "tol": 0.001 },
+    "hints": ["Halve, then halve, then halve again."],
+    "solution": ["(½)³ = 1/8 = 0.125."],
+    "misconceptions": ["Subtracting a half each time: 1 − 3 × ½."]
+  },
+  {
+    "id": "p-dec-03", "node": "p-decay", "format": "numeric", "difficulty": 2, "minutes": 2, "skill": "calculation",
+    "prompt": "An isotope has a half-life of 8.0 days. Calculate its decay constant in day⁻¹.",
+    "answer": { "value": 0.0866, "tol": 0.01, "units": "day⁻¹" },
+    "hints": ["λ = ln 2 / T½."],
+    "solution": ["λ = 0.693 / 8.0 = 0.0866 day⁻¹."],
+    "misconceptions": ["Using λ = 1 / T½ or λ = T½ / ln 2."]
+  },
+  {
+    "id": "p-dec-04", "node": "p-decay", "format": "numeric", "difficulty": 2, "minutes": 2, "skill": "multi-step",
+    "prompt": "The activity of a sample falls from 640 Bq to 40 Bq in 20 minutes. What is the half-life?",
+    "answer": { "value": 5, "tol": 0.01, "units": "min" },
+    "hints": ["What is 640 / 40?", "16 = 2⁴."],
+    "solution": ["640 → 320 → 160 → 80 → 40 is 4 half-lives.", "T½ = 20 / 4 = 5.0 min."],
+    "misconceptions": ["Dividing 20 min by 16 rather than by the number of halvings."]
+  },
+  {
+    "id": "p-dec-05", "node": "p-decay", "format": "mcq", "difficulty": 2, "minutes": 1, "skill": "interpretation",
+    "prompt": "A graph of ln N against time for a decaying sample is:",
+    "choices": [
+      { "text": "a straight line with gradient −λ", "correct": true },
+      { "text": "a curve that levels off towards zero", "why": "That is the shape of N against t. Taking logs straightens the exponential." },
+      { "text": "a straight line through the origin", "why": "The intercept is ln N₀, not zero." },
+      { "text": "a straight line with gradient −T½", "why": "ln N = ln N₀ − λt, so the gradient is −λ." }
+    ],
+    "hints": ["Take ln of both sides of N = N₀e^(−λt)."],
+    "solution": ["ln N = ln N₀ − λt.", "Compare with y = c + mx: a straight line with gradient −λ and intercept ln N₀."],
+    "misconceptions": []
+  },
+  {
+    "id": "p-dec-06", "node": "p-decay", "format": "numeric", "difficulty": 3, "minutes": 4, "skill": "multi-step",
+    "prompt": "A wooden artefact contains 30% of the carbon-14 that living wood contains. The half-life of carbon-14 is 5730 years. Estimate the age of the artefact in years.",
+    "answer": { "value": 9950, "tol": 0.015, "units": "years" },
+    "hints": ["N/N₀ = 0.30 = e^(−λt).", "λ = ln 2 / 5730 = 1.21 × 10⁻⁴ yr⁻¹.", "t = ln(1/0.30) / λ."],
+    "solution": ["λ = 0.693 / 5730 = 1.21 × 10⁻⁴ yr⁻¹.", "ln(1/0.30) = 1.204.", "t = 1.204 / 1.21 × 10⁻⁴ = 9950 years."],
+    "misconceptions": ["Using 0.70 (the fraction decayed) instead of 0.30 (the fraction remaining)."]
+  },
+  {
+    "id": "p-dec-07", "node": "p-decay", "format": "mcq", "difficulty": 2, "minutes": 1, "skill": "concept",
+    "prompt": "Why is it impossible to predict when a particular nucleus will decay?",
+    "choices": [
+      { "text": "Decay is random: each nucleus has a constant probability of decaying per unit time", "correct": true },
+      { "text": "Because it depends on the temperature, which keeps changing", "why": "Decay is unaffected by temperature, pressure or chemical state." },
+      { "text": "Because older nuclei are more likely to decay", "why": "Nuclei do not age: the probability per second is the same for every nucleus, however long it has existed." },
+      { "text": "Because our detectors are not sensitive enough", "why": "The unpredictability is fundamental, not a measurement limitation." }
+    ],
+    "hints": ["Does a nucleus that has survived a long time become more likely to decay?"],
+    "solution": ["Radioactive decay is random and spontaneous.", "Each nucleus has the same probability λ of decaying per second; nothing about its history or surroundings changes that."],
+    "misconceptions": ["Nuclei 'age' and become more likely to decay."]
+  }
+]

@@ -1,0 +1,117 @@
+{
+  "node": "m-5-1",
+  "title": "The derivative as a limit",
+  "minutes": 25,
+  "objectives": [
+    "Interpret the derivative as the gradient of a tangent and as an instantaneous rate of change.",
+    "Write the gradient of a secant line in terms of h.",
+    "Differentiate simple polynomials from first principles.",
+    "Explain why h cannot simply be set to zero."
+  ],
+  "explanation": [
+    {
+      "heading": "From average to instantaneous rate of change",
+      "body": [
+        "Pick two points on the curve y = f(x): P at x and Q a horizontal distance h further along, at x + h. The straight line through them is a <b>secant</b>, and its gradient is rise over run:",
+        "<p class='eq'>gradient of PQ = (f(x + h) − f(x)) / h</p>",
+        "That is the <b>average</b> rate of change of f between the two points. A car's average speed over a journey is exactly this kind of quantity."
+      ]
+    },
+    {
+      "heading": "Let h shrink",
+      "body": [
+        "Now slide Q towards P. As h gets smaller the secant swings round until it is indistinguishable from the <b>tangent</b> at P. The derivative is defined as the value the secant gradient approaches:",
+        "<p class='eq'>f′(x) = lim<sub>h→0</sub> (f(x + h) − f(x)) / h</p>",
+        "You cannot just put h = 0 into the fraction, or you would get 0/0, which has no value. The method is always: expand, simplify, <b>cancel the h</b>, and only then let h → 0."
+      ]
+    },
+    {
+      "heading": "Notation",
+      "body": [
+        "f′(x) and dy/dx mean the same thing. Leibniz's dy/dx is a reminder of where it came from: a small change in y divided by a small change in x, in the limit as both shrink.",
+        "In physics the same idea appears as velocity: v = ds/dt is the gradient of a displacement–time graph."
+      ]
+    }
+  ],
+  "demo": {
+    "id": "secant",
+    "intro": "Choose a function, place the point P, then shrink h. The readout compares the secant's gradient with the true derivative at P.",
+    "notice": [
+      "With f(x) = x², the secant gradient is exactly 2x + h. Watch the error shrink in step with h.",
+      "Try a negative h: Q moves to the left of P and the secant approaches the same tangent from the other side.",
+      "At a turning point of sin x the tangent is horizontal, so f′ = 0 even though the function itself is not zero."
+    ]
+  },
+  "examples": [
+    {
+      "title": "First principles for x²",
+      "problem": "Use first principles to show that the derivative of f(x) = x² is 2x.",
+      "steps": [
+        {
+          "do": "f(x + h) = (x + h)² = x² + 2xh + h²",
+          "why": "Expand first, so the x² terms can be seen to cancel."
+        },
+        {
+          "do": "f(x + h) − f(x) = 2xh + h²",
+          "why": "The x² cancels. This always happens in a correct first-principles derivation."
+        },
+        {
+          "do": "(2xh + h²) / h = 2x + h",
+          "why": "Every remaining term has a factor of h, so dividing is now legal for h ≠ 0."
+        },
+        {
+          "do": "lim<sub>h→0</sub> (2x + h) = 2x",
+          "why": "Only now does letting h shrink to zero make sense."
+        }
+      ],
+      "answer": "f′(x) = 2x"
+    },
+    {
+      "title": "First principles for x³",
+      "problem": "Differentiate f(x) = x³ from first principles.",
+      "steps": [
+        {
+          "do": "(x + h)³ = x³ + 3x²h + 3xh² + h³",
+          "why": "Binomial expansion: the coefficients 1, 3, 3, 1 come from Pascal's triangle."
+        },
+        {
+          "do": "f(x + h) − f(x) = 3x²h + 3xh² + h³",
+          "why": "x³ cancels."
+        },
+        {
+          "do": "÷ h gives 3x² + 3xh + h²",
+          "why": "Cancel one factor of h from every term."
+        },
+        {
+          "do": "As h → 0, this tends to 3x²",
+          "why": "Both 3xh and h² vanish in the limit."
+        }
+      ],
+      "answer": "f′(x) = 3x²"
+    },
+    {
+      "title": "Average versus instantaneous velocity",
+      "problem": "A ball's displacement is s(t) = 5t² meters. Find its average velocity between t = 3 and t = 3.1 s, and its instantaneous velocity at t = 3 s.",
+      "steps": [
+        {
+          "do": "s(3.1) = 5 × 9.61 = 48.05 m and s(3) = 45 m",
+          "why": "Evaluate at both ends of the interval."
+        },
+        {
+          "do": "Average velocity = (48.05 − 45) / 0.1 = 30.5 m s⁻¹",
+          "why": "This is a secant gradient with h = 0.1."
+        },
+        {
+          "do": "s′(t) = 10t, so s′(3) = 30 m s⁻¹",
+          "why": "The derivative of 5t² is 5 × 2t, by the result from the first example."
+        }
+      ],
+      "answer": "30.5 m s⁻¹ on average; 30 m s⁻¹ at the instant t = 3 s. The average is slightly larger because the ball is speeding up."
+    }
+  ],
+  "takeaways": [
+    "A secant gradient is an average rate of change; the derivative is its limit as h → 0.",
+    "In first principles, the f(x) terms always cancel and every remaining term has a factor of h.",
+    "Cancel h before taking the limit. Substituting h = 0 directly gives 0/0."
+  ]
+}

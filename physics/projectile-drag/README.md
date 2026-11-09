@@ -1,6 +1,6 @@
 # Projectile motion with air resistance
 
-**Subject:** Physics HL (Theme A - kinematics and forces)
+**Subject:** Physics HL (Theme A: kinematics and forces)
 
 **The hard bit:** exam questions use the vacuum parabola, so it is easy to
 believe 45 degrees is always the best launch angle and that the path is
@@ -15,7 +15,7 @@ from the algebra (there is no neat closed form).
 
 ## Run it
 
-Notebook (recommended - explanation and code side by side):
+Notebook (recommended: explanation and code side by side):
 ```
 pip install numpy matplotlib jupyter
 jupyter notebook projectile_drag.ipynb
@@ -29,9 +29,9 @@ python projectile_drag.py
 The notebook also opens in VS Code, or in Google Colab with nothing installed.
 
 ## Try changing
-- `speed` in `main()` - push it to 80 m/s and watch the optimum drop further.
-- `DRAG_K` - set it to 0 to recover the textbook result exactly.
-- `MASS` - a ping-pong ball vs a cannonball at the same speed.
+- `speed` in `main()`: push it to 80 m/s and watch the optimum drop further.
+- `DRAG_K`: set it to 0 to recover the textbook result exactly.
+- `MASS`: a ping-pong ball vs a cannonball at the same speed.
 
 **Method note:** this uses Euler integration with `DT = 0.001 s`. Larger steps
-drift noticeably - worth trying, since it shows why step size matters.
+drift noticeably. Worth trying, since it shows why step size matters.

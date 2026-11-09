@@ -2,7 +2,7 @@
 # service below is created with these settings already filled in.
 services:
   - type: web
-    name: ib-hl-visualisations
+    name: ib-hl-visualizations
     runtime: python
     plan: free
     region: singapore

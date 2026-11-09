@@ -1,0 +1,89 @@
+{
+  "node": "c-r2-2",
+  "title": "Maxwell–Boltzmann and activation energy",
+  "minutes": 25,
+  "topic": "maxwell-boltzmann",
+  "objectives": [
+    "Sketch and interpret a Maxwell–Boltzmann distribution curve.",
+    "Use the area beyond Ea to explain the effect of temperature on rate.",
+    "Use the curve to explain how a catalyst increases rate.",
+    "Explain why a small temperature rise causes a large increase in rate."
+  ],
+  "explanation": [
+    {
+      "heading": "Particles do not all have the same energy",
+      "body": [
+        "In a gas or solution, particles constantly collide and swap energy, so at any instant they have a spread of kinetic energies. The Maxwell–Boltzmann curve shows how many particles have each energy.",
+        "<ul><li>It starts at the origin: no particles have zero energy.</li><li>It is <b>not symmetric</b>: a long tail stretches to high energy.</li><li>It never touches the energy axis, however far out you go.</li><li>The <b>area under the curve</b> is the total number of particles.</li></ul>"
+      ]
+    },
+    {
+      "heading": "Activation energy",
+      "body": [
+        "A collision only leads to reaction if the particles collide with the correct orientation and with energy of at least the <b>activation energy</b>, Ea.",
+        "Mark Ea on the energy axis. The area under the curve to the right of it is the number of particles with enough energy to react. Rate is proportional to that area (and to collision frequency)."
+      ]
+    },
+    {
+      "heading": "Temperature versus catalyst",
+      "body": [
+        "<b>Raising the temperature</b> moves the peak to the right and makes it lower. The total area stays the same because the number of particles has not changed. But the tail past Ea grows dramatically, which is why a 10 K rise can roughly double the rate even though the average energy goes up by only about 3%.",
+        "<b>A catalyst</b> leaves the curve alone. It provides an alternative pathway with a lower Ea, so the line moves left and more of the existing area lies beyond it."
+      ]
+    }
+  ],
+  "demo": {
+    "id": "boltzmann",
+    "intro": "Drag the temperature and the activation energy. The shaded area is the fraction of particles that can react.",
+    "notice": [
+      "The peak barely moves when you heat by 10 K, but the shaded area multiplies.",
+      "The total area under the curve never changes.",
+      "Lowering Ea (what a catalyst does) has a similar effect on the shaded area to heating, without changing the curve."
+    ]
+  },
+  "examples": [
+    {
+      "title": "Explaining a temperature rise",
+      "problem": "Explain, with reference to the Maxwell–Boltzmann distribution, why increasing the temperature increases the rate of reaction.",
+      "steps": [
+        {
+          "do": "At higher temperature, the average kinetic energy of the particles increases; the curve's peak shifts right and becomes lower, with the same total area.",
+          "why": "Mark scheme point 1: describe the change in the curve correctly, including that the area is unchanged."
+        },
+        {
+          "do": "A greater proportion of particles now have energy ≥ Ea.",
+          "why": "Point 2: refer to Ea explicitly."
+        },
+        {
+          "do": "So the frequency of successful collisions increases, and the rate increases.",
+          "why": "Point 3: 'successful' (or 'effective') collisions, not just 'more collisions'."
+        }
+      ],
+      "answer": "More particles have E ≥ Ea, so successful collisions are more frequent."
+    },
+    {
+      "title": "Putting a number on it",
+      "problem": "The fraction of particles with energy ≥ Ea is approximately e<sup>−Ea/RT</sup>. For Ea = 50 kJ mol⁻¹, by what factor does that fraction increase from 300 K to 310 K?",
+      "steps": [
+        {
+          "do": "At 300 K: e<sup>−50000 / (8.31 × 300)</sup> = e<sup>−20.05</sup> = 1.97 × 10⁻⁹",
+          "why": "Convert Ea to J mol⁻¹ so it matches R."
+        },
+        {
+          "do": "At 310 K: e<sup>−19.41</sup> = 3.76 × 10⁻⁹",
+          "why": ""
+        },
+        {
+          "do": "Ratio = 3.76 / 1.97 = 1.91",
+          "why": "Almost double, for a 3% rise in absolute temperature."
+        }
+      ],
+      "answer": "About 1.9 times, which is the origin of the 'rate doubles per 10 K' rule of thumb."
+    }
+  ],
+  "takeaways": [
+    "Area under the curve = number of particles; it does not change on heating.",
+    "Heating: peak lower and to the right; far more particles beyond Ea.",
+    "Catalyst: same curve, Ea moved left."
+  ]
+}

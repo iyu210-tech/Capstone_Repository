@@ -1,0 +1,105 @@
+{
+  "node": "c-s1-3",
+  "title": "Electron configurations",
+  "minutes": 30,
+  "topic": "electron-orbitals",
+  "objectives": [
+    "Describe the shapes of s and p orbitals and the capacity of each sub-level.",
+    "Apply the Aufbau principle, Pauli exclusion principle and Hund's rule.",
+    "Write full and condensed configurations for atoms and ions up to Z = 36.",
+    "Explain the configurations of chromium and copper."
+  ],
+  "explanation": [
+    {
+      "heading": "Shells, sub-levels and orbitals",
+      "body": [
+        "Each shell n contains sub-levels: s, p, d and f. Each sub-level is made of orbitals: regions where there is a high probability of finding an electron.",
+        "<ul><li>s: 1 orbital, spherical, holds 2 electrons.</li><li>p: 3 orbitals (pₓ, p_y, p_z), dumbbell-shaped, hold 6 electrons.</li><li>d: 5 orbitals, hold 10 electrons.</li><li>f: 7 orbitals, hold 14 electrons.</li></ul>",
+        "The <b>Pauli exclusion principle</b>: an orbital holds at most two electrons, and they must have opposite spins."
+      ]
+    },
+    {
+      "heading": "Filling order",
+      "body": [
+        "Electrons fill the lowest-energy sub-level available first (the <b>Aufbau principle</b>). The order is 1s, 2s, 2p, 3s, 3p, <b>4s, 3d</b>, 4p …. Importantly, 4s fills before 3d, which is why potassium and calcium come before the transition metals.",
+        "<b>Hund's rule</b>: in a set of orbitals of equal energy, electrons occupy separate orbitals with parallel spins before any pair up. So nitrogen's 2p³ has three unpaired electrons, one in each p orbital."
+      ]
+    },
+    {
+      "heading": "Ions and exceptions",
+      "body": [
+        "Once 3d is occupied, it drops below 4s in energy. So when a transition metal forms an ion, it loses its <b>4s electrons first</b>: Fe is [Ar]3d⁶4s², but Fe²⁺ is [Ar]3d⁶.",
+        "Two elements in the first transition series break the simple filling order: Cr is [Ar]3d⁵4s¹ and Cu is [Ar]3d¹⁰4s¹. A half-filled or completely filled d sub-level is especially stable, and the 4s and 3d energies are close enough that moving one electron is worth it."
+      ]
+    }
+  ],
+  "demo": {
+    "id": "orbitals",
+    "intro": "Explore the orbital shapes, fill the periodic table in Aufbau order, then compare iron with the chromium and copper exceptions.",
+    "notice": [
+      "The s, p and d blocks of the periodic table line up with the sub-level being filled.",
+      "The diagonal fill order puts 4s before 3d.",
+      "Cr and Cu each move one electron from 4s into 3d."
+    ]
+  },
+  "examples": [
+    {
+      "title": "A transition metal atom",
+      "problem": "Write the full and condensed electron configurations of iron, Z = 26.",
+      "steps": [
+        {
+          "do": "1s² 2s² 2p⁶ 3s² 3p⁶ = 18 electrons = [Ar]",
+          "why": "Fill in Aufbau order up to argon."
+        },
+        {
+          "do": "4s² → 20 electrons",
+          "why": "4s fills before 3d."
+        },
+        {
+          "do": "3d⁶ → 26 electrons",
+          "why": "The remaining six go into 3d."
+        }
+      ],
+      "answer": "1s² 2s² 2p⁶ 3s² 3p⁶ 3d⁶ 4s², or [Ar] 3d⁶ 4s²"
+    },
+    {
+      "title": "A transition metal ion",
+      "problem": "Write the configuration of Fe³⁺.",
+      "steps": [
+        {
+          "do": "Start from Fe: [Ar] 3d⁶ 4s²",
+          "why": "Always start from the neutral atom."
+        },
+        {
+          "do": "Remove the two 4s electrons: [Ar] 3d⁶",
+          "why": "4s electrons are lost first."
+        },
+        {
+          "do": "Remove one 3d electron: [Ar] 3d⁵",
+          "why": "That is three electrons in total."
+        }
+      ],
+      "answer": "[Ar] 3d⁵, a half-filled d sub-level, which is why Fe³⁺ is quite stable."
+    },
+    {
+      "title": "Counting unpaired electrons",
+      "problem": "How many unpaired electrons are there in a ground-state nitrogen atom?",
+      "steps": [
+        {
+          "do": "N (Z = 7): 1s² 2s² 2p³",
+          "why": ""
+        },
+        {
+          "do": "The three 2p electrons go into separate p orbitals with parallel spins",
+          "why": "Hund's rule."
+        }
+      ],
+      "answer": "3 unpaired electrons"
+    }
+  ],
+  "takeaways": [
+    "s, p, d, f hold 2, 6, 10, 14 electrons; each orbital holds 2 with opposite spins.",
+    "Fill 4s before 3d, but remove 4s first when forming ions.",
+    "Cr = [Ar]3d⁵4s¹ and Cu = [Ar]3d¹⁰4s¹."
+  ]
+}

@@ -1,0 +1,2721 @@
+{
+  "specs": {
+    "math": {
+      "label": "Math AA HL",
+      "first_assessment": 2021
+    },
+    "physics": {
+      "label": "Physics HL",
+      "first_assessment": 2025
+    },
+    "chemistry": {
+      "label": "Chemistry HL",
+      "first_assessment": 2025
+    }
+  },
+  "subjects": [
+    {
+      "id": "math",
+      "name": "Math AA HL",
+      "short": "Math",
+      "clusters": [
+        {
+          "id": "num",
+          "name": "Number"
+        },
+        {
+          "id": "fun",
+          "name": "Functions"
+        },
+        {
+          "id": "geo",
+          "name": "Geometry"
+        },
+        {
+          "id": "sta",
+          "name": "Statistics"
+        },
+        {
+          "id": "cal",
+          "name": "Calculus"
+        }
+      ]
+    },
+    {
+      "id": "physics",
+      "name": "Physics HL",
+      "short": "Physics",
+      "clusters": [
+        {
+          "id": "A",
+          "name": "Motion"
+        },
+        {
+          "id": "B",
+          "name": "Matter"
+        },
+        {
+          "id": "C",
+          "name": "Waves"
+        },
+        {
+          "id": "D",
+          "name": "Fields"
+        },
+        {
+          "id": "E",
+          "name": "Nuclear"
+        }
+      ]
+    },
+    {
+      "id": "chemistry",
+      "name": "Chemistry HL",
+      "short": "Chemistry",
+      "clusters": [
+        {
+          "id": "S1",
+          "name": "Models"
+        },
+        {
+          "id": "S2",
+          "name": "Bonding"
+        },
+        {
+          "id": "S3",
+          "name": "Matter"
+        },
+        {
+          "id": "R1",
+          "name": "Energy"
+        },
+        {
+          "id": "R2",
+          "name": "Rates"
+        },
+        {
+          "id": "R3",
+          "name": "Mechanisms"
+        }
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "id": "m-1-1",
+      "subject": "math",
+      "cluster": "num",
+      "title": "Scientific notation",
+      "syllabus": "1.1",
+      "level": "SL",
+      "difficulty": 1,
+      "spec": "current",
+      "summary": "Scientific notation Calculate with powers of ten and report a normalized coeﬀicient.",
+      "tags": [
+        "scientific",
+        "notation"
+      ]
+    },
+    {
+      "id": "m-1-2",
+      "subject": "math",
+      "cluster": "num",
+      "title": "Arithmetic patterns",
+      "syllabus": "1.2",
+      "level": "SL",
+      "difficulty": 2,
+      "spec": "current",
+      "summary": "Arithmetic patterns Recover terms and differences; evaluate finite sums and sigma expressions; interpret approximate additive models.",
+      "tags": [
+        "arithmetic",
+        "patterns"
+      ]
+    },
+    {
+      "id": "m-1-3",
+      "subject": "math",
+      "cluster": "num",
+      "title": "Geometric patterns",
+      "syllabus": "1.3",
+      "level": "SL",
+      "difficulty": 2,
+      "spec": "current",
+      "summary": "Geometric patterns Connect a first term and ratio to later terms, finite sums, sigma expressions and multiplicative models.",
+      "tags": [
+        "geometric",
+        "patterns"
+      ]
+    },
+    {
+      "id": "m-1-4",
+      "subject": "math",
+      "cluster": "num",
+      "title": "Growth of money and depreciation",
+      "syllabus": "1.4",
+      "level": "SL",
+      "difficulty": 2,
+      "spec": "current",
+      "summary": "Growth of money and depreciation Use compounding periods, percentage losses and inflation to calculate nominal and real values.",
+      "tags": [
+        "growth",
+        "money",
+        "depreciation"
+      ]
+    },
+    {
+      "id": "m-1-5",
+      "subject": "math",
+      "cluster": "num",
+      "title": "Integer powers and logarithm notation",
+      "syllabus": "1.5",
+      "level": "SL",
+      "difficulty": 1,
+      "spec": "current",
+      "summary": "Integer powers and logarithm notation Simplify integer powers and interpret base-10 and natural logarithms.",
+      "tags": [
+        "integer",
+        "powers",
+        "logarithm",
+        "notation"
+      ]
+    },
+    {
+      "id": "m-1-6",
+      "subject": "math",
+      "cluster": "num",
+      "title": "Direct algebraic reasoning",
+      "syllabus": "1.6",
+      "level": "SL",
+      "difficulty": 2,
+      "spec": "current",
+      "summary": "Direct algebraic reasoning Use exact numerical and algebraic deduction; distinguish equality from iden- tity and check transformations.",
+      "tags": [
+        "direct",
+        "algebraic",
+        "reasoning"
+      ]
+    },
+    {
+      "id": "m-1-7",
+      "subject": "math",
+      "cluster": "num",
+      "title": "Rational powers and logarithmic equations",
+      "syllabus": "1.7",
+      "level": "SL",
+      "difficulty": 2,
+      "spec": "current",
+      "summary": "Rational powers and logarithmic equations Use roots, logarithm laws and change of base; solve exponential equations with valid domains.",
+      "tags": [
+        "rational",
+        "powers",
+        "logarithmic",
+        "equations"
+      ]
+    },
+    {
+      "id": "m-1-8",
+      "subject": "math",
+      "cluster": "num",
+      "title": "Infinite geometric sums",
+      "syllabus": "1.8",
+      "level": "SL",
+      "difficulty": 2,
+      "spec": "current",
+      "summary": "Infinite geometric sums Recognize convergence, evaluate an infinite sum and combine related geomet- ric series.",
+      "tags": [
+        "infinite",
+        "geometric",
+        "sums"
+      ]
+    },
+    {
+      "id": "m-1-9",
+      "subject": "math",
+      "cluster": "num",
+      "title": "Binomial coeﬀicients",
+      "syllabus": "1.9",
+      "level": "SL",
+      "difficulty": 2,
+      "spec": "current",
+      "summary": "Binomial coeﬀicients Use Pascal coeﬀicients and combinations to extract terms from positive-integer powers.",
+      "tags": [
+        "binomial",
+        "icients"
+      ]
+    },
+    {
+      "id": "m-1-10",
+      "subject": "math",
+      "cluster": "num",
+      "title": "Counting and generalized expansions",
+      "syllabus": "1.10",
+      "level": "AHL",
+      "difficulty": 4,
+      "spec": "current",
+      "summary": "Counting and generalized expansions Count ordered and unordered selections with restrictions; expand rational powers with in a valid interval.",
+      "tags": [
+        "counting",
+        "generalized",
+        "expansions"
+      ]
+    },
+    {
+      "id": "m-1-11",
+      "subject": "math",
+      "cluster": "num",
+      "title": "Partial fractions",
+      "syllabus": "1.11",
+      "level": "AHL",
+      "difficulty": 2,
+      "spec": "current",
+      "summary": "Partial fractions Separate proper rational expressions over two distinct linear factors and use the decomposition.",
+      "tags": [
+        "partial",
+        "fractions"
+      ]
+    },
+    {
+      "id": "m-1-12",
+      "subject": "math",
+      "cluster": "num",
+      "title": "Cartesian complex numbers",
+      "syllabus": "1.12",
+      "level": "AHL",
+      "difficulty": 2,
+      "spec": "current",
+      "summary": "Cartesian complex numbers Calculate with i, conjugates and Cartesian components; interpret modulus and argument on an Argand plane.",
+      "tags": [
+        "cartesian",
+        "complex",
+        "numbers"
+      ]
+    },
+    {
+      "id": "m-1-13",
+      "subject": "math",
+      "cluster": "num",
+      "title": "Polar and exponential complex forms",
+      "syllabus": "1.13",
+      "level": "AHL",
+      "difficulty": 3,
+      "spec": "current",
+      "summary": "Polar and exponential complex forms Convert representations; connect multiplication and division to changes in scale and angle.",
+      "tags": [
+        "polar",
+        "exponential",
+        "complex",
+        "forms"
+      ]
+    },
+    {
+      "id": "m-1-14",
+      "subject": "math",
+      "cluster": "num",
+      "title": "Complex powers and polynomial roots",
+      "syllabus": "1.14",
+      "level": "AHL",
+      "difficulty": 4,
+      "spec": "current",
+      "summary": "Complex powers and polynomial roots Use conjugate pairs and de Moivre powers; extend to rational exponents and find every complex root.",
+      "tags": [
+        "complex",
+        "powers",
+        "polynomial",
+        "roots"
+      ]
+    },
+    {
+      "id": "m-1-15",
+      "subject": "math",
+      "cluster": "num",
+      "title": "Induction, contradiction and counterexamples",
+      "syllabus": "1.15",
+      "level": "AHL",
+      "difficulty": 4,
+      "spec": "current",
+      "summary": "Induction, contradiction and counterexamples Use induction with a base case and inductive step, contradiction reasoning and counterexamples to universal claims.",
+      "tags": [
+        "induction",
+        "contradiction",
+        "counterexamples"
+      ]
+    },
+    {
+      "id": "m-1-16",
+      "subject": "math",
+      "cluster": "num",
+      "title": "Linear systems",
+      "syllabus": "1.16",
+      "level": "AHL",
+      "difficulty": 3,
+      "spec": "current",
+      "summary": "Linear systems Solve up to three equations; distinguish a unique solution, a solution family and inconsistency.",
+      "tags": [
+        "linear",
+        "systems"
+      ]
+    },
+    {
+      "id": "m-2-1",
+      "subject": "math",
+      "cluster": "fun",
+      "title": "Straight lines",
+      "syllabus": "2.1",
+      "level": "SL",
+      "difficulty": 1,
+      "spec": "current",
+      "summary": "Straight lines Convert line equations; calculate slopes and intercepts; use parallel and per- pendicular directions.",
+      "tags": [
+        "straight",
+        "lines"
+      ]
+    },
+    {
+      "id": "m-2-2",
+      "subject": "math",
+      "cluster": "fun",
+      "title": "F unction language",
+      "syllabus": "2.2",
+      "level": "SL",
+      "difficulty": 2,
+      "spec": "current",
+      "summary": "F unction language Identify inputs, outputs, domain and range; interpret a function as a model and its inverse as a reversed mapping.",
+      "tags": [
+        "unction",
+        "language"
+      ]
+    },
+    {
+      "id": "m-2-3",
+      "subject": "math",
+      "cluster": "fun",
+      "title": "Reading and representing graphs",
+      "syllabus": "2.3",
+      "level": "SL",
+      "difficulty": 2,
+      "spec": "current",
+      "summary": "Reading and representing graphs Connect equations, tables and graph shapes; interpret graphs of sums and differences; select appropriate graph windows.",
+      "tags": [
+        "reading",
+        "representing",
+        "graphs"
+      ]
+    },
+    {
+      "id": "m-2-4",
+      "subject": "math",
+      "cluster": "fun",
+      "title": "Graph features and intersections",
+      "syllabus": "2.4",
+      "level": "SL",
+      "difficulty": 2,
+      "spec": "current",
+      "summary": "Graph features and intersections Locate zeros, vertices, extrema, symmetry, intercepts and asymptotes; find intersections numerically.",
+      "tags": [
+        "graph",
+        "features",
+        "intersections"
+      ]
+    },
+    {
+      "id": "m-2-5",
+      "subject": "math",
+      "cluster": "fun",
+      "title": "Composition and inversion",
+      "syllabus": "2.5",
+      "level": "SL",
+      "difficulty": 2,
+      "spec": "current",
+      "summary": "Composition and inversion Apply functions in order; construct inverses of one-to-one functions; use the identity mapping.",
+      "tags": [
+        "composition",
+        "inversion"
+      ]
+    },
+    {
+      "id": "m-2-6",
+      "subject": "math",
+      "cluster": "fun",
+      "title": "Quadratic representations",
+      "syllabus": "2.6",
+      "level": "SL",
+      "difficulty": 2,
+      "spec": "current",
+      "summary": "Quadratic representations Move among expanded, factorized and vertex forms; interpret each represen- tation geometrically.",
+      "tags": [
+        "quadratic",
+        "representations"
+      ]
+    },
+    {
+      "id": "m-2-7",
+      "subject": "math",
+      "cluster": "fun",
+      "title": "Quadratic equations and inequalities",
+      "syllabus": "2.7",
+      "level": "SL",
+      "difficulty": 2,
+      "spec": "current",
+      "summary": "Quadratic equations and inequalities Find roots and solution intervals; use the discriminant to determine root counts and parameter restrictions.",
+      "tags": [
+        "quadratic",
+        "equations",
+        "inequalities"
+      ]
+    },
+    {
+      "id": "m-2-8",
+      "subject": "math",
+      "cluster": "fun",
+      "title": "Reciprocal and linear rational graphs",
+      "syllabus": "2.8",
+      "level": "SL",
+      "difficulty": 2,
+      "spec": "current",
+      "summary": "Reciprocal and linear rational graphs Recognize reciprocal structure, excluded inputs, asymptotes and the range of a linear-over-linear function.",
+      "tags": [
+        "reciprocal",
+        "linear",
+        "rational",
+        "graphs"
+      ]
+    },
+    {
+      "id": "m-2-9",
+      "subject": "math",
+      "cluster": "fun",
+      "title": "Exponential and logarithmic models",
+      "syllabus": "2.9",
+      "level": "SL",
+      "difficulty": 2,
+      "spec": "current",
+      "summary": "Exponential and logarithmic models Interpret exponential growth and decay, logarithmic graphs, inverse relation- ships and asymptotes.",
+      "tags": [
+        "exponential",
+        "logarithmic",
+        "models"
+      ]
+    },
+    {
+      "id": "m-2-10",
+      "subject": "math",
+      "cluster": "fun",
+      "title": "Analytic and numerical equations",
+      "syllabus": "2.10",
+      "level": "SL",
+      "difficulty": 2,
+      "spec": "current",
+      "summary": "Analytic and numerical equations Solve equations by algebra or graphing technology; interpret numerical solu- tions in a model.",
+      "tags": [
+        "analytic",
+        "numerical",
+        "equations"
+      ]
+    },
+    {
+      "id": "m-2-11",
+      "subject": "math",
+      "cluster": "fun",
+      "title": "Basic graph transformations",
+      "syllabus": "2.11",
+      "level": "SL",
+      "difficulty": 2,
+      "spec": "current",
+      "summary": "Basic graph transformations Combine translations, reflections and horizontal or vertical stretches, respect- ing their order.",
+      "tags": [
+        "basic",
+        "graph",
+        "transformations"
+      ]
+    },
+    {
+      "id": "m-2-12",
+      "subject": "math",
+      "cluster": "fun",
+      "title": "Polynomial structure",
+      "syllabus": "2.12",
+      "level": "AHL",
+      "difficulty": 3,
+      "spec": "current",
+      "summary": "Polynomial structure Relate roots, factors and graphs; apply remainder and factor tests; obtain root sums and products.",
+      "tags": [
+        "polynomial",
+        "structure"
+      ]
+    },
+    {
+      "id": "m-2-13",
+      "subject": "math",
+      "cluster": "fun",
+      "title": "Further rational functions",
+      "syllabus": "2.13",
+      "level": "AHL",
+      "difficulty": 3,
+      "spec": "current",
+      "summary": "Further rational functions Analyze linear-over-quadratic and quadratic-over-linear expressions, including oblique asymptotes and cancellation.",
+      "tags": [
+        "further",
+        "rational",
+        "functions"
+      ]
+    },
+    {
+      "id": "m-2-14",
+      "subject": "math",
+      "cluster": "fun",
+      "title": "Symmetry and restricted inverses",
+      "syllabus": "2.14",
+      "level": "AHL",
+      "difficulty": 3,
+      "spec": "current",
+      "summary": "Symmetry and restricted inverses Use odd, even and periodic behavior; restrict a domain for inversion; recognize self-inverse mappings.",
+      "tags": [
+        "symmetry",
+        "restricted",
+        "inverses"
+      ]
+    },
+    {
+      "id": "m-2-15",
+      "subject": "math",
+      "cluster": "fun",
+      "title": "Comparing functions",
+      "syllabus": "2.15",
+      "level": "AHL",
+      "difficulty": 3,
+      "spec": "current",
+      "summary": "Comparing functions Solve polynomial and other inequalities by sign analysis or graph intersections.",
+      "tags": [
+        "comparing",
+        "functions"
+      ]
+    },
+    {
+      "id": "m-2-16",
+      "subject": "math",
+      "cluster": "fun",
+      "title": "Further transformations and modulus",
+      "syllabus": "2.16",
+      "level": "AHL",
+      "difficulty": 3,
+      "spec": "current",
+      "summary": "Further transformations and modulus Interpret absolute values of inputs or outputs, reciprocal and squared outputs, and aﬀine input changes; solve modulus conditions.",
+      "tags": [
+        "further",
+        "transformations",
+        "modulus"
+      ]
+    },
+    {
+      "id": "m-3-1",
+      "subject": "math",
+      "cluster": "geo",
+      "title": "Coordinates and solids",
+      "syllabus": "3.1",
+      "level": "SL",
+      "difficulty": 2,
+      "spec": "current",
+      "summary": "Coordinates and solids Find spatial distances and midpoints; work with volumes, exposed surface areas, and right triangles inside solids, including line-plane angles.",
+      "tags": [
+        "coordinates",
+        "solids"
+      ]
+    },
+    {
+      "id": "m-3-2",
+      "subject": "math",
+      "cluster": "geo",
+      "title": "T riangle calculations",
+      "syllabus": "3.2",
+      "level": "SL",
+      "difficulty": 2,
+      "spec": "current",
+      "summary": "T riangle calculations Choose a right-triangle ratio, sine rule, cosine rule, or sine-area formula to recover a missing measurement.",
+      "tags": [
+        "riangle",
+        "calculations"
+      ]
+    },
+    {
+      "id": "m-3-3",
+      "subject": "math",
+      "cluster": "geo",
+      "title": "Navigation and sight lines",
+      "syllabus": "3.3",
+      "level": "SL",
+      "difficulty": 3,
+      "spec": "current",
+      "summary": "Navigation and sight lines Translate bearings, elevation, and depression into labelled geometric relation- ships and calculate lengths or directions.",
+      "tags": [
+        "navigation",
+        "sight",
+        "lines"
+      ]
+    },
+    {
+      "id": "m-3-4",
+      "subject": "math",
+      "cluster": "geo",
+      "title": "Radians and sectors",
+      "syllabus": "3.4",
+      "level": "SL",
+      "difficulty": 1,
+      "spec": "current",
+      "summary": "Radians and sectors Convert angle units and connect a circle’s radius, central angle, arc length, and sector area.",
+      "tags": [
+        "radians",
+        "sectors"
+      ]
+    },
+    {
+      "id": "m-3-5",
+      "subject": "math",
+      "cluster": "geo",
+      "title": "Unit circle and ambiguous triangles",
+      "syllabus": "3.5",
+      "level": "SL",
+      "difficulty": 3,
+      "spec": "current",
+      "summary": "Unit circle and ambiguous triangles Use exact circular values and quadrant signs; identify when sine-rule informa- tion permits two different triangles.",
+      "tags": [
+        "unit",
+        "circle",
+        "ambiguous",
+        "triangles"
+      ]
+    },
+    {
+      "id": "m-3-6",
+      "subject": "math",
+      "cluster": "geo",
+      "title": "Basic trigonometric identities",
+      "syllabus": "3.6",
+      "level": "SL",
+      "difficulty": 2,
+      "spec": "current",
+      "summary": "Basic trigonometric identities Connect sine, cosine, and tangent using the unit-circle identity and the sine and cosine double-angle formulas.",
+      "tags": [
+        "basic",
+        "trigonometric",
+        "identities"
+      ]
+    },
+    {
+      "id": "m-3-7",
+      "subject": "math",
+      "cluster": "geo",
+      "title": "Trigonometric graphs and models",
+      "syllabus": "3.7",
+      "level": "SL",
+      "difficulty": 3,
+      "spec": "current",
+      "summary": "Trigonometric graphs and models Read and build sine, cosine, and tangent models using period, amplitude where applicable, shifts, and context.",
+      "tags": [
+        "trigonometric",
+        "graphs",
+        "models"
+      ]
+    },
+    {
+      "id": "m-3-8",
+      "subject": "math",
+      "cluster": "geo",
+      "title": "Trigonometric equations",
+      "syllabus": "3.8",
+      "level": "SL",
+      "difficulty": 3,
+      "spec": "current",
+      "summary": "Trigonometric equations Find every root in a stated interval, including equations requiring factorization or a quadratic substitution.",
+      "tags": [
+        "trigonometric",
+        "equations"
+      ]
+    },
+    {
+      "id": "m-3-9",
+      "subject": "math",
+      "cluster": "geo",
+      "title": "Reciprocal and inverse trigonometry",
+      "syllabus": "3.9",
+      "level": "AHL",
+      "difficulty": 3,
+      "spec": "current",
+      "summary": "Reciprocal and inverse trigonometry Use secant, cosecant, and cotangent identities; interpret inverse-trigonometric graphs, domains, ranges, and principal values.",
+      "tags": [
+        "reciprocal",
+        "inverse",
+        "trigonometry"
+      ]
+    },
+    {
+      "id": "m-3-10",
+      "subject": "math",
+      "cluster": "geo",
+      "title": "Angle addition",
+      "syllabus": "3.10",
+      "level": "AHL",
+      "difficulty": 2,
+      "spec": "current",
+      "summary": "Angle addition Combine or split angles with sine, cosine, and tangent formulas, including the tangent double-angle formula.",
+      "tags": [
+        "angle",
+        "addition"
+      ]
+    },
+    {
+      "id": "m-3-11",
+      "subject": "math",
+      "cluster": "geo",
+      "title": "Trigonometric symmetry",
+      "syllabus": "3.11",
+      "level": "AHL",
+      "difficulty": 2,
+      "spec": "current",
+      "summary": "Trigonometric symmetry Use reflection, parity, and periodicity to relate circular functions evaluated at different angles.",
+      "tags": [
+        "trigonometric",
+        "symmetry"
+      ]
+    },
+    {
+      "id": "m-3-12",
+      "subject": "math",
+      "cluster": "geo",
+      "title": "V ector representation and reasoning",
+      "syllabus": "3.12",
+      "level": "AHL",
+      "difficulty": 3,
+      "spec": "current",
+      "summary": "V ector representation and reasoning Use components, magnitudes, unit vectors, scalar multiples, positions, and displacements; complete geometric arguments with vectors.",
+      "tags": [
+        "ector",
+        "representation",
+        "reasoning"
+      ]
+    },
+    {
+      "id": "m-3-13",
+      "subject": "math",
+      "cluster": "geo",
+      "title": "Scalar products",
+      "syllabus": "3.13",
+      "level": "AHL",
+      "difficulty": 2,
+      "spec": "current",
+      "summary": "Scalar products Calculate angles and test perpendicularity or parallelism through the dot prod- uct and its algebraic properties.",
+      "tags": [
+        "scalar",
+        "products"
+      ]
+    },
+    {
+      "id": "m-3-14",
+      "subject": "math",
+      "cluster": "geo",
+      "title": "Lines and motion",
+      "syllabus": "3.14",
+      "level": "AHL",
+      "difficulty": 3,
+      "spec": "current",
+      "summary": "Lines and motion Convert vector, parametric, and Cartesian line descriptions; use direction vec- tors for line angles and constant-velocity motion.",
+      "tags": [
+        "lines",
+        "motion"
+      ]
+    },
+    {
+      "id": "m-3-15",
+      "subject": "math",
+      "cluster": "geo",
+      "title": "Relationships between lines",
+      "syllabus": "3.15",
+      "level": "AHL",
+      "difficulty": 3,
+      "spec": "current",
+      "summary": "Relationships between lines Distinguish identical, parallel, intersecting, and skew lines, checking every co- ordinate when solving for intersections.",
+      "tags": [
+        "relationships",
+        "between",
+        "lines"
+      ]
+    },
+    {
+      "id": "m-3-16",
+      "subject": "math",
+      "cluster": "geo",
+      "title": "V ector products and area",
+      "syllabus": "3.16",
+      "level": "AHL",
+      "difficulty": 2,
+      "spec": "current",
+      "summary": "V ector products and area Compute oriented cross products; use their properties to find normals and triangle or parallelogram areas.",
+      "tags": [
+        "ector",
+        "products",
+        "area"
+      ]
+    },
+    {
+      "id": "m-3-17",
+      "subject": "math",
+      "cluster": "geo",
+      "title": "Plane equations",
+      "syllabus": "3.17",
+      "level": "AHL",
+      "difficulty": 3,
+      "spec": "current",
+      "summary": "Plane equations Represent a plane by a point and two directions, by a normal, or by a Cartesian equation.",
+      "tags": [
+        "plane",
+        "equations"
+      ]
+    },
+    {
+      "id": "m-3-18",
+      "subject": "math",
+      "cluster": "geo",
+      "title": "Intersections and spatial angles",
+      "syllabus": "3.18",
+      "level": "AHL",
+      "difficulty": 4,
+      "spec": "current",
+      "summary": "Intersections and spatial angles Solve line-plane and plane-system intersections; distinguish geometric out- comes and calculate line-plane or plane-plane angles.",
+      "tags": [
+        "intersections",
+        "spatial",
+        "angles"
+      ]
+    },
+    {
+      "id": "m-4-1",
+      "subject": "math",
+      "cluster": "sta",
+      "title": "Data quality and sampling",
+      "syllabus": "4.1",
+      "level": "SL",
+      "difficulty": 1,
+      "spec": "current",
+      "summary": "Data quality and sampling Distinguish populations and samples, discrete and continuous variables; eval- uate bias, missing data, recording errors, outliers and random, convenience, systematic, quota or stratified sampling.",
+      "tags": [
+        "data",
+        "quality",
+        "sampling"
+      ]
+    },
+    {
+      "id": "m-4-2",
+      "subject": "math",
+      "cluster": "sta",
+      "title": "Statistical displays",
+      "syllabus": "4.2",
+      "level": "SL",
+      "difficulty": 1,
+      "spec": "current",
+      "summary": "Statistical displays Read frequency tables, equal-width histograms, cumulative frequencies and box plots; obtain percentiles and compare distributions using symmetry, me- dians, quartiles, range and IQR.",
+      "tags": [
+        "statistical",
+        "displays"
+      ]
+    },
+    {
+      "id": "m-4-3",
+      "subject": "math",
+      "cluster": "sta",
+      "title": "Location and spread",
+      "syllabus": "4.3",
+      "level": "SL",
+      "difficulty": 2,
+      "spec": "current",
+      "summary": "Location and spread Calculate mean, median, mode, modal class, variance and standard devi- ation; estimate grouped means; specify quartile conventions and interpret transformed data.",
+      "tags": [
+        "location",
+        "spread"
+      ]
+    },
+    {
+      "id": "m-4-4",
+      "subject": "math",
+      "cluster": "sta",
+      "title": "Correlation and predicting y",
+      "syllabus": "4.4",
+      "level": "SL",
+      "difficulty": 2,
+      "spec": "current",
+      "summary": "Correlation and predicting y Read scatter patterns; use Pearson correlation and the regression of y on x; distinguish association from causation and interpolation from extrapolation.",
+      "tags": [
+        "correlation",
+        "predicting"
+      ]
+    },
+    {
+      "id": "m-4-5",
+      "subject": "math",
+      "cluster": "sta",
+      "title": "Probability foundations",
+      "syllabus": "4.5",
+      "level": "SL",
+      "difficulty": 1,
+      "spec": "current",
+      "summary": "Probability foundations Count outcomes, use relative frequencies and complements, and calculate the expected number of occurrences.",
+      "tags": [
+        "probability",
+        "foundations"
+      ]
+    },
+    {
+      "id": "m-4-6",
+      "subject": "math",
+      "cluster": "sta",
+      "title": "Combining events",
+      "syllabus": "4.6",
+      "level": "SL",
+      "difficulty": 3,
+      "spec": "current",
+      "summary": "Combining events Use Venn or tree reasoning and outcome tables; handle union, intersection, exclusivity, independence and sampling with or without replacement.",
+      "tags": [
+        "combining",
+        "events"
+      ]
+    },
+    {
+      "id": "m-4-7",
+      "subject": "math",
+      "cluster": "sta",
+      "title": "Discrete distributions and expectation",
+      "syllabus": "4.7",
+      "level": "SL",
+      "difficulty": 2,
+      "spec": "current",
+      "summary": "Discrete distributions and expectation Normalize a probability distribution; calculate expected values and interpret fair prices for games.",
+      "tags": [
+        "discrete",
+        "distributions",
+        "expectation"
+      ]
+    },
+    {
+      "id": "m-4-8",
+      "subject": "math",
+      "cluster": "sta",
+      "title": "Binomial models",
+      "syllabus": "4.8",
+      "level": "SL",
+      "difficulty": 2,
+      "spec": "current",
+      "summary": "Binomial models Recognize a fixed number of independent fixed-probability trials; calculate individual and cumulative probabilities, means and variances.",
+      "tags": [
+        "binomial",
+        "models"
+      ]
+    },
+    {
+      "id": "m-4-9",
+      "subject": "math",
+      "cluster": "sta",
+      "title": "Normal models with known parameters",
+      "syllabus": "4.9",
+      "level": "SL",
+      "difficulty": 2,
+      "spec": "current",
+      "summary": "Normal models with known parameters Use symmetry, probability areas and inverse-normal calculations for a given mean and standard deviation.",
+      "tags": [
+        "normal",
+        "models",
+        "with",
+        "known",
+        "parameters"
+      ]
+    },
+    {
+      "id": "m-4-10",
+      "subject": "math",
+      "cluster": "sta",
+      "title": "Predicting x from y",
+      "syllabus": "4.10",
+      "level": "SL",
+      "difficulty": 1,
+      "spec": "current",
+      "summary": "Predicting x from y Use the regression of x on y for the appropriate direction of prediction; distin- guish it from rearranging a y-on-x regression.",
+      "tags": [
+        "predicting",
+        "from"
+      ]
+    },
+    {
+      "id": "m-4-11",
+      "subject": "math",
+      "cluster": "sta",
+      "title": "Conditional probability and independence",
+      "syllabus": "4.11",
+      "level": "SL",
+      "difficulty": 3,
+      "spec": "current",
+      "summary": "Conditional probability and independence Apply conditional probability algebra; test independence and distinguish it from mutual exclusivity.",
+      "tags": [
+        "conditional",
+        "probability",
+        "independence"
+      ]
+    },
+    {
+      "id": "m-4-12",
+      "subject": "math",
+      "cluster": "sta",
+      "title": "Standardization and unknown parameters",
+      "syllabus": "4.12",
+      "level": "SL",
+      "difficulty": 3,
+      "spec": "current",
+      "summary": "Standardization and unknown parameters Convert between observations and z-scores; recover a normal mean or standard deviation from percentile information.",
+      "tags": [
+        "standardization",
+        "unknown",
+        "parameters"
+      ]
+    },
+    {
+      "id": "m-4-13",
+      "subject": "math",
+      "cluster": "sta",
+      "title": "Bayesian updating",
+      "syllabus": "4.13",
+      "level": "AHL",
+      "difficulty": 3,
+      "spec": "current",
+      "summary": "Bayesian updating Reverse a conditional probability using a partition into at most three cases and the total-probability denominator.",
+      "tags": [
+        "bayesian",
+        "updating"
+      ]
+    },
+    {
+      "id": "m-4-14",
+      "subject": "math",
+      "cluster": "sta",
+      "title": "Moments and continuous distributions",
+      "syllabus": "4.14",
+      "level": "AHL",
+      "difficulty": 3,
+      "spec": "current",
+      "summary": "Moments and continuous distributions Use discrete and continuous moments, density normalization, piecewise den- sities, medians and modes; calculate variance and the effect of aﬀine transfor- mations.",
+      "tags": [
+        "moments",
+        "continuous",
+        "distributions"
+      ]
+    },
+    {
+      "id": "m-5-1",
+      "subject": "math",
+      "cluster": "cal",
+      "title": "Limits and the meaning of a derivative",
+      "syllabus": "5.1",
+      "level": "SL",
+      "difficulty": 2,
+      "spec": "current",
+      "summary": "Limits and the meaning of a derivative Estimate limits numerically or graphically; interpret a derivative as a tangent gradient or an instantaneous rate.",
+      "tags": [
+        "limits",
+        "meaning",
+        "derivative"
+      ]
+    },
+    {
+      "id": "m-5-2",
+      "subject": "math",
+      "cluster": "cal",
+      "title": "Increasing and decreasing behaviour",
+      "syllabus": "5.2",
+      "level": "SL",
+      "difficulty": 2,
+      "spec": "current",
+      "summary": "Increasing and decreasing behaviour Use the sign of the first derivative to locate intervals of increase and decrease.",
+      "tags": [
+        "increasing",
+        "decreasing",
+        "behaviour"
+      ]
+    },
+    {
+      "id": "m-5-3",
+      "subject": "math",
+      "cluster": "cal",
+      "title": "Differentiating integer powers",
+      "syllabus": "5.3",
+      "level": "SL",
+      "difficulty": 1,
+      "spec": "current",
+      "summary": "Differentiating integer powers Apply the power rule to integer powers, including negative powers, and to sums of such terms.",
+      "tags": [
+        "differentiating",
+        "integer",
+        "powers"
+      ]
+    },
+    {
+      "id": "m-5-4",
+      "subject": "math",
+      "cluster": "cal",
+      "title": "T angents and normals",
+      "syllabus": "5.4",
+      "level": "SL",
+      "difficulty": 2,
+      "spec": "current",
+      "summary": "T angents and normals Find tangent and normal gradients, equations and intercepts at specified points.",
+      "tags": [
+        "angents",
+        "normals"
+      ]
+    },
+    {
+      "id": "m-5-5",
+      "subject": "math",
+      "cluster": "cal",
+      "title": "Antiderivatives and numerical integrals",
+      "syllabus": "5.5",
+      "level": "SL",
+      "difficulty": 2,
+      "spec": "current",
+      "summary": "Antiderivatives and numerical integrals Recover a function from its derivative and a condition; evaluate definite inte- grals and positive areas with technology.",
+      "tags": [
+        "antiderivatives",
+        "numerical",
+        "integrals"
+      ]
+    },
+    {
+      "id": "m-5-6",
+      "subject": "math",
+      "cluster": "cal",
+      "title": "Differentiation rules",
+      "syllabus": "5.6",
+      "level": "SL",
+      "difficulty": 3,
+      "spec": "current",
+      "summary": "Differentiation rules Differentiate rational powers, sine, cosine, exponential and logarithmic func- tions; apply chain, product and quotient rules.",
+      "tags": [
+        "differentiation",
+        "rules"
+      ]
+    },
+    {
+      "id": "m-5-7",
+      "subject": "math",
+      "cluster": "cal",
+      "title": "Second derivatives and graphs",
+      "syllabus": "5.7",
+      "level": "SL",
+      "difficulty": 3,
+      "spec": "current",
+      "summary": "Second derivatives and graphs Connect a function, its gradient and its curvature; interpret the signs of first and second derivatives.",
+      "tags": [
+        "second",
+        "derivatives",
+        "graphs"
+      ]
+    },
+    {
+      "id": "m-5-8",
+      "subject": "math",
+      "cluster": "cal",
+      "title": "Extrema, inflexions and optimization",
+      "syllabus": "5.8",
+      "level": "SL",
+      "difficulty": 3,
+      "spec": "current",
+      "summary": "Extrema, inflexions and optimization Classify stationary points, check changes of concavity and optimize quantities in context.",
+      "tags": [
+        "extrema",
+        "inflexions",
+        "optimization"
+      ]
+    },
+    {
+      "id": "m-5-9",
+      "subject": "math",
+      "cluster": "cal",
+      "title": "Motion in one dimension",
+      "syllabus": "5.9",
+      "level": "SL",
+      "difficulty": 3,
+      "spec": "current",
+      "summary": "Motion in one dimension Connect displacement, velocity, speed and acceleration; distinguish signed dis- placement from total distance.",
+      "tags": [
+        "motion",
+        "dimension"
+      ]
+    },
+    {
+      "id": "m-5-10",
+      "subject": "math",
+      "cluster": "cal",
+      "title": "Standard integrals and reverse chain rule",
+      "syllabus": "5.10",
+      "level": "SL",
+      "difficulty": 3,
+      "spec": "current",
+      "summary": "Standard integrals and reverse chain rule Integrate powers, trigonometric, exponential and reciprocal expressions; use linear substitutions and recognizable inner derivatives.",
+      "tags": [
+        "standard",
+        "integrals",
+        "reverse",
+        "chain",
+        "rule"
+      ]
+    },
+    {
+      "id": "m-5-11",
+      "subject": "math",
+      "cluster": "cal",
+      "title": "Definite integrals and enclosed areas",
+      "syllabus": "5.11",
+      "level": "SL",
+      "difficulty": 3,
+      "spec": "current",
+      "summary": "Definite integrals and enclosed areas Evaluate integrals exactly or numerically; split signed regions and calculate areas between curves.",
+      "tags": [
+        "definite",
+        "integrals",
+        "enclosed",
+        "areas"
+      ]
+    },
+    {
+      "id": "m-5-12",
+      "subject": "math",
+      "cluster": "cal",
+      "title": "First principles and higher derivatives",
+      "syllabus": "5.12",
+      "level": "AHL",
+      "difficulty": 3,
+      "spec": "current",
+      "summary": "First principles and higher derivatives Understand continuity and differentiability informally; recognize convergent or divergent limits; differentiate polynomials from first principles and calculate higher derivatives.",
+      "tags": [
+        "first",
+        "principles",
+        "higher",
+        "derivatives"
+      ]
+    },
+    {
+      "id": "m-5-13",
+      "subject": "math",
+      "cluster": "cal",
+      "title": "Indeterminate limits",
+      "syllabus": "5.13",
+      "level": "AHL",
+      "difficulty": 3,
+      "spec": "current",
+      "summary": "Indeterminate limits Resolve zero-over-zero and infinity-over-infinity limits using l’Hopital’s rule, repeated differentiation or Maclaurin expansions.",
+      "tags": [
+        "indeterminate",
+        "limits"
+      ]
+    },
+    {
+      "id": "m-5-14",
+      "subject": "math",
+      "cluster": "cal",
+      "title": "Implicit differentiation and related rates",
+      "syllabus": "5.14",
+      "level": "AHL",
+      "difficulty": 4,
+      "spec": "current",
+      "summary": "Implicit differentiation and related rates Differentiate implicit relations, connect changing quantities and optimize on restricted domains, including endpoint optima.",
+      "tags": [
+        "implicit",
+        "differentiation",
+        "related",
+        "rates"
+      ]
+    },
+    {
+      "id": "m-5-15",
+      "subject": "math",
+      "cluster": "cal",
+      "title": "Further derivative and integral families",
+      "syllabus": "5.15",
+      "level": "AHL",
+      "difficulty": 3,
+      "spec": "current",
+      "summary": "Further derivative and integral families Use tangent, secant, cosecant, cotangent, general-base exponentials and loga- rithms, and inverse trigonometric functions; integrate using partial fractions.",
+      "tags": [
+        "further",
+        "derivative",
+        "integral",
+        "families"
+      ]
+    },
+    {
+      "id": "m-5-16",
+      "subject": "math",
+      "cluster": "cal",
+      "title": "Substitution and integration by parts",
+      "syllabus": "5.16",
+      "level": "AHL",
+      "difficulty": 4,
+      "spec": "current",
+      "summary": "Substitution and integration by parts Transform integrals with supplied non-obvious substitutions; apply integration by parts once or repeatedly.",
+      "tags": [
+        "substitution",
+        "integration",
+        "parts"
+      ]
+    },
+    {
+      "id": "m-5-17",
+      "subject": "math",
+      "cluster": "cal",
+      "title": "Areas with respect to y and solid volumes",
+      "syllabus": "5.17",
+      "level": "AHL",
+      "difficulty": 3,
+      "spec": "current",
+      "summary": "Areas with respect to y and solid volumes Integrate horizontal widths; calculate volumes formed by revolving regions about either coordinate axis.",
+      "tags": [
+        "areas",
+        "with",
+        "respect",
+        "solid",
+        "volumes"
+      ]
+    },
+    {
+      "id": "m-5-18",
+      "subject": "math",
+      "cluster": "cal",
+      "title": "First-order differential equations",
+      "syllabus": "5.18",
+      "level": "AHL",
+      "difficulty": 4,
+      "spec": "current",
+      "summary": "First-order differential equations Use Euler steps, separate variables, substitute y=vx in homogeneous equations, or apply an integrating factor; impose initial conditions.",
+      "tags": [
+        "first-order",
+        "differential",
+        "equations"
+      ]
+    },
+    {
+      "id": "m-5-19",
+      "subject": "math",
+      "cluster": "cal",
+      "title": "Maclaurin expansions",
+      "syllabus": "5.19",
+      "level": "AHL",
+      "difficulty": 4,
+      "spec": "current",
+      "summary": "Maclaurin expansions Expand exponential, trigonometric, inverse-trigonometric, logarithmic and bi- nomial expressions; obtain further series by substitution, products, calculus or differential equations.",
+      "tags": [
+        "maclaurin",
+        "expansions"
+      ]
+    },
+    {
+      "id": "p-a-1",
+      "subject": "physics",
+      "cluster": "A",
+      "title": "Kinematics",
+      "syllabus": "A.1",
+      "level": "SL",
+      "difficulty": 2,
+      "spec": "current",
+      "summary": "Kinematics Position, distance and displacement; instantaneous and average motion; gradients and graph areas; constant and changing acceler- ation; projectiles in two dimensions; qualitative fluid resistance.",
+      "tags": [
+        "kinematics"
+      ]
+    },
+    {
+      "id": "p-a-2",
+      "subject": "physics",
+      "cluster": "A",
+      "title": "Forces and momentum",
+      "syllabus": "A.2",
+      "level": "SL",
+      "difficulty": 3,
+      "spec": "current",
+      "summary": "HL guidance includes two-dimensional collisions.",
+      "tags": [
+        "forces",
+        "momentum"
+      ]
+    },
+    {
+      "id": "p-a-3",
+      "subject": "physics",
+      "cluster": "A",
+      "title": "Work, energy and power",
+      "syllabus": "A.3",
+      "level": "SL",
+      "difficulty": 2,
+      "spec": "current",
+      "summary": "Work, energy and power Work and energy transfers; kinetic, gravitational and elastic en- ergy; conservation and dissipation; power, eﬀiciency, Sankey dia- grams and fuel energy density.",
+      "tags": [
+        "work",
+        "energy",
+        "power"
+      ]
+    },
+    {
+      "id": "p-a-4",
+      "subject": "physics",
+      "cluster": "A",
+      "title": "Rigid body mechanics",
+      "syllabus": "A.4",
+      "level": "AHL",
+      "difficulty": 4,
+      "spec": "current",
+      "summary": "Rigid body mechanics Torque and equilibrium; angular kinematics; inertia and rotation- al dynamics; angular momentum and impulse; rotational energy; coupled bodies and rolling without slipping.",
+      "tags": [
+        "rigid",
+        "body",
+        "mechanics"
+      ]
+    },
+    {
+      "id": "p-a-5",
+      "subject": "physics",
+      "cluster": "A",
+      "title": "Galilean and special relativity",
+      "syllabus": "A.5",
+      "level": "AHL",
+      "difficulty": 4,
+      "spec": "current",
+      "summary": "Galilean and special relativity Inertial frames; Galilean and Lorentz transformations; light-speed invariance; velocity addition; intervals, proper measurements and simultaneity; spacetime diagrams and muon evidence.",
+      "tags": [
+        "galilean",
+        "special",
+        "relativity"
+      ]
+    },
+    {
+      "id": "p-b-1",
+      "subject": "physics",
+      "cluster": "B",
+      "title": "Thermal energy transfers",
+      "syllabus": "B.1",
+      "level": "SL",
+      "difficulty": 2,
+      "spec": "current",
+      "summary": "Thermal energy transfers Particle descriptions of matter; density and temperature; internal energy; heating and phase changes; conduction, convection and radiation; stellar brightness and thermal spectra.",
+      "tags": [
+        "thermal",
+        "energy",
+        "transfers"
+      ]
+    },
+    {
+      "id": "p-b-2",
+      "subject": "physics",
+      "cluster": "B",
+      "title": "Greenhouse effect",
+      "syllabus": "B.2",
+      "level": "SL",
+      "difficulty": 2,
+      "spec": "current",
+      "summary": "Greenhouse effect Reflectivity and emission; intercepted sunlight; molecular infrared absorption; surface and atmosphere energy budgets; equilibrium temperature and changes to the greenhouse effect.",
+      "tags": [
+        "greenhouse",
+        "effect"
+      ]
+    },
+    {
+      "id": "p-b-3",
+      "subject": "physics",
+      "cluster": "B",
+      "title": "Gas laws",
+      "syllabus": "B.3",
+      "level": "SL",
+      "difficulty": 2,
+      "spec": "current",
+      "summary": "Gas laws Pressure and particle number; ideal-gas assumptions; state changes; microscopic pressure and rms speed; temperature and molecular energy; monatomic internal energy and model limits.",
+      "tags": [
+        "laws"
+      ]
+    },
+    {
+      "id": "p-b-4",
+      "subject": "physics",
+      "cluster": "B",
+      "title": "Thermodynamics",
+      "syllabus": "B.4",
+      "level": "AHL",
+      "difficulty": 4,
+      "spec": "current",
+      "summary": "Thermodynamics First-law signs and work; closed and isolated systems; entropy and microstates; reversible and irreversible processes; gas paths and heat-engine cycles; the Carnot eﬀiciency limit.",
+      "tags": [
+        "thermodynamics"
+      ]
+    },
+    {
+      "id": "p-b-5",
+      "subject": "physics",
+      "cluster": "B",
+      "title": "Current and circuits",
+      "syllabus": "B.5",
+      "level": "SL",
+      "difficulty": 3,
+      "spec": "current",
+      "summary": "Current and circuits Charge flow and energy transfer; resistance, resistivity and power; circuit combinations; emf and internal resistance; meters, sources, non-ohmic components and variable-resistance dividers.",
+      "tags": [
+        "current",
+        "circuits"
+      ]
+    },
+    {
+      "id": "p-c-1",
+      "subject": "physics",
+      "cluster": "C",
+      "title": "Simple harmonic motion",
+      "syllabus": "C.1",
+      "level": "SL",
+      "difficulty": 3,
+      "spec": "current",
+      "summary": "Model springs and small-angle pendulums; in- terpret energy changes. At AHL, use phase, displacement and ve- locity equations to reconstruct motion and calculate energy quan- titatively.",
+      "tags": [
+        "simple",
+        "harmonic",
+        "motion"
+      ]
+    },
+    {
+      "id": "p-c-2",
+      "subject": "physics",
+      "cluster": "C",
+      "title": "Wave model",
+      "syllabus": "C.2",
+      "level": "SL",
+      "difficulty": 1,
+      "spec": "current",
+      "summary": "Distin- guish transverse and longitudinal waves, sound, mechanical and electromagnetic waves, and locate radiation with in the electromag- netic spectrum.",
+      "tags": [
+        "wave",
+        "model"
+      ]
+    },
+    {
+      "id": "p-c-3",
+      "subject": "physics",
+      "cluster": "C",
+      "title": "Wave phenomena",
+      "syllabus": "C.3",
+      "level": "SL",
+      "difficulty": 4,
+      "spec": "current",
+      "summary": "Apply superpo- sition, coherence and Young fringes. At AHL, analyse single-slit envelopes, missing orders and diffraction gratings.",
+      "tags": [
+        "wave",
+        "phenomena"
+      ]
+    },
+    {
+      "id": "p-c-4",
+      "subject": "physics",
+      "cluster": "C",
+      "title": "Standing waves and resonance",
+      "syllabus": "C.4",
+      "level": "SL",
+      "difficulty": 3,
+      "spec": "current",
+      "summary": "Use fixed, free, open and closed bound- aries to calculate permitted harmonics. Interpret resonance, its ap- plications and hazards, and the effects of light, critical and heavy damping.",
+      "tags": [
+        "standing",
+        "waves",
+        "resonance"
+      ]
+    },
+    {
+      "id": "p-c-5",
+      "subject": "physics",
+      "cluster": "C",
+      "title": "Doppler effect",
+      "syllabus": "C.5",
+      "level": "SL",
+      "difficulty": 3,
+      "spec": "current",
+      "summary": "Es- timate slow radial motion from light-frequency or wavelength changes. At AHL, calculate sound shifts and infer speeds for a moving source or a moving observer, considered separately.",
+      "tags": [
+        "doppler",
+        "effect"
+      ]
+    },
+    {
+      "id": "p-d-1",
+      "subject": "physics",
+      "cluster": "D",
+      "title": "Gravitational fields",
+      "syllabus": "D.1",
+      "level": "SL",
+      "difficulty": 3,
+      "spec": "current",
+      "summary": "At AHL, connect potential gradients, equipotential surfaces and work; calculate escape and circular-orbit speeds, satellite energy changes and the qualitative effects of atmospheric drag.",
+      "tags": [
+        "gravitational",
+        "fields"
+      ]
+    },
+    {
+      "id": "p-d-2",
+      "subject": "physics",
+      "cluster": "D",
+      "title": "Electric and magnetic fields",
+      "syllabus": "D.2",
+      "level": "SL",
+      "difficulty": 3,
+      "spec": "current",
+      "summary": "At AHL, combine scalar potentials and relate potential gradients, equipotentials, work and interac- tion energy.",
+      "tags": [
+        "electric",
+        "magnetic",
+        "fields"
+      ]
+    },
+    {
+      "id": "p-d-3",
+      "subject": "physics",
+      "cluster": "D",
+      "title": "Motion in electromagnetic fields",
+      "syllabus": "D.3",
+      "level": "SL",
+      "difficulty": 3,
+      "spec": "current",
+      "summary": "Apply magnetic forces to charges and current-carrying wires, determine charge-to-mass ratios, analyse velocity selectors and curved trajectories, and calculate interactions between parallel currents.",
+      "tags": [
+        "motion",
+        "electromagnetic",
+        "fields"
+      ]
+    },
+    {
+      "id": "p-d-4",
+      "subject": "physics",
+      "cluster": "D",
+      "title": "Induction",
+      "syllabus": "D.4",
+      "level": "AHL",
+      "difficulty": 4,
+      "spec": "current",
+      "summary": "Analyse moving rods, translating rectangular coils and rotating generators, includ- ing rotation-frequency effects and qualitative self-induction.",
+      "tags": [
+        "induction"
+      ]
+    },
+    {
+      "id": "p-e-1",
+      "subject": "physics",
+      "cluster": "E",
+      "title": "Structure of the atom",
+      "syllabus": "E.1",
+      "level": "SL",
+      "difficulty": 3,
+      "spec": "current",
+      "summary": "Structure of the atom Use scattering and spectra to test atomic models; count nucleons; calculate transitions, nuclear sizes, closest approach and quantized hydrogen orbits.",
+      "tags": [
+        "structure",
+        "atom"
+      ]
+    },
+    {
+      "id": "p-e-2",
+      "subject": "physics",
+      "cluster": "E",
+      "title": "Quantum physics",
+      "syllabus": "E.2",
+      "level": "AHL",
+      "difficulty": 3,
+      "spec": "current",
+      "summary": "Quantum physics Link photoelectric data to photons; use matter-wave diffraction, de Broglie momentum and Compton scattering with energy con- servation.",
+      "tags": [
+        "quantum",
+        "physics"
+      ]
+    },
+    {
+      "id": "p-e-3",
+      "subject": "physics",
+      "cluster": "E",
+      "title": "Radioactive decay",
+      "syllabus": "E.3",
+      "level": "SL",
+      "difficulty": 3,
+      "spec": "current",
+      "summary": "Radioactive decay Balance nuclear changes; interpret binding and radiation evidence; model counts, backgrounds, populations, activity, half-life, decay probabilities and applications.",
+      "tags": [
+        "radioactive",
+        "decay"
+      ]
+    },
+    {
+      "id": "p-e-4",
+      "subject": "physics",
+      "cluster": "E",
+      "title": "Fission",
+      "syllabus": "E.4",
+      "level": "SL",
+      "difficulty": 2,
+      "spec": "current",
+      "summary": "Fission Balance fission reactions; calculate released energy and chain be- haviour; connect reactor components, fuel use, eﬀiciency and radioactive-product management.",
+      "tags": [
+        "fission"
+      ]
+    },
+    {
+      "id": "p-e-5",
+      "subject": "physics",
+      "cluster": "E",
+      "title": "Fusion and stars",
+      "syllabus": "E.5",
+      "level": "SL",
+      "difficulty": 3,
+      "spec": "current",
+      "summary": "Fusion and stars Relate fusion and pressure support to stellar evolution; interpret HR regions and spectra; infer distance, luminosity and radius with uncertainties.",
+      "tags": [
+        "fusion",
+        "stars"
+      ]
+    },
+    {
+      "id": "c-s1-1",
+      "subject": "chemistry",
+      "cluster": "S1",
+      "title": "Introduction to the particulate nature of matter",
+      "syllabus": "S1.1",
+      "level": "SL",
+      "difficulty": 1,
+      "spec": "current",
+      "summary": "Connect temperature with particle motion, use state symbols, and analyse practical evidence from heating, cooling, sol- ubility and more than one chromatography method.",
+      "tags": [
+        "introduction",
+        "particulate",
+        "nature",
+        "matter"
+      ]
+    },
+    {
+      "id": "c-s1-2",
+      "subject": "chemistry",
+      "cluster": "S1",
+      "title": "The nuclear atom",
+      "syllabus": "S1.2",
+      "level": "SL",
+      "difficulty": 2,
+      "spec": "current",
+      "summary": "Use isotope proportions to ex- plain average atomic masses and reconstruct unknown composi- tions. At HL, extract isotope identities and abundances from mass spectra, combining graphical evidence with particle and mixture accounting.",
+      "tags": [
+        "nuclear",
+        "atom"
+      ]
+    },
+    {
+      "id": "c-s1-3",
+      "subject": "chemistry",
+      "cluster": "S1",
+      "title": "Electron configurations",
+      "syllabus": "S1.3",
+      "level": "SL",
+      "difficulty": 3,
+      "spec": "current",
+      "summary": "Interpret orbital occupancy and the chromium and copper exceptions. HL work adds ionization trends, spectral convergence calculations, and deductions from successive ionization energies.",
+      "tags": [
+        "electron",
+        "configurations"
+      ]
+    },
+    {
+      "id": "c-s1-4",
+      "subject": "chemistry",
+      "cluster": "S1",
+      "title": "Counting particles by mass: The mole",
+      "syllabus": "S1.4",
+      "level": "SL",
+      "difficulty": 2,
+      "spec": "current",
+      "summary": "Deter- mine empirical and molecular formulas from analytical data, plan solution preparation and dilution, and connect gaseous volume ra- tios with balanced reactions under matched conditions.",
+      "tags": [
+        "counting",
+        "particles",
+        "mass",
+        "mole"
+      ]
+    },
+    {
+      "id": "c-s1-5",
+      "subject": "chemistry",
+      "cluster": "S1",
+      "title": "Ideal gases",
+      "syllabus": "S1.5",
+      "level": "SL",
+      "difficulty": 2,
+      "spec": "current",
+      "summary": "Interpret graphs, infer molar masses and analyse changing gas samples using consistent units. Evaluate when real gases depart from the model and propagate measurement uncertainty in experimental gas calculations.",
+      "tags": [
+        "ideal",
+        "gases"
+      ]
+    },
+    {
+      "id": "c-s2-1",
+      "subject": "chemistry",
+      "cluster": "S2",
+      "title": "The ionic model",
+      "syllabus": "S2.1",
+      "level": "SL",
+      "difficulty": 2,
+      "spec": "current",
+      "summary": "Use lattice structure, mobile charge carriers, ion size and charge to reason about melting, conductivity, solubility and relative lattice strength.",
+      "tags": [
+        "ionic",
+        "model"
+      ]
+    },
+    {
+      "id": "c-s2-2",
+      "subject": "chemistry",
+      "cluster": "S2",
+      "title": "The covalent model",
+      "syllabus": "S2.2",
+      "level": "SL",
+      "difficulty": 3,
+      "spec": "current",
+      "summary": "Extend bonding models through resonance, benzene evidence, expanded valence shells, formal charge, orbital overlap and hybridization to interpret both organic and inorganic species.",
+      "tags": [
+        "covalent",
+        "model"
+      ]
+    },
+    {
+      "id": "c-s2-3",
+      "subject": "chemistry",
+      "cluster": "S2",
+      "title": "The metallic model",
+      "syllabus": "S2.3",
+      "level": "SL",
+      "difficulty": 2,
+      "spec": "current",
+      "summary": "Com- pare bonding trends using charge, size and electron density, eval- uate simple models against data, and consider the contribution of transition metals’ d-electrons.",
+      "tags": [
+        "metallic",
+        "model"
+      ]
+    },
+    {
+      "id": "c-s2-4",
+      "subject": "chemistry",
+      "cluster": "S2",
+      "title": "From models to materials",
+      "syllabus": "S2.4",
+      "level": "SL",
+      "difficulty": 3,
+      "spec": "current",
+      "summary": "Infer addition monomers and repeat units, then analyse polyester and polyamide formation, hydrolysis, terminal groups and the loss of small molecules.",
+      "tags": [
+        "from",
+        "models",
+        "materials"
+      ]
+    },
+    {
+      "id": "c-s3-1",
+      "subject": "chemistry",
+      "cluster": "S3",
+      "title": "The periodic table: Classification of elements",
+      "syllabus": "S3.1",
+      "level": "SL",
+      "difficulty": 3,
+      "spec": "current",
+      "summary": "Examine ionization-energy exceptions and transition- element chemistry through ion configurations, characteristic prop- erties and the relationship between absorbed light, observed colour and energy.",
+      "tags": [
+        "periodic",
+        "table",
+        "classification",
+        "elements"
+      ]
+    },
+    {
+      "id": "c-s3-2",
+      "subject": "chemistry",
+      "cluster": "S3",
+      "title": "Functional groups: Classification of organic compounds",
+      "syllabus": "S3.2",
+      "level": "SL",
+      "difficulty": 4,
+      "spec": "current",
+      "summary": "Analyse stereoisomerism and opti- cal behaviour, then combine mass fragments, infrared bands and proton NMR signals, integration and splitting to identify compact organic structures.",
+      "tags": [
+        "functional",
+        "groups",
+        "classification",
+        "organic",
+        "compounds"
+      ]
+    },
+    {
+      "id": "c-r1-1",
+      "subject": "chemistry",
+      "cluster": "R1",
+      "title": "Measuring enthalpy changes",
+      "syllabus": "R1.1",
+      "level": "SL",
+      "difficulty": 2,
+      "spec": "current",
+      "summary": "Use temperature measurements to determine enthalpy changes, ac- counting for reacting amounts, calorimeter heat capacity, heat loss and the limitations of experimental assumptions.",
+      "tags": [
+        "measuring",
+        "enthalpy",
+        "changes"
+      ]
+    },
+    {
+      "id": "c-r1-2",
+      "subject": "chemistry",
+      "cluster": "R1",
+      "title": "Energy cycles in reactions",
+      "syllabus": "R1.2",
+      "level": "SL",
+      "difficulty": 3,
+      "spec": "current",
+      "summary": "Use formation and combustion data with the ap- propriate stoichiometric factors, distinguish standard states, and interpret Born–Haber cycles involving singly or doubly charged ions and explicit lattice-enthalpy conventions.",
+      "tags": [
+        "energy",
+        "cycles",
+        "reactions"
+      ]
+    },
+    {
+      "id": "c-r1-3",
+      "subject": "chemistry",
+      "cluster": "R1",
+      "title": "Energy from fuels",
+      "syllabus": "R1.3",
+      "level": "SL",
+      "difficulty": 2,
+      "spec": "current",
+      "summary": "Interpret hydrogen and methanol fuel- cell electrode equations, connecting electron balance with fuel use, oxygen demand and reaction products.",
+      "tags": [
+        "energy",
+        "from",
+        "fuels"
+      ]
+    },
+    {
+      "id": "c-r1-4",
+      "subject": "chemistry",
+      "cluster": "R1",
+      "title": "Entropy and spontaneity",
+      "syllabus": "R1.4",
+      "level": "AHL",
+      "difficulty": 4,
+      "spec": "current",
+      "summary": "Combine enthalpy, entropy and temperature to evaluate Gibbs energy and feasibility; distinguish thermodynamic direc- tion from reaction speed. Connect non-standard composition, re- action quotient and equilibrium constants, including inverse and temperature-threshold problems.",
+      "tags": [
+        "entropy",
+        "spontaneity"
+      ]
+    },
+    {
+      "id": "c-r2-1",
+      "subject": "chemistry",
+      "cluster": "R2",
+      "title": "How much? The amount of chemical change",
+      "syllabus": "R2.1",
+      "level": "SL",
+      "difficulty": 3,
+      "spec": "current",
+      "summary": "Identify limiting and excess reagents, distinguish actual from theoretical yields, and compare atom e- conomy with yield. Solve inverse composition, purity, sequential processing and residual-mixture problems using conserved atoms.",
+      "tags": [
+        "much",
+        "amount",
+        "chemical",
+        "change"
+      ]
+    },
+    {
+      "id": "c-r2-2",
+      "subject": "chemistry",
+      "cluster": "R2",
+      "title": "How fast? The rate of chemical change",
+      "syllabus": "R2.2",
+      "level": "SL",
+      "difficulty": 3,
+      "spec": "current",
+      "summary": "Interpret multistep mechanisms and energy profiles; infer rate laws, reaction orders and rate-constant units from evidence, and extract activation energy and frequency factors from Arrhe- nius data.",
+      "tags": [
+        "fast",
+        "rate",
+        "chemical",
+        "change"
+      ]
+    },
+    {
+      "id": "c-r2-3",
+      "subject": "chemistry",
+      "cluster": "R2",
+      "title": "How far? The extent of chemical change",
+      "syllabus": "R2.3",
+      "level": "SL",
+      "difficulty": 3,
+      "spec": "current",
+      "summary": "Use concentration expressions, reaction quotients and Gibbs energy to predict direction and determine composition. Solve inverse equi- librium problems, apply justified small-conversion approximations and track conserved reacting amounts.",
+      "tags": [
+        "extent",
+        "chemical",
+        "change"
+      ]
+    },
+    {
+      "id": "c-r3-1",
+      "subject": "chemistry",
+      "cluster": "R3",
+      "title": "Proton transfer reactions",
+      "syllabus": "R3.1",
+      "level": "SL",
+      "difficulty": 4,
+      "spec": "current",
+      "summary": "Ex- tend to weak-acid and weak-base equilibria, salt hydrolysis, in- dicators, titration curves and buffers, including the assumptions behind quantitative pH calculations.",
+      "tags": [
+        "proton",
+        "transfer",
+        "reactions"
+      ]
+    },
+    {
+      "id": "c-r3-2",
+      "subject": "chemistry",
+      "cluster": "R3",
+      "title": "Electron transfer reactions",
+      "syllabus": "R3.2",
+      "level": "SL",
+      "difficulty": 4,
+      "spec": "current",
+      "summary": "At HL, compare electrode potentials, connect cell potential to Gibbs energy, and predict aqueous electrolysis and electroplating behaviour.",
+      "tags": [
+        "electron",
+        "transfer",
+        "reactions"
+      ]
+    },
+    {
+      "id": "c-r3-3",
+      "subject": "chemistry",
+      "cluster": "R3",
+      "title": "Electron sharing reactions",
+      "syllabus": "R3.3",
+      "level": "SL",
+      "difficulty": 2,
+      "spec": "current",
+      "summary": "Track regenerated radicals, infer net reactions and product mixtures, and connect molecular symmetry, experimental conditions and sup- plied quantitative models to reaction outcomes.",
+      "tags": [
+        "electron",
+        "sharing",
+        "reactions"
+      ]
+    },
+    {
+      "id": "c-r3-4",
+      "subject": "chemistry",
+      "cluster": "R3",
+      "title": "Electron-pair sharing reactions",
+      "syllabus": "R3.4",
+      "level": "SL",
+      "difficulty": 4,
+      "spec": "current",
+      "summary": "At HL, use Lewis acid-base and coordination models, compare SN1 and SN2 mechanisms and stereochemistry, and explain carbocation-controlled addition and electrophilic substitution of benzene.",
+      "tags": [
+        "electron-pair",
+        "sharing",
+        "reactions"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "from": "m-1-1",
+      "to": "m-1-2",
+      "type": "prerequisite"
+    },
+    {
+      "from": "m-1-2",
+      "to": "m-1-3",
+      "type": "prerequisite"
+    },
+    {
+      "from": "m-1-3",
+      "to": "m-1-4",
+      "type": "prerequisite"
+    },
+    {
+      "from": "m-1-4",
+      "to": "m-1-5",
+      "type": "prerequisite"
+    },
+    {
+      "from": "m-1-5",
+      "to": "m-1-6",
+      "type": "prerequisite"
+    },
+    {
+      "from": "m-1-6",
+      "to": "m-1-7",
+      "type": "prerequisite"
+    },
+    {
+      "from": "m-1-7",
+      "to": "m-1-8",
+      "type": "prerequisite"
+    },
+    {
+      "from": "m-1-8",
+      "to": "m-1-9",
+      "type": "prerequisite"
+    },
+    {
+      "from": "m-1-9",
+      "to": "m-1-10",
+      "type": "prerequisite"
+    },
+    {
+      "from": "m-1-10",
+      "to": "m-1-11",
+      "type": "prerequisite"
+    },
+    {
+      "from": "m-1-11",
+      "to": "m-1-12",
+      "type": "prerequisite"
+    },
+    {
+      "from": "m-1-12",
+      "to": "m-1-13",
+      "type": "prerequisite"
+    },
+    {
+      "from": "m-1-13",
+      "to": "m-1-14",
+      "type": "prerequisite"
+    },
+    {
+      "from": "m-1-14",
+      "to": "m-1-15",
+      "type": "prerequisite"
+    },
+    {
+      "from": "m-1-15",
+      "to": "m-1-16",
+      "type": "prerequisite"
+    },
+    {
+      "from": "m-2-1",
+      "to": "m-2-2",
+      "type": "prerequisite"
+    },
+    {
+      "from": "m-2-2",
+      "to": "m-2-3",
+      "type": "prerequisite"
+    },
+    {
+      "from": "m-2-3",
+      "to": "m-2-4",
+      "type": "prerequisite"
+    },
+    {
+      "from": "m-2-4",
+      "to": "m-2-5",
+      "type": "prerequisite"
+    },
+    {
+      "from": "m-2-5",
+      "to": "m-2-6",
+      "type": "prerequisite"
+    },
+    {
+      "from": "m-2-6",
+      "to": "m-2-7",
+      "type": "prerequisite"
+    },
+    {
+      "from": "m-2-7",
+      "to": "m-2-8",
+      "type": "prerequisite"
+    },
+    {
+      "from": "m-2-8",
+      "to": "m-2-9",
+      "type": "prerequisite"
+    },
+    {
+      "from": "m-2-9",
+      "to": "m-2-10",
+      "type": "prerequisite"
+    },
+    {
+      "from": "m-2-10",
+      "to": "m-2-11",
+      "type": "prerequisite"
+    },
+    {
+      "from": "m-2-11",
+      "to": "m-2-12",
+      "type": "prerequisite"
+    },
+    {
+      "from": "m-2-12",
+      "to": "m-2-13",
+      "type": "prerequisite"
+    },
+    {
+      "from": "m-2-13",
+      "to": "m-2-14",
+      "type": "prerequisite"
+    },
+    {
+      "from": "m-2-14",
+      "to": "m-2-15",
+      "type": "prerequisite"
+    },
+    {
+      "from": "m-2-15",
+      "to": "m-2-16",
+      "type": "prerequisite"
+    },
+    {
+      "from": "m-3-1",
+      "to": "m-3-2",
+      "type": "prerequisite"
+    },
+    {
+      "from": "m-3-2",
+      "to": "m-3-3",
+      "type": "prerequisite"
+    },
+    {
+      "from": "m-3-3",
+      "to": "m-3-4",
+      "type": "prerequisite"
+    },
+    {
+      "from": "m-3-4",
+      "to": "m-3-5",
+      "type": "prerequisite"
+    },
+    {
+      "from": "m-3-5",
+      "to": "m-3-6",
+      "type": "prerequisite"
+    },
+    {
+      "from": "m-3-6",
+      "to": "m-3-7",
+      "type": "prerequisite"
+    },
+    {
+      "from": "m-3-7",
+      "to": "m-3-8",
+      "type": "prerequisite"
+    },
+    {
+      "from": "m-3-8",
+      "to": "m-3-9",
+      "type": "prerequisite"
+    },
+    {
+      "from": "m-3-9",
+      "to": "m-3-10",
+      "type": "prerequisite"
+    },
+    {
+      "from": "m-3-10",
+      "to": "m-3-11",
+      "type": "prerequisite"
+    },
+    {
+      "from": "m-3-11",
+      "to": "m-3-12",
+      "type": "prerequisite"
+    },
+    {
+      "from": "m-3-12",
+      "to": "m-3-13",
+      "type": "prerequisite"
+    },
+    {
+      "from": "m-3-13",
+      "to": "m-3-14",
+      "type": "prerequisite"
+    },
+    {
+      "from": "m-3-14",
+      "to": "m-3-15",
+      "type": "prerequisite"
+    },
+    {
+      "from": "m-3-15",
+      "to": "m-3-16",
+      "type": "prerequisite"
+    },
+    {
+      "from": "m-3-16",
+      "to": "m-3-17",
+      "type": "prerequisite"
+    },
+    {
+      "from": "m-3-17",
+      "to": "m-3-18",
+      "type": "prerequisite"
+    },
+    {
+      "from": "m-4-1",
+      "to": "m-4-2",
+      "type": "prerequisite"
+    },
+    {
+      "from": "m-4-2",
+      "to": "m-4-3",
+      "type": "prerequisite"
+    },
+    {
+      "from": "m-4-3",
+      "to": "m-4-4",
+      "type": "prerequisite"
+    },
+    {
+      "from": "m-4-4",
+      "to": "m-4-5",
+      "type": "prerequisite"
+    },
+    {
+      "from": "m-4-5",
+      "to": "m-4-6",
+      "type": "prerequisite"
+    },
+    {
+      "from": "m-4-6",
+      "to": "m-4-7",
+      "type": "prerequisite"
+    },
+    {
+      "from": "m-4-7",
+      "to": "m-4-8",
+      "type": "prerequisite"
+    },
+    {
+      "from": "m-4-8",
+      "to": "m-4-9",
+      "type": "prerequisite"
+    },
+    {
+      "from": "m-4-9",
+      "to": "m-4-10",
+      "type": "prerequisite"
+    },
+    {
+      "from": "m-4-10",
+      "to": "m-4-11",
+      "type": "prerequisite"
+    },
+    {
+      "from": "m-4-11",
+      "to": "m-4-12",
+      "type": "prerequisite"
+    },
+    {
+      "from": "m-4-12",
+      "to": "m-4-13",
+      "type": "prerequisite"
+    },
+    {
+      "from": "m-4-13",
+      "to": "m-4-14",
+      "type": "prerequisite"
+    },
+    {
+      "from": "m-5-1",
+      "to": "m-5-2",
+      "type": "prerequisite"
+    },
+    {
+      "from": "m-5-2",
+      "to": "m-5-3",
+      "type": "prerequisite"
+    },
+    {
+      "from": "m-5-3",
+      "to": "m-5-4",
+      "type": "prerequisite"
+    },
+    {
+      "from": "m-5-4",
+      "to": "m-5-5",
+      "type": "prerequisite"
+    },
+    {
+      "from": "m-5-5",
+      "to": "m-5-6",
+      "type": "prerequisite"
+    },
+    {
+      "from": "m-5-6",
+      "to": "m-5-7",
+      "type": "prerequisite"
+    },
+    {
+      "from": "m-5-7",
+      "to": "m-5-8",
+      "type": "prerequisite"
+    },
+    {
+      "from": "m-5-8",
+      "to": "m-5-9",
+      "type": "prerequisite"
+    },
+    {
+      "from": "m-5-9",
+      "to": "m-5-10",
+      "type": "prerequisite"
+    },
+    {
+      "from": "m-5-10",
+      "to": "m-5-11",
+      "type": "prerequisite"
+    },
+    {
+      "from": "m-5-11",
+      "to": "m-5-12",
+      "type": "prerequisite"
+    },
+    {
+      "from": "m-5-12",
+      "to": "m-5-13",
+      "type": "prerequisite"
+    },
+    {
+      "from": "m-5-13",
+      "to": "m-5-14",
+      "type": "prerequisite"
+    },
+    {
+      "from": "m-5-14",
+      "to": "m-5-15",
+      "type": "prerequisite"
+    },
+    {
+      "from": "m-5-15",
+      "to": "m-5-16",
+      "type": "prerequisite"
+    },
+    {
+      "from": "m-5-16",
+      "to": "m-5-17",
+      "type": "prerequisite"
+    },
+    {
+      "from": "m-5-17",
+      "to": "m-5-18",
+      "type": "prerequisite"
+    },
+    {
+      "from": "m-5-18",
+      "to": "m-5-19",
+      "type": "prerequisite"
+    },
+    {
+      "from": "p-a-1",
+      "to": "p-a-2",
+      "type": "prerequisite"
+    },
+    {
+      "from": "p-a-2",
+      "to": "p-a-3",
+      "type": "prerequisite"
+    },
+    {
+      "from": "p-a-3",
+      "to": "p-a-4",
+      "type": "prerequisite"
+    },
+    {
+      "from": "p-a-4",
+      "to": "p-a-5",
+      "type": "prerequisite"
+    },
+    {
+      "from": "p-b-1",
+      "to": "p-b-2",
+      "type": "prerequisite"
+    },
+    {
+      "from": "p-b-2",
+      "to": "p-b-3",
+      "type": "prerequisite"
+    },
+    {
+      "from": "p-b-3",
+      "to": "p-b-4",
+      "type": "prerequisite"
+    },
+    {
+      "from": "p-b-4",
+      "to": "p-b-5",
+      "type": "prerequisite"
+    },
+    {
+      "from": "p-c-1",
+      "to": "p-c-2",
+      "type": "prerequisite"
+    },
+    {
+      "from": "p-c-2",
+      "to": "p-c-3",
+      "type": "prerequisite"
+    },
+    {
+      "from": "p-c-3",
+      "to": "p-c-4",
+      "type": "prerequisite"
+    },
+    {
+      "from": "p-c-4",
+      "to": "p-c-5",
+      "type": "prerequisite"
+    },
+    {
+      "from": "p-d-1",
+      "to": "p-d-2",
+      "type": "prerequisite"
+    },
+    {
+      "from": "p-d-2",
+      "to": "p-d-3",
+      "type": "prerequisite"
+    },
+    {
+      "from": "p-d-3",
+      "to": "p-d-4",
+      "type": "prerequisite"
+    },
+    {
+      "from": "p-e-1",
+      "to": "p-e-2",
+      "type": "prerequisite"
+    },
+    {
+      "from": "p-e-2",
+      "to": "p-e-3",
+      "type": "prerequisite"
+    },
+    {
+      "from": "p-e-3",
+      "to": "p-e-4",
+      "type": "prerequisite"
+    },
+    {
+      "from": "p-e-4",
+      "to": "p-e-5",
+      "type": "prerequisite"
+    },
+    {
+      "from": "c-s1-1",
+      "to": "c-s1-2",
+      "type": "prerequisite"
+    },
+    {
+      "from": "c-s1-2",
+      "to": "c-s1-3",
+      "type": "prerequisite"
+    },
+    {
+      "from": "c-s1-3",
+      "to": "c-s1-4",
+      "type": "prerequisite"
+    },
+    {
+      "from": "c-s1-4",
+      "to": "c-s1-5",
+      "type": "prerequisite"
+    },
+    {
+      "from": "c-s2-1",
+      "to": "c-s2-2",
+      "type": "prerequisite"
+    },
+    {
+      "from": "c-s2-2",
+      "to": "c-s2-3",
+      "type": "prerequisite"
+    },
+    {
+      "from": "c-s2-3",
+      "to": "c-s2-4",
+      "type": "prerequisite"
+    },
+    {
+      "from": "c-s3-1",
+      "to": "c-s3-2",
+      "type": "prerequisite"
+    },
+    {
+      "from": "c-r1-1",
+      "to": "c-r1-2",
+      "type": "prerequisite"
+    },
+    {
+      "from": "c-r1-2",
+      "to": "c-r1-3",
+      "type": "prerequisite"
+    },
+    {
+      "from": "c-r1-3",
+      "to": "c-r1-4",
+      "type": "prerequisite"
+    },
+    {
+      "from": "c-r2-1",
+      "to": "c-r2-2",
+      "type": "prerequisite"
+    },
+    {
+      "from": "c-r2-2",
+      "to": "c-r2-3",
+      "type": "prerequisite"
+    },
+    {
+      "from": "c-r3-1",
+      "to": "c-r3-2",
+      "type": "prerequisite"
+    },
+    {
+      "from": "c-r3-2",
+      "to": "c-r3-3",
+      "type": "prerequisite"
+    },
+    {
+      "from": "c-r3-3",
+      "to": "c-r3-4",
+      "type": "prerequisite"
+    },
+    {
+      "from": "m-5-1",
+      "to": "m-5-12",
+      "type": "similarity",
+      "note": "Both develop differentiation from first principles."
+    },
+    {
+      "from": "m-5-13",
+      "to": "m-5-19",
+      "type": "application",
+      "note": "Series expansions resolve 0/0 limits."
+    },
+    {
+      "from": "p-a-1",
+      "to": "p-c-1",
+      "type": "application",
+      "note": "SHM uses kinematics of oscillating displacement."
+    },
+    {
+      "from": "c-s1-3",
+      "to": "c-s3-1",
+      "type": "application",
+      "note": "Periodic trends follow from electron configurations."
+    }
+  ]
+}

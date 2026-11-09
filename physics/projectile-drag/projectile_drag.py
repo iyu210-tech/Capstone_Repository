@@ -1,4 +1,4 @@
-"""Projectile motion with air resistance (IB HL Physics - Topic A.1 / B).
+"""Projectile motion with air resistance (IB HL Physics, Topic A.1 / B).
 
 Idea: the textbook parabola assumes no drag. With a drag force proportional to
 v^2 the range shrinks, the path becomes asymmetric, and the optimal launch
@@ -70,7 +70,7 @@ def main():
 
     ax2.plot(angles, ranges_vac, ls="--", label=f"vacuum (best {opt_vac} deg)")
     ax2.plot(angles, ranges_drag, lw=2, label=f"with drag (best {opt_drag} deg)")
-    ax2.axvline(45, color="grey", ls=":", lw=1)
+    ax2.axvline(45, color="gray", ls=":", lw=1)
     ax2.set_xlabel("launch angle / degrees")
     ax2.set_ylabel("range / m")
     ax2.set_title("Range vs launch angle")

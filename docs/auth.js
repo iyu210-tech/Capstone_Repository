@@ -4,7 +4,7 @@
  * dialog, and touches nothing the router in app.js renders, so topic pages and
  * demos behave the same whether or not anyone is signed in.
  *
- * Nothing here gates the content. The visualisations stay open to everyone -
+ * Nothing here gates the content. The visualizations stay open to everyone -
  * an account exists so progress can be saved later, not to put a wall in front
  * of a student who is stuck at 11pm.
  */
@@ -13,8 +13,8 @@ const configured = Boolean(cfg.url && cfg.anonKey);
 
 // The rest of this site makes zero third-party requests, and a reader who
 // never signs in should not pay for one. So supabase-js is fetched on demand:
-// when the dialog opens, or - checked synchronously below, without loading
-// anything - when a stored session says this browser is already signed in.
+// when the dialog opens, or (checked synchronously below, without loading
+// anything) when a stored session says this browser is already signed in.
 const STORAGE_KEY = configured
   ? "sb-" + new URL(cfg.url).hostname.split(".")[0] + "-auth-token"
   : "";
@@ -99,7 +99,7 @@ function friendly(error) {
   const m = (error && error.message) || "Something went wrong. Try again.";
   if (/invalid login credentials/i.test(m)) return "That email and password do not match an account.";
   if (/email not confirmed/i.test(m)) return "Check your email and click the confirmation link first.";
-  if (/user already registered/i.test(m)) return "There is already an account with that email - try signing in.";
+  if (/user already registered/i.test(m)) return "There is already an account with that email. Try signing in.";
   if (/password should be at least/i.test(m)) return "Passwords need to be at least 6 characters.";
   if (/rate limit|too many/i.test(m)) return "Too many attempts. Wait a minute and try again.";
   if (/failed to fetch|networkerror/i.test(m)) return "Could not reach the server. Check your connection.";
@@ -109,7 +109,7 @@ function friendly(error) {
 /* -------------------------------------------------------------- header UI */
 
 // The phone nav forwards its account tab to the header button, so the label
-// has to say which button that is - a tab reading "Sign in" that silently
+// has to say which button that is: a tab reading "Sign in" that silently
 // signs you out would be the worst kind of surprise.
 function mirrorToNav(text) {
   const el = document.getElementById("mnav-account-label");
@@ -157,7 +157,7 @@ function renderSignedIn(user) {
 function open() {
   setMode("signin");
   // The real controls are always shown, so what the page will look like once
-  // the keys are in is never a surprise - they are just inert until then.
+  // the keys are in is never a surprise. They are just inert until then.
   if (configured) client();   // start the fetch while they read the form
   setupEl.hidden = configured;
   submitBtn.disabled = !configured;
@@ -206,7 +206,7 @@ form.addEventListener("submit", async (e) => {
     });
     setBusy(false);
     if (error) { say(friendly(error), "err"); return; }
-    // With email confirmation on, there is no session yet - saying "done"
+    // With email confirmation on, there is no session yet, so saying "done"
     // here would be a lie, and the student would sit waiting on a blank page.
     if (data.session) dlg.close();
     else say("Account created. Check " + email + " for a confirmation link, then sign in.", "ok");

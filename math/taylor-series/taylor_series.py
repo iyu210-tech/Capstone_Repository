@@ -1,4 +1,4 @@
-"""Taylor series visualisation (IB HL Maths AA - Option/AHL: Maclaurin series).
+"""Taylor series visualization (IB HL Math AA, Option/AHL: Maclaurin series).
 
 Idea: a Taylor polynomial is the "best possible" polynomial copy of a function
 near one point. Adding terms widens the region where the copy is good.
@@ -14,7 +14,7 @@ from matplotlib.animation import FuncAnimation
 
 # --- the function we approximate, and its Maclaurin coefficients -------------
 # sin(x) = x - x^3/3! + x^5/5! - ...
-CENTRE = 0.0
+CENTER = 0.0
 MAX_TERMS = 10
 
 
@@ -34,7 +34,7 @@ def main():
     fig, ax = plt.subplots(figsize=(9, 5))
     ax.plot(x, exact, color="black", lw=2, label="sin(x)")
     approx_line, = ax.plot([], [], color="crimson", lw=2, label="Taylor polynomial")
-    ax.axvline(CENTRE, color="grey", ls=":", lw=1)
+    ax.axvline(CENTER, color="gray", ls=":", lw=1)
 
     ax.set_ylim(-3, 3)
     ax.set_xlim(x[0], x[-1])
@@ -48,7 +48,7 @@ def main():
         n = i + 1
         approx_line.set_data(x, taylor_sin(x, n))
         highest = 2 * n - 1
-        title.set_text(f"{n} term(s) - polynomial up to x^{highest}")
+        title.set_text(f"{n} term(s): polynomial up to x^{highest}")
         return approx_line, title
 
     anim = FuncAnimation(fig, frame, frames=MAX_TERMS, interval=900, blit=False)

@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <title>SlimeIB</title>
+  <path d="M9 45C5 31 13 9 32 9s27 22 23 36c-1 5-5 7-9 6-1 5-6 6-8 1-6 2-15 2-20 0-3 2-8 0-9-6z"
+        fill="#6cc551" stroke="#1c1b19" stroke-width="2.5" stroke-linejoin="round"/>
+  <path d="M45 51c0 3 1 5 3 5s2-3 1-5" fill="#6cc551" stroke="#1c1b19" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+  <ellipse cx="21" cy="20" rx="5.5" ry="3" transform="rotate(-35 21 20)" fill="#fff" opacity=".55"/>
+  <circle cx="25" cy="31" r="3.2" fill="#1c1b19"/>
+  <circle cx="39" cy="31" r="3.2" fill="#1c1b19"/>
+  <path d="M24.5 39q7.5 6.5 15 0" fill="none" stroke="#1c1b19" stroke-width="2.8" stroke-linecap="round"/>
+</svg>
