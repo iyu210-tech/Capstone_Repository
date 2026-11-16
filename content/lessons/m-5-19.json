@@ -40,9 +40,9 @@
   ],
   "demo": {
     "id": "taylor",
-    "intro": "The gray curve is sin x. Step up the number of terms and watch the polynomial approximation grip more of it.",
+    "intro": "The black curve (white in dark mode) is sin x. Step up the number of terms and watch the polynomial approximation grip more of it.",
     "notice": [
-      "Each new term roughly extends the region of good agreement by π in each direction.",
+      "Each new term extends the region of good agreement in each direction.",
       "Outside that region the polynomial diverges violently, up or down depending on the sign of the last term.",
       "With one term the approximation is just y = x: the small-angle approximation sin x ≈ x."
     ]

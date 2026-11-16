@@ -71,8 +71,11 @@
     return { ticks: out, step: step };
   }
 
+  // As many decimals as the step itself needs: a 2.5 step reads 2.5, 5.0,
+  // 7.5 (not 3, 5, 8) and a 0.25 step reads 0.25, 0.50, 0.75.
   function stepFmt(step) {
-    var d = Math.max(0, -Math.floor(Math.log(step) / Math.LN10 + 1e-9));
+    var d = 0;
+    while (d < 6 && Math.abs(step * Math.pow(10, d) - Math.round(step * Math.pow(10, d))) > 1e-6) d++;
     return function (v) {
       if (v === 0) return "0";
       var a = Math.abs(v);
@@ -457,7 +460,7 @@
       }
       ctx.say(
         "Polynomial up to <b>x<sup>" + (2 * n - 1) + "</sup></b>. " +
-        "It tracks sin(x) to within 0.05 out to about <b>x = ±" + good.toFixed(1) + "</b>" +
+        "It tracks sin(x) to within 0.05 out to about <b>x = ±" + good.toFixed(1) + "</b>. " +
         "Then it escapes to infinity."
       );
       ctx.setAlt(

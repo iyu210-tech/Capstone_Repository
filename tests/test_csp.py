@@ -35,10 +35,23 @@ def directive(policy, name):
     return []
 
 
+def redirected(page):
+    """True for a page vercel.json redirects away, so it is never served."""
+    cfg = json.loads((ROOT / "vercel.json").read_text(encoding="utf-8"))
+    url = "/" + page.relative_to(DOCS).as_posix()
+    for r in cfg.get("redirects", []):
+        src = r["source"]
+        if src.endswith("/:path*") and url.startswith(src[: -len(":path*")]):
+            return True
+    return False
+
+
 def test_every_inline_script_is_allowed_by_hash():
     allowed = set(directive(csp(), "script-src"))
     missing = []
     for page in sorted(DOCS.rglob("*.html")):
+        if redirected(page):
+            continue
         # Hashed exactly as the browser does: the raw text between the tags.
         text = page.read_bytes().decode("utf-8").replace("\r\n", "\n")
         for body in INLINE.findall(text):

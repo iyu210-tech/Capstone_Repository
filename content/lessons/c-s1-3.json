@@ -14,7 +14,7 @@
       "heading": "Shells, sub-levels and orbitals",
       "body": [
         "Each shell n contains sub-levels: s, p, d and f. Each sub-level is made of orbitals: regions where there is a high probability of finding an electron.",
-        "<ul><li>s: 1 orbital, spherical, holds 2 electrons.</li><li>p: 3 orbitals (pₓ, p_y, p_z), dumbbell-shaped, hold 6 electrons.</li><li>d: 5 orbitals, hold 10 electrons.</li><li>f: 7 orbitals, hold 14 electrons.</li></ul>",
+        "<ul><li>s: 1 orbital, spherical, holds 2 electrons.</li><li>p: 3 orbitals (p<sub>x</sub>, p<sub>y</sub>, p<sub>z</sub>), dumbbell-shaped, hold 6 electrons.</li><li>d: 5 orbitals, hold 10 electrons.</li><li>f: 7 orbitals, hold 14 electrons.</li></ul>",
         "The <b>Pauli exclusion principle</b>: an orbital holds at most two electrons, and they must have opposite spins."
       ]
     },

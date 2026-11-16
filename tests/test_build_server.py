@@ -34,7 +34,7 @@ def get(addr, path):
 
 
 def first_id():
-    return build_site.load_topics(REPO)[0]["id"]
+    return build_site.load(REPO / "topics.json")[0]["id"]
 
 
 def test_topic_page_is_served(base):

@@ -2825,7 +2825,7 @@ window.CONTENT = {
      "heading": "Shells, sub-levels and orbitals",
      "body": [
       "Each shell n contains sub-levels: s, p, d and f. Each sub-level is made of orbitals: regions where there is a high probability of finding an electron.",
-      "<ul><li>s: 1 orbital, spherical, holds 2 electrons.</li><li>p: 3 orbitals (pₓ, p_y, p_z), dumbbell-shaped, hold 6 electrons.</li><li>d: 5 orbitals, hold 10 electrons.</li><li>f: 7 orbitals, hold 14 electrons.</li></ul>",
+      "<ul><li>s: 1 orbital, spherical, holds 2 electrons.</li><li>p: 3 orbitals (p<sub>x</sub>, p<sub>y</sub>, p<sub>z</sub>), dumbbell-shaped, hold 6 electrons.</li><li>d: 5 orbitals, hold 10 electrons.</li><li>f: 7 orbitals, hold 14 electrons.</li></ul>",
       "The <b>Pauli exclusion principle</b>: an orbital holds at most two electrons, and they must have opposite spins."
      ]
     },
@@ -3073,9 +3073,9 @@ window.CONTENT = {
    ],
    "demo": {
     "id": "taylor",
-    "intro": "The gray curve is sin x. Step up the number of terms and watch the polynomial approximation grip more of it.",
+    "intro": "The black curve (white in dark mode) is sin x. Step up the number of terms and watch the polynomial approximation grip more of it.",
     "notice": [
-     "Each new term roughly extends the region of good agreement by π in each direction.",
+     "Each new term extends the region of good agreement in each direction.",
      "Outside that region the polynomial diverges violently, up or down depending on the sign of the last term.",
      "With one term the approximation is just y = x: the small-angle approximation sin x ≈ x."
     ]

@@ -2,4 +2,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://iyu210-tech.github.io/Capstone_Repository/sitemap.xml
+Sitemap: https://capstone-repository-tau.vercel.app/sitemap.xml

@@ -49,6 +49,24 @@
       .toLowerCase();
   }
 
+  // A stored short answer that is really a number: "6 × 10−3", "1.28 × 103
+  // kJ mol−1", "− 3", "0.100". The question import flattened powers of ten,
+  // so "× 10" followed by digits is read as the exponent (6 × 10−3 = 0.006).
+  // A unit after the number is allowed, as numeric questions allow it.
+  // Anything else (words, formulas, lists, "1 2") is not a number: NaN.
+  function answerNumber(text) {
+    var s = String(text || "").normalize("NFKC")
+      .replace(/[−–]/g, "-").replace(/[×⋅·]/g, "x").replace(/\s+/g, " ").trim();
+    var m = s.match(/^([-+]?) ?(\d+(?:\.\d+)?)(?: ?[x*] ?10 ?\^? ?\(?([-+]?\d{1,3})\)?)?((?: [A-Za-zµμΩÅ°%]+(?:-?\d+)?\.?)*)$/);
+    if (!m || /(?:^| )(?:and|or|to|then|x)\b/i.test(m[4])) return NaN;
+    return parseFloat(m[1] + m[2] + (m[3] ? "e" + m[3] : ""));
+  }
+
+  function sameNumber(x, v) {
+    if (!isFinite(x) || !isFinite(v)) return false;
+    return x === v || Math.abs(x - v) <= 1e-9 * Math.max(Math.abs(x), Math.abs(v));
+  }
+
   function shortMatch(given, a) {
     var g = normalizeShort(given);
     if (!g) return false;
@@ -56,7 +74,20 @@
     for (var i = 0; i < opts.length; i++) {
       if (normalizeShort(opts[i]) === g) return true;
     }
-    return false;
+    // Typed answers to the imported A–D questions are stored as "A: <option>".
+    // The letter on its own, or the option itself, is the same answer.
+    var text = String(a.text || "");
+    var pick = text.match(/^\s*([A-D]):\s+(.+)$/);
+    if (pick) {
+      var l = pick[1].toLowerCase();
+      if ([l, "(" + l + ")", l + ".", l + ")", l + ":"].indexOf(g) >= 0) return true;
+      if (normalizeShort(pick[2]) === g) return true;
+      text = pick[2];
+    }
+    // A number is checked as a number, so 6 × 10^-3, 6e-3 and 0.006 all match.
+    var v = answerNumber(text);
+    if (isNaN(v)) return false;
+    return sameNumber(parseNumber(String(given).normalize("NFKC").replace(/⁄/g, "/")), v);
   }
 
   // A wrong number usually has a recognizable shape. Saying which one is far
@@ -313,6 +344,6 @@
 
   Slime.quiz = {
     render: render, parseNumber: parseNumber, normalizeShort: normalizeShort,
-    shortMatch: shortMatch, SKILL_LABEL: SKILL_LABEL
+    answerNumber: answerNumber, shortMatch: shortMatch, SKILL_LABEL: SKILL_LABEL
   };
 })();

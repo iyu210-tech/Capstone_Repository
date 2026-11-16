@@ -4,6 +4,12 @@
   "buildCommand": "python3 build_site.py",
   "outputDirectory": "docs",
   "trailingSlash": true,
+  "redirects": [
+    { "source": "/t/taylor-series/:path*", "destination": "/#/topic/m-5-19", "permanent": true },
+    { "source": "/t/projectile-drag/:path*", "destination": "/#/topic/p-a-1", "permanent": true },
+    { "source": "/t/maxwell-boltzmann/:path*", "destination": "/#/topic/c-r2-2", "permanent": true },
+    { "source": "/t/electron-orbitals/:path*", "destination": "/#/topic/c-s1-3", "permanent": true }
+  ],
   "headers": [
     {
       "source": "/(.*)",
